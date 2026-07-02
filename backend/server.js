@@ -13,7 +13,6 @@ const allowedOrigins = [
   "http://localhost:5175",
   "http://localhost:5176",
   "https://web-portal-hazel-six.vercel.app",
-  "https://web-portal-nigw3gr5c-nainakharolas-projects.vercel.app",
 ];
 
 // CORS Configuration
