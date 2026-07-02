@@ -6,12 +6,40 @@ const studentRoutes = require("./routes/studentRoutes");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// Allowed Frontend URLs
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175",
+  "http://localhost:5176",
+  "https://web-portal-nigw3gr5c-nainakharolas-projects.vercel.app",
+];
+
+// CORS Configuration
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests without an origin (Postman, mobile apps, curl)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve uploaded files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Health Check Route
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
@@ -19,8 +47,10 @@ app.get("/", (req, res) => {
   });
 });
 
+// Student Routes
 app.use("/api/students", studentRoutes);
 
+// 404 Route
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -28,15 +58,16 @@ app.use((req, res) => {
   });
 });
 
+// Global Error Handler
 app.use((error, req, res, next) => {
-  const statusCode = error.statusCode || 500;
+  console.error(error);
 
-  res.status(statusCode).json({
+  res.status(error.statusCode || 500).json({
     success: false,
-    message: error.message || "Internal server error",
+    message: error.message || "Internal Server Error",
   });
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
