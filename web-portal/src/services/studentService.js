@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api/students";
+const API_URL = "https://web-portal-l7kv.onrender.com/api/students";
 
 export async function submitStudentRegistration(formData) {
   const response = await fetch(API_URL, {
