@@ -1,0 +1,13 @@
+node_modules
+.env
+*.log
+
+uploads/resumes/*
+uploads/results/*
+uploads/photos/*
+
+!uploads/resumes/.gitkeep
+!uploads/results/.gitkeep
+!uploads/photos/.gitkeep
+
+students.json
