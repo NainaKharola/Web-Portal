@@ -155,7 +155,7 @@ function StudentForm() {
     <main className="portal-shell">
       <section className="portal-card">
         <header className="portal-header">
-          <img src="/drdo-logo.svg" alt="DRDO logo" className="portal-logo" />
+          <img src="/drdo-logo.png" alt="DRDO logo" className="portal-logo" />
           <div>
             <p className="portal-eyebrow">Defence Research and Development Organisation</p>
             <h1>Student Registration Portal</h1>
