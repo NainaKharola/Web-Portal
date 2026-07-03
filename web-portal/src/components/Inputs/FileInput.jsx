@@ -9,8 +9,14 @@ function FileInput({ label, name, onChange, error, required = false, accept }) {
         onChange={onChange}
         required={required}
         accept={accept}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${name}-error` : undefined}
       />
-      {error && <span className="field__error">{error}</span>}
+      {error && (
+        <span className="field__error" id={`${name}-error`}>
+          {error}
+        </span>
+      )}
     </label>
   );
 }

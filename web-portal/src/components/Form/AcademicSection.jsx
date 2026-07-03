@@ -4,7 +4,7 @@ import { years } from "../../data/years";
 import SelectInput from "../Inputs/SelectInput";
 import TextInput from "../Inputs/TextInput";
 
-function AcademicSection({ form, errors, onChange, cgpaWarning }) {
+function AcademicSection({ form, errors, onChange }) {
   return (
     <section className="form-section">
       <h2>Academic Details</h2>
@@ -42,7 +42,7 @@ function AcademicSection({ form, errors, onChange, cgpaWarning }) {
           type="number"
           value={form.cgpa}
           onChange={onChange}
-          error={errors.cgpa || cgpaWarning}
+          error={errors.cgpa}
           required
         />
         <TextInput

@@ -16,6 +16,8 @@ function SelectInput({
         value={value}
         onChange={onChange}
         required={required}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${name}-error` : undefined}
       >
         <option value="">{placeholder}</option>
         {options.map((option) => (
@@ -25,7 +27,11 @@ function SelectInput({
         ))}
       </select>
       <span className="field__label">{label}</span>
-      {error && <span className="field__error">{error}</span>}
+      {error && (
+        <span className="field__error" id={`${name}-error`}>
+          {error}
+        </span>
+      )}
     </label>
   );
 }

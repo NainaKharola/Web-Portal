@@ -24,6 +24,14 @@ function PersonalForm({ form, errors, onChange }) {
           error={errors.dob}
           required
         />
+        <TextInput
+          label="Aadhaar Card Number"
+          name="aadhaarNumber"
+          value={form.aadhaarNumber}
+          onChange={onChange}
+          error={errors.aadhaarNumber}
+          required
+        />
       </div>
     </section>
   );

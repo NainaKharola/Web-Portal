@@ -8,12 +8,14 @@ const uploadFolders = {
   resume: "resumes",
   result: "results",
   photo: "photos",
+  permissionLetter: "permissionLetters",
 };
 
 const allowedTypes = {
   resume: ["application/pdf"],
   result: ["application/pdf", "image/jpeg", "image/jpg"],
   photo: ["image/png", "image/jpeg", "image/jpg"],
+  permissionLetter: ["application/pdf", "image/jpeg", "image/jpg", "image/png"],
 };
 
 Object.values(uploadFolders).forEach((folder) => {
@@ -60,6 +62,7 @@ const upload = multer({
   { name: "resume", maxCount: 1 },
   { name: "result", maxCount: 1 },
   { name: "photo", maxCount: 1 },
+  { name: "permissionLetter", maxCount: 1 },
 ]);
 
 function uploadStudentDocuments(req, res, next) {

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Success from "../../pages/Success";
 import { submitStudentRegistration } from "../../services/studentService";
 import AcademicSection from "./AcademicSection";
@@ -16,6 +16,7 @@ const initialForm = {
   phone: "",
   email: "",
   dob: "",
+  aadhaarNumber: "",
   collegeName: "",
   collegeLocation: "",
   currentAddress: "",
@@ -29,6 +30,10 @@ const initialForm = {
   result: null,
   photo: null,
   collegeId: "",
+  internshipDuration: "",
+  permissionLetterNumber: "",
+  permissionLetterDate: "",
+  permissionLetter: null,
 };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,6 +48,7 @@ function validateStepOne(form) {
     "phone",
     "email",
     "dob",
+    "aadhaarNumber",
     "collegeName",
     "collegeLocation",
     "currentAddress",
@@ -63,12 +69,13 @@ function validateStepOne(form) {
   }
   if (form.email && !emailPattern.test(form.email)) errors.email = "Enter a valid email address.";
   if (form.dob && new Date(form.dob) > new Date()) errors.dob = "Date of birth cannot be in the future.";
+  if (form.aadhaarNumber && !/^\d{12}$/.test(form.aadhaarNumber)) {
+    errors.aadhaarNumber = "Aadhaar Number must contain exactly 12 digits.";
+  }
 
   const cgpa = Number(form.cgpa);
   if (form.cgpa && (Number.isNaN(cgpa) || cgpa < 0 || cgpa > 10)) {
     errors.cgpa = "CGPA must be between 0 and 10.";
-  } else if (form.cgpa && cgpa < 7.5) {
-    errors.cgpa = "Minimum CGPA required is 7.5.";
   }
 
   return errors;
@@ -77,10 +84,21 @@ function validateStepOne(form) {
 function validateStepTwo(form) {
   const errors = {};
   const checks = [
+    [
+      "permissionLetter",
+      ["application/pdf", "image/jpeg", "image/jpg", "image/png"],
+      "College Permission Letter must be PDF, JPG, JPEG, or PNG.",
+    ],
     ["resume", ["application/pdf"], "Resume must be a PDF."],
     ["result", ["application/pdf", "image/jpeg", "image/jpg"], "Result must be PDF, JPG, or JPEG."],
     ["photo", ["image/png", "image/jpeg", "image/jpg"], "Photo must be PNG, JPG, or JPEG."],
   ];
+
+  const requiredFields = ["internshipDuration", "permissionLetterNumber", "permissionLetterDate"];
+
+  requiredFields.forEach((field) => {
+    if (!String(form[field]).trim()) errors[field] = "This field is required.";
+  });
 
   checks.forEach(([field, allowedTypes, message]) => {
     if (!form[field]) {
@@ -101,12 +119,6 @@ function StudentForm() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const cgpaWarning = useMemo(() => {
-    if (!form.cgpa) return "";
-    const cgpa = Number(form.cgpa);
-    return !Number.isNaN(cgpa) && cgpa < 7.5 ? "Minimum CGPA required is 7.5." : "";
-  }, [form.cgpa]);
 
   const handleChange = (event) => {
     const { name, value, type, checked, files } = event.target;
@@ -172,14 +184,14 @@ function StudentForm() {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="student-form">
+        <form onSubmit={handleSubmit} className="student-form" noValidate>
           {step === 1 ? (
             <div className="form-page">
               <PersonalForm form={form} errors={errors} onChange={handleChange} />
-              <AcademicSection form={form} errors={errors} onChange={handleChange} cgpaWarning={cgpaWarning} />
+              <AcademicSection form={form} errors={errors} onChange={handleChange} />
               <AddressSection form={form} errors={errors} onChange={handleChange} />
               <ParentSection form={form} errors={errors} onChange={handleChange} />
-              <button className="primary-button" type="button" onClick={goToDocuments} disabled={Boolean(cgpaWarning)}>
+              <button className="primary-button" type="button" onClick={goToDocuments}>
                 Next
               </button>
             </div>

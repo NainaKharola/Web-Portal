@@ -9,6 +9,7 @@ function TextInput({
   type = "text",
   as = "input",
   disabled = false,
+  max,
 }) {
   const InputTag = as;
 
@@ -23,10 +24,17 @@ function TextInput({
         placeholder={placeholder}
         required={required}
         disabled={disabled}
+        max={max}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${name}-error` : undefined}
         rows={as === "textarea" ? 4 : undefined}
       />
       <span className="field__label">{label}</span>
-      {error && <span className="field__error">{error}</span>}
+      {error && (
+        <span className="field__error" id={`${name}-error`}>
+          {error}
+        </span>
+      )}
     </label>
   );
 }

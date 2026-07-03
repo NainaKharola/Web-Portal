@@ -252,21 +252,6 @@ backend/uploads/photos/
 - Cloud File Storage
 - Dashboard Analytics
 
----
-
-# Screenshots
-
-_Add screenshots of the application here._
-
-Example:
-
-```
-screenshots/
-    home.png
-    form-page1.png
-    form-page2.png
-    success.png
-```
 
 ---
 
