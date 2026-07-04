@@ -5,6 +5,7 @@ const express = require("express");
 const cors = require("cors");
 
 const connectDB = require("./config/db");
+const adminRoutes = require("./routes/adminRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 
 const app = express();
@@ -33,7 +34,7 @@ app.use(
 
       return callback(new Error("Not allowed by CORS"));
     },
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
 );
@@ -55,6 +56,7 @@ app.get("/", (req, res) => {
 
 // Student Routes
 app.use("/api/students", studentRoutes);
+app.use("/api/admin", adminRoutes);
 
 // 404 Route
 app.use((req, res) => {

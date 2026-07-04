@@ -53,6 +53,49 @@ const studentSchema = new mongoose.Schema(
       publicId: String,
     },
 
+    status: {
+      type: String,
+      enum: ["Pending", "Approved", "Rejected"],
+      default: "Pending",
+    },
+    remark: {
+      type: String,
+      default: "",
+    },
+    referenceBy: {
+      type: String,
+      default: "",
+    },
+    recommendedBy: {
+      type: String,
+      default: "",
+    },
+    reviewedBy: {
+      type: String,
+      default: "",
+    },
+    reviewedAt: Date,
+    approvedDate: Date,
+    offerLetterUrl: {
+      type: String,
+      default: "",
+    },
+    offerLetterPublicId: {
+      type: String,
+      default: "",
+    },
+    offerLetterUploadedDate: Date,
+    offerLetterSentDate: Date,
+    offerLetterSentBy: {
+      type: String,
+      default: "",
+    },
+    offerLetterStatus: {
+      type: String,
+      enum: ["Not Sent", "Sent"],
+      default: "Not Sent",
+    },
+
     submittedAt: {
       type: Date,
       default: Date.now,
