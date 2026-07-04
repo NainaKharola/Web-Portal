@@ -25,9 +25,25 @@ const requiredFields = [
   "cgpa",
   "collegeId",
   "internshipDuration",
+  "internshipJoiningDate",
   "permissionLetterNumber",
   "permissionLetterDate",
 ];
+
+const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+function isValidDateValue(value) {
+  if (!datePattern.test(value)) return false;
+
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
+  );
+}
 
 function validateRequest(body, files) {
   const missingFields = requiredFields.filter(
@@ -66,6 +82,14 @@ function validateRequest(body, files) {
 
   if (new Date(body.dob) > new Date()) {
     return "Date of birth cannot be in the future.";
+  }
+
+  if (!isValidDateValue(body.internshipJoiningDate)) {
+    return "Select a valid internship joining date.";
+  }
+
+  if (!isValidDateValue(body.permissionLetterDate)) {
+    return "Select a valid permission letter date.";
   }
 
   const cgpa = Number(body.cgpa);
@@ -122,6 +146,7 @@ async function createStudent(req, res) {
       collegeId: req.body.collegeId,
 
       internshipDuration: req.body.internshipDuration,
+      internshipJoiningDate: req.body.internshipJoiningDate,
 
       permissionLetterNumber: req.body.permissionLetterNumber,
       permissionLetterDate: req.body.permissionLetterDate,

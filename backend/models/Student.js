@@ -28,6 +28,7 @@ const studentSchema = new mongoose.Schema(
     collegeId: String,
 
     internshipDuration: String,
+    internshipJoiningDate: String,
 
     permissionLetterNumber: String,
     permissionLetterDate: String,
