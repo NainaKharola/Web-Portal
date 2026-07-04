@@ -124,12 +124,13 @@ async function createStudent(req, res) {
       submittedAt: new Date(),
     });
 
-    await student.save();
+    // Save student only once
+    const savedStudent = await student.save();
 
     return res.status(201).json({
       success: true,
       message: "Student Registered Successfully",
-      student,
+      student: savedStudent,
     });
   } catch (error) {
     console.error(error);
