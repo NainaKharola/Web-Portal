@@ -1,13 +1,16 @@
-node_modules
+node_modules/
 .env
 *.log
+dist/
 
 uploads/resumes/*
 uploads/results/*
 uploads/photos/*
+uploads/permissionLetters/*
 
 !uploads/resumes/.gitkeep
 !uploads/results/.gitkeep
 !uploads/photos/.gitkeep
+!uploads/permissionLetters/.gitkeep
 
-students.json
+backend/data/students.json

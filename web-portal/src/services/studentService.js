@@ -1,4 +1,4 @@
-const API_URL = "https://web-portal-l7kv.onrender.com/api/students";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/students";
 
 export async function submitStudentRegistration(formData) {
   const response = await fetch(API_URL, {

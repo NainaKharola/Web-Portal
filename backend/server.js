@@ -6,6 +6,9 @@ const studentRoutes = require("./routes/studentRoutes");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+require("dotenv").config();
+const connectDB = require("./config/db"); 
+
 // Allowed Frontend URLs
 const allowedOrigins = [
   "http://localhost:5173",
@@ -67,6 +70,8 @@ app.use((error, req, res, next) => {
     message: error.message || "Internal Server Error",
   });
 });
+
+connectDB(); 
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
