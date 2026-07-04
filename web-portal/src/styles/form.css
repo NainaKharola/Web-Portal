@@ -182,6 +182,67 @@ input[type="date"].field__control + .field__label {
   font-weight: 700;
 }
 
+.searchable-field {
+  z-index: 3;
+  gap: 7px;
+}
+
+.searchable-field__label {
+  color: var(--heading);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.searchable-field__control {
+  padding: 0 15px;
+}
+
+.searchable-field__control::placeholder {
+  color: var(--muted);
+  opacity: 0.86;
+}
+
+.searchable-field__menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 12;
+  max-height: 230px;
+  overflow-y: auto;
+  border: 1px solid rgba(10, 78, 163, 0.22);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 36px rgba(25, 54, 92, 0.16);
+}
+
+.searchable-field__option,
+.searchable-field__empty {
+  display: block;
+  width: 100%;
+  min-height: 42px;
+  padding: 11px 14px;
+  border: 0;
+  background: transparent;
+  color: var(--heading);
+  font: inherit;
+  text-align: left;
+}
+
+.searchable-field__option {
+  cursor: pointer;
+}
+
+.searchable-field__option:hover,
+.searchable-field__option[aria-selected="true"] {
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+}
+
+.searchable-field__empty {
+  color: var(--muted);
+}
+
 .field__error {
   color: var(--danger);
   font-size: 0.82rem;

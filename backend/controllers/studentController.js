@@ -1,5 +1,8 @@
 const Student = require("../models/Student");
 const cloudinary = require("../config/cloudinary");
+const {
+  indianStatesAndUnionTerritories,
+} = require("../data/indianStates");
 
 
 const requiredFields = [
@@ -12,6 +15,7 @@ const requiredFields = [
   "dob",
   "aadhaarNumber",
   "collegeName",
+  "collegeState",
   "collegeLocation",
   "currentAddress",
   "permanentAddress",
@@ -70,6 +74,10 @@ function validateRequest(body, files) {
     return "CGPA must be between 0 and 10.";
   }
 
+  if (!indianStatesAndUnionTerritories.includes(body.collegeState)) {
+    return "Select a valid college state or union territory.";
+  }
+
   return "";
 }
 
@@ -99,6 +107,7 @@ async function createStudent(req, res) {
       aadhaarNumber: req.body.aadhaarNumber,
 
       collegeName: req.body.collegeName,
+      collegeState: req.body.collegeState,
       location: req.body.collegeLocation,
 
       currentAddress: req.body.currentAddress,

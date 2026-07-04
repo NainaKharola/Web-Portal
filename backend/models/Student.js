@@ -13,6 +13,7 @@ const studentSchema = new mongoose.Schema(
     aadhaarNumber: String,
 
     collegeName: String,
+    collegeState: String,
     location: String,
 
     currentAddress: String,

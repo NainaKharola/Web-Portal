@@ -1,6 +1,8 @@
 import { branches } from "../../data/branches";
 import { courses } from "../../data/courses";
+import { indianStatesAndUnionTerritories } from "../../data/states";
 import { years } from "../../data/years";
+import SearchableDropdown from "../Inputs/SearchableDropdown";
 import SelectInput from "../Inputs/SelectInput";
 import TextInput from "../Inputs/TextInput";
 
@@ -51,6 +53,15 @@ function AcademicSection({ form, errors, onChange }) {
           value={form.collegeName}
           onChange={onChange}
           error={errors.collegeName}
+          required
+        />
+        <SearchableDropdown
+          label="College State"
+          name="collegeState"
+          value={form.collegeState}
+          onChange={onChange}
+          options={indianStatesAndUnionTerritories}
+          error={errors.collegeState}
           required
         />
         <TextInput

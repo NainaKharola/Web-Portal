@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Success from "../../pages/Success";
+import { indianStatesAndUnionTerritories } from "../../data/states";
 import { submitStudentRegistration } from "../../services/studentService";
 import AcademicSection from "./AcademicSection";
 import AddressSection from "./AddressSection";
@@ -18,6 +19,7 @@ const initialForm = {
   dob: "",
   aadhaarNumber: "",
   collegeName: "",
+  collegeState: "",
   collegeLocation: "",
   currentAddress: "",
   sameAddress: false,
@@ -50,6 +52,7 @@ function validateStepOne(form) {
     "dob",
     "aadhaarNumber",
     "collegeName",
+    "collegeState",
     "collegeLocation",
     "currentAddress",
     "permanentAddress",
@@ -71,6 +74,12 @@ function validateStepOne(form) {
   if (form.dob && new Date(form.dob) > new Date()) errors.dob = "Date of birth cannot be in the future.";
   if (form.aadhaarNumber && !/^\d{12}$/.test(form.aadhaarNumber)) {
     errors.aadhaarNumber = "Aadhaar Number must contain exactly 12 digits.";
+  }
+  if (
+    form.collegeState &&
+    !indianStatesAndUnionTerritories.includes(form.collegeState)
+  ) {
+    errors.collegeState = "Select a valid college state or union territory.";
   }
 
   const cgpa = Number(form.cgpa);
