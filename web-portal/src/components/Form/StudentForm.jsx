@@ -33,12 +33,27 @@ const initialForm = {
   photo: null,
   collegeId: "",
   internshipDuration: "",
+  internshipJoiningDate: "",
   permissionLetterNumber: "",
   permissionLetterDate: "",
   permissionLetter: null,
 };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+function isValidDateValue(value) {
+  if (!datePattern.test(value)) return false;
+
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
+  );
+}
 
 function validateStepOne(form) {
   const errors = {};
@@ -103,7 +118,12 @@ function validateStepTwo(form) {
     ["photo", ["image/png", "image/jpeg", "image/jpg"], "Photo must be PNG, JPG, or JPEG."],
   ];
 
-  const requiredFields = ["internshipDuration", "permissionLetterNumber", "permissionLetterDate"];
+  const requiredFields = [
+    "internshipDuration",
+    "internshipJoiningDate",
+    "permissionLetterNumber",
+    "permissionLetterDate",
+  ];
 
   requiredFields.forEach((field) => {
     if (!String(form[field]).trim()) errors[field] = "This field is required.";
@@ -118,6 +138,12 @@ function validateStepTwo(form) {
   });
 
   if (!form.collegeId.trim()) errors.collegeId = "College identity card number is required.";
+  if (form.internshipJoiningDate && !isValidDateValue(form.internshipJoiningDate)) {
+    errors.internshipJoiningDate = "Select a valid internship joining date.";
+  }
+  if (form.permissionLetterDate && !isValidDateValue(form.permissionLetterDate)) {
+    errors.permissionLetterDate = "Select a valid permission letter date.";
+  }
 
   return errors;
 }

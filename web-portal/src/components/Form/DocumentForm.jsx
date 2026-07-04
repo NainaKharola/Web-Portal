@@ -21,6 +21,15 @@ function DocumentForm({ form, errors, onChange }) {
             required
           />
           <TextInput
+            label="Internship Joining Date"
+            name="internshipJoiningDate"
+            type="date"
+            value={form.internshipJoiningDate}
+            onChange={onChange}
+            error={errors.internshipJoiningDate}
+            required
+          />
+          <TextInput
             label="College Permission Letter Number"
             name="permissionLetterNumber"
             value={form.permissionLetterNumber}
