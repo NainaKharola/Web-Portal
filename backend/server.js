@@ -1,13 +1,14 @@
+require("dotenv").config();
+
 const path = require("path");
-const cors = require("cors");
 const express = require("express");
+const cors = require("cors");
+
+const connectDB = require("./config/db");
 const studentRoutes = require("./routes/studentRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-require("dotenv").config();
-const connectDB = require("./config/db"); 
 
 // Allowed Frontend URLs
 const allowedOrigins = [
@@ -15,6 +16,7 @@ const allowedOrigins = [
   "http://localhost:5174",
   "http://localhost:5175",
   "http://localhost:5176",
+  "http://localhost:5177",
   "https://web-portal-hazel-six.vercel.app",
 ];
 
@@ -22,7 +24,7 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests without an origin (Postman, mobile apps, curl)
+      // Allow Postman, curl, etc.
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
@@ -36,10 +38,11 @@ app.use(
   })
 );
 
+// Body Parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve uploaded files
+// Serve Uploaded Files (only used if files are stored locally)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Health Check Route
@@ -62,17 +65,19 @@ app.use((req, res) => {
 });
 
 // Global Error Handler
-app.use((error, req, res, next) => {
-  console.error(error);
+app.use((err, req, res, next) => {
+  console.error(err);
 
-  res.status(error.statusCode || 500).json({
+  res.status(err.statusCode || 500).json({
     success: false,
-    message: error.message || "Internal Server Error",
+    message: err.message || "Internal Server Error",
   });
 });
 
-connectDB(); 
+// Connect MongoDB
+connectDB();
 
+// Start Server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

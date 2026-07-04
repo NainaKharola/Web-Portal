@@ -31,10 +31,25 @@ const studentSchema = new mongoose.Schema(
     permissionLetterNumber: String,
     permissionLetterDate: String,
 
-    resume: String,
-    result: String,
-    photo: String,
-    permissionLetter: String,
+    resume: {
+      url: String,
+      publicId: String,
+    },
+
+    result: {
+      url: String,
+      publicId: String,
+    },
+
+    photo: {
+      url: String,
+      publicId: String,
+    },
+
+    permissionLetter: {
+      url: String,
+      publicId: String,
+    },
 
     submittedAt: {
       type: Date,

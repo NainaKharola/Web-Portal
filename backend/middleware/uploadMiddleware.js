@@ -1,6 +1,6 @@
-const fs = require("fs");
-const path = require("path");
 const multer = require("multer");
+const streamifier = require("streamifier");
+const cloudinary = require("../config/cloudinary");
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
@@ -15,28 +15,16 @@ const allowedTypes = {
   resume: ["application/pdf"],
   result: ["application/pdf", "image/jpeg", "image/jpg"],
   photo: ["image/png", "image/jpeg", "image/jpg"],
-  permissionLetter: ["application/pdf", "image/jpeg", "image/jpg", "image/png"],
+  permissionLetter: [
+    "application/pdf",
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+  ],
 };
 
-Object.values(uploadFolders).forEach((folder) => {
-  fs.mkdirSync(path.join(__dirname, "..", "uploads", folder), { recursive: true });
-});
-
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, path.join(__dirname, "..", "uploads", uploadFolders[file.fieldname]));
-  },
-  filename(req, file, cb) {
-    const extension = path.extname(file.originalname).toLowerCase();
-    const safeBaseName = path
-      .basename(file.originalname, extension)
-      .replace(/[^a-z0-9]/gi, "-")
-      .toLowerCase();
-    const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e9)}-${safeBaseName}${extension}`;
-
-    cb(null, uniqueName);
-  },
-});
+// Store files in memory instead of local uploads folder
+const storage = multer.memoryStorage();
 
 function fileFilter(req, file, cb) {
   const allowed = allowedTypes[file.fieldname];
@@ -65,16 +53,80 @@ const upload = multer({
   { name: "permissionLetter", maxCount: 1 },
 ]);
 
-function uploadStudentDocuments(req, res, next) {
-  upload(req, res, (error) => {
-    if (!error) return next();
+async function uploadToCloudinary(file, folder) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: `web-portal/${folder}`,
+        resource_type: "auto",
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      }
+    );
 
-    if (error instanceof multer.MulterError) {
-      const message = error.code === "LIMIT_FILE_SIZE" ? "File size must not exceed 10MB." : error.message;
-      return res.status(400).json({ success: false, message });
+    streamifier.createReadStream(file.buffer).pipe(stream);
+  });
+}
+
+function uploadStudentDocuments(req, res, next) {
+  upload(req, res, async (error) => {
+    if (error) {
+      if (error instanceof multer.MulterError) {
+        const message =
+          error.code === "LIMIT_FILE_SIZE"
+            ? "File size must not exceed 10MB."
+            : error.message;
+
+        return res.status(400).json({
+          success: false,
+          message,
+        });
+      }
+
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
     }
 
-    return res.status(400).json({ success: false, message: error.message });
+    try {
+      const uploadedFiles = {};
+
+      if (req.files) {
+        for (const fieldName of Object.keys(req.files)) {
+          const file = req.files[fieldName][0];
+
+          const result = await uploadToCloudinary(
+            file,
+            uploadFolders[fieldName]
+          );
+
+          uploadedFiles[fieldName] = {
+            url: result.secure_url,
+            public_id: result.public_id,
+            originalName: file.originalname,
+          };
+          console.log("Uploaded:", result.secure_url);
+        }
+      }
+
+      req.uploadedFiles = uploadedFiles;
+
+      next();
+    } 
+    catch (err) {
+    console.error("========== CLOUDINARY ERROR ==========");
+    console.error(err);
+    console.error("=====================================");
+
+    return res.status(500).json({
+      success: false,
+      message: "Cloudinary upload failed.",
+      error: err.message,
+    });
+  }
   });
 }
 

@@ -1,5 +1,6 @@
 const Student = require("../models/Student");
-const { toPublicUploadPath } = require("../utils/filePath");
+const cloudinary = require("../config/cloudinary");
+
 
 const requiredFields = [
   "name",
@@ -83,6 +84,8 @@ async function createStudent(req, res) {
       });
     }
 
+    console.log(req.uploadedFiles);
+
     const student = new Student({
       name: req.body.name,
       course: req.body.course,
@@ -114,12 +117,25 @@ async function createStudent(req, res) {
       permissionLetterNumber: req.body.permissionLetterNumber,
       permissionLetterDate: req.body.permissionLetterDate,
 
-      resume: toPublicUploadPath(req.files.resume[0].path),
-      result: toPublicUploadPath(req.files.result[0].path),
-      photo: toPublicUploadPath(req.files.photo[0].path),
-      permissionLetter: toPublicUploadPath(
-        req.files.permissionLetter[0].path
-      ),
+      resume: {
+        url: req.uploadedFiles.resume.url,
+        publicId: req.uploadedFiles.resume.public_id,
+      },
+
+      result: {
+        url: req.uploadedFiles.result.url,
+        publicId: req.uploadedFiles.result.public_id,
+      },
+
+      photo: {
+        url: req.uploadedFiles.photo.url,
+        publicId: req.uploadedFiles.photo.public_id,
+      },
+
+      permissionLetter: {
+        url: req.uploadedFiles.permissionLetter.url,
+        publicId: req.uploadedFiles.permissionLetter.public_id,
+      },
 
       submittedAt: new Date(),
     });
@@ -143,6 +159,64 @@ async function createStudent(req, res) {
   }
 }
 
+async function deleteStudent(req, res) {
+  try {
+    // Find student
+    const student = await Student.findById(req.params.id);
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    // Delete Resume from Cloudinary
+    if (student.resume?.publicId) {
+      await cloudinary.uploader.destroy(student.resume.publicId, {
+        resource_type: "raw",
+      });
+    }
+
+    // Delete Result from Cloudinary
+    if (student.result?.publicId) {
+      await cloudinary.uploader.destroy(student.result.publicId, {
+        resource_type: "auto",
+      });
+    }
+
+    // Delete Photo from Cloudinary
+    if (student.photo?.publicId) {
+      await cloudinary.uploader.destroy(student.photo.publicId);
+    }
+
+    // Delete Permission Letter from Cloudinary
+    if (student.permissionLetter?.publicId) {
+      await cloudinary.uploader.destroy(student.permissionLetter.publicId, {
+        resource_type: "auto",
+      });
+    }
+
+    // Delete Student from MongoDB
+    await Student.findByIdAndDelete(req.params.id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Student and all uploaded files deleted successfully.",
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to delete student.",
+      error: error.message,
+    });
+  }
+}
+
 module.exports = {
   createStudent,
+  deleteStudent,
 };
