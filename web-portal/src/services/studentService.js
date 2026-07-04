@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/students";
+const API_URL = "https://web-portal-l7kv.onrender.com/api/students";
 
 export async function submitStudentRegistration(formData) {
   const response = await fetch(API_URL, {
@@ -8,8 +8,10 @@ export async function submitStudentRegistration(formData) {
 
   if (!response.ok) {
     const errorBody = await response.json().catch(() => ({}));
-    throw new Error(errorBody.message || "Unable to submit registration. Please try again.");
+    throw new Error(
+      errorBody.message || "Unable to submit registration."
+    );
   }
 
-  return response.json().catch(() => ({}));
+  return response.json();
 }
