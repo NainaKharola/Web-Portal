@@ -1,4 +1,4 @@
-const API_URL = "https://web-portal-l7kv.onrender.com/api/admin";
+const API_URL = `${import.meta.env.VITE_API_URL}/admin`;
 const TOKEN_KEY = "webPortalAdminToken";
 
 export function getAdminToken() {
