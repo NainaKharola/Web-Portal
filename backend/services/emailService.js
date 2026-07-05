@@ -1,50 +1,47 @@
 const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
 
 function hasEmailConfig() {
   return Boolean(
     process.env.EMAIL_USER &&
-    process.env.EMAIL_PASS &&
-    process.env.MAIL_FROM
+      process.env.MAIL_FROM &&
+      process.env.GOOGLE_CLIENT_ID &&
+      process.env.GOOGLE_CLIENT_SECRET &&
+      process.env.GOOGLE_REFRESH_TOKEN
   );
 }
 
-
-function createTransporter() {
+async function createTransporter() {
   if (!hasEmailConfig()) {
     return null;
   }
 
-  console.log("========== EMAIL CONFIG ==========");
-  console.log("EMAIL_USER:", process.env.EMAIL_USER);
-  console.log("MAIL_FROM:", process.env.MAIL_FROM);
-  console.log("EMAIL_PASS Exists:", !!process.env.EMAIL_PASS);
-  console.log("==================================");
-  const dns = require("dns");
+  const oAuth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET
+  );
+
+  oAuth2Client.setCredentials({
+    refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+  });
+
+  const accessToken = await oAuth2Client.getAccessToken();
+
   return nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    requireTLS: true,
+    service: "gmail",
     auth: {
-    user: process.env.EMAIL_USER.trim(),
-    pass: process.env.EMAIL_PASS.trim(),
-    },
-    lookup(hostname, options, callback) {
-    return dns.lookup(hostname, { family: 4 }, callback);
-  },
-  
-    connectionTimeout: 60000,
-    greetingTimeout: 60000,
-    socketTimeout: 60000,
-    tls: {
-      rejectUnauthorized: false,
-      minVersion: "TLSv1.2",
+      type: "OAuth2",
+      user: process.env.EMAIL_USER,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+      accessToken: accessToken.token,
     },
   });
 }
 
 async function sendOfferLetterEmail(student) {
-  const transporter = createTransporter();
+  const transporter = await createTransporter();
 
   if (!transporter) {
     return {
@@ -64,19 +61,20 @@ async function sendOfferLetterEmail(student) {
       from: process.env.MAIL_FROM,
       to: student.email,
       subject: "Internship Application Approved - Offer Letter",
-      text: [
-        `Dear ${student.name},`,
-        "",
-        "Congratulations!",
-        "Your internship application has been approved.",
-        "",
-        `Offer Letter Issue Date: ${issueDate}`,
-        "",
-        "Please find your Offer Letter attached.",
-        "",
-        "Regards,",
-        "Internship Management Team",
-      ].join("\n"),
+      text: `
+Dear ${student.name},
+
+Congratulations!
+
+Your internship application has been approved.
+
+Offer Letter Issue Date: ${issueDate}
+
+Please find your Offer Letter attached.
+
+Regards,
+Internship Management Team
+`,
       attachments: [
         {
           filename: "Offer-Letter.pdf",
@@ -85,11 +83,12 @@ async function sendOfferLetterEmail(student) {
       ],
     });
 
-    console.log("✅ Offer Letter Email Sent Successfully");
-    console.log("Message ID:", info.messageId);
+    console.log("✅ Offer Letter Email Sent");
+    console.log(info.messageId);
 
     return {
       skipped: false,
+      messageId: info.messageId,
     };
   } catch (err) {
     console.error("❌ Offer Letter Email Error");
@@ -100,7 +99,7 @@ async function sendOfferLetterEmail(student) {
 }
 
 async function sendRejectionEmail(student) {
-  const transporter = createTransporter();
+  const transporter = await createTransporter();
 
   if (!transporter) {
     return {
@@ -116,26 +115,25 @@ async function sendRejectionEmail(student) {
       from: process.env.MAIL_FROM,
       to: student.email,
       subject: "Internship Application Status",
-      text: [
-        `Dear ${student.name},`,
-        "",
-        "We regret to inform you that your internship application has been rejected.",
-        "",
-        `Remark: ${
-          student.remark ||
-          "Please contact the administration for more information."
-        }`,
-        "",
-        "Regards,",
-        "Internship Management Team",
-      ].join("\n"),
+      text: `
+Dear ${student.name},
+
+We regret to inform you that your internship application has been rejected.
+
+Remark:
+${student.remark || "Please contact the administration for more information."}
+
+Regards,
+Internship Management Team
+`,
     });
 
-    console.log("✅ Rejection Email Sent Successfully");
-    console.log("Message ID:", info.messageId);
+    console.log("✅ Rejection Email Sent");
+    console.log(info.messageId);
 
     return {
       skipped: false,
+      messageId: info.messageId,
     };
   } catch (err) {
     console.error("❌ Rejection Email Error");
