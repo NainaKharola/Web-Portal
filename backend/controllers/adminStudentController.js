@@ -250,12 +250,7 @@ async function uploadOfferLetter(req, res) {
     student.offerLetterUploadedDate = new Date();
     student.offerLetterSentBy = req.admin.email;
 
-    //const emailResult = await sendOfferLetterEmail(student);
-
-    const emailResult = {
-      skipped: true,
-      reason: "Testing",
-    };
+    const emailResult = await sendOfferLetterEmail(student);
 
     if (emailResult?.skipped) {
       student.offerLetterStatus = "Not Sent";
