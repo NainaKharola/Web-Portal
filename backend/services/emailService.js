@@ -29,12 +29,16 @@ function createTransporter() {
 async function sendOfferLetterEmail(student) {
   const transporter = createTransporter();
 
+  
+
   if (!transporter) {
     return {
       skipped: true,
       reason: "SMTP is not configured.",
     };
   }
+  await transporter.verify();
+  console.log("SMTP connected successfully");
 
   const issueDate = student.offerLetterUploadedDate
     ? new Date(student.offerLetterUploadedDate).toLocaleDateString("en-IN")
