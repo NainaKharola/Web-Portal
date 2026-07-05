@@ -11,7 +11,9 @@ const studentRoutes = require("./routes/studentRoutes");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// ========================
 // Allowed Frontend URLs
+// ========================
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
@@ -21,11 +23,13 @@ const allowedOrigins = [
   "https://web-portal-hazel-six.vercel.app",
 ];
 
+// ========================
 // CORS Configuration
+// ========================
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow Postman, curl, etc.
+      // Allow Postman, Thunder Client, etc.
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
@@ -34,19 +38,25 @@ app.use(
 
       return callback(new Error("Not allowed by CORS"));
     },
-    methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
+    methods: ["GET", "POST", "PATCH", "DELETE"],
   })
 );
 
-// Body Parsers
+// ========================
+// Body Parser
+// ========================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve Uploaded Files (only used if files are stored locally)
+// ========================
+// Static Upload Folder
+// ========================
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Health Check Route
+// ========================
+// Health Check
+// ========================
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
@@ -54,11 +64,15 @@ app.get("/", (req, res) => {
   });
 });
 
-// Student Routes
+// ========================
+// Routes
+// ========================
 app.use("/api/students", studentRoutes);
 app.use("/api/admin", adminRoutes);
 
-// 404 Route
+// ========================
+// 404 Handler
+// ========================
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -66,7 +80,9 @@ app.use((req, res) => {
   });
 });
 
+// ========================
 // Global Error Handler
+// ========================
 app.use((err, req, res, next) => {
   console.error(err);
 
@@ -76,10 +92,14 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Connect MongoDB
+// ========================
+// Connect Database
+// ========================
 connectDB();
 
+// ========================
 // Start Server
+// ========================
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });

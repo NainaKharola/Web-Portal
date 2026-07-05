@@ -12,6 +12,7 @@ const reviewFields = [
 ];
 
 const allowedStatuses = ["Pending", "Approved", "Rejected"];
+
 const recommendedByOptions = [
   "Servo System",
   "ABS",
@@ -53,8 +54,12 @@ function buildStudentFilter(query) {
   if (query.collegeName) filter.collegeName = query.collegeName;
   if (query.branch) filter.branch = query.branch;
   if (query.year) filter.year = query.year;
+
   if (query.status === "Pending") {
-    filter.$or = [{ status: "Pending" }, { status: { $exists: false } }];
+    filter.$or = [
+      { status: "Pending" },
+      { status: { $exists: false } },
+    ];
   } else if (query.status) {
     filter.status = query.status;
   }
@@ -63,7 +68,11 @@ function buildStudentFilter(query) {
     const start = new Date(query.registrationDate);
     const end = new Date(query.registrationDate);
     end.setDate(end.getDate() + 1);
-    filter.submittedAt = { $gte: start, $lt: end };
+
+    filter.submittedAt = {
+      $gte: start,
+      $lt: end,
+    };
   }
 
   return filter;
@@ -80,24 +89,31 @@ function buildSort(sortBy, sortOrder) {
 
   if (!map[sortBy]) return { submittedAt: -1 };
 
-  return { [map[sortBy]]: sortOrder === "asc" ? 1 : -1 };
+  return {
+    [map[sortBy]]: sortOrder === "asc" ? 1 : -1,
+  };
 }
 
 async function getStudents(req, res) {
   try {
     const filter = buildStudentFilter(req.query);
     const sort = buildSort(req.query.sortBy, req.query.sortOrder);
+
     const students = await Student.find(filter).sort(sort);
 
     const allStudents = await Student.find({}, "status offerLetterStatus");
+
     const summary = allStudents.reduce(
       (acc, student) => {
-        acc.totalStudents += 1;
+        acc.totalStudents++;
+
         const status = student.status || "Pending";
-        if (status === "Pending") acc.pendingApplications += 1;
-        if (status === "Approved") acc.approvedStudents += 1;
-        if (status === "Rejected") acc.rejectedStudents += 1;
-        if (student.offerLetterStatus === "Sent") acc.offerLettersSent += 1;
+
+        if (status === "Pending") acc.pendingApplications++;
+        if (status === "Approved") acc.approvedStudents++;
+        if (status === "Rejected") acc.rejectedStudents++;
+        if (student.offerLetterStatus === "Sent") acc.offerLettersSent++;
+
         return acc;
       },
       {
@@ -176,19 +192,22 @@ async function updateStudentReview(req, res) {
     }
 
     const wasRejected = student.status === "Rejected";
+
     reviewFields.forEach((field) => {
       student[field] = req.body[field] || "";
     });
 
     student.reviewedBy = req.admin.email;
     student.reviewedAt = new Date();
-    if (req.body.status === "Approved" && !student.approvedDate) {
+
+    if (student.status === "Approved" && !student.approvedDate) {
       student.approvedDate = new Date();
     }
 
     await student.save();
 
     let emailResult = null;
+
     if (student.status === "Rejected" && !wasRejected) {
       emailResult = await sendRejectionEmail(student);
     }
@@ -234,12 +253,13 @@ async function uploadOfferLetter(req, res) {
     const emailResult = await sendOfferLetterEmail(student);
 
     if (emailResult?.skipped) {
-      student.offerLetterSentDate = undefined;
       student.offerLetterStatus = "Not Sent";
+      student.offerLetterSentDate = undefined;
     } else {
-      student.offerLetterSentDate = new Date();
       student.offerLetterStatus = "Sent";
+      student.offerLetterSentDate = new Date();
     }
+
     await student.save();
 
     return res.status(200).json({
@@ -251,6 +271,8 @@ async function uploadOfferLetter(req, res) {
         : "Offer Letter uploaded and sent successfully.",
     });
   } catch (error) {
+    console.error(error);
+
     return res.status(500).json({
       success: false,
       message: "Unable to upload and send Offer Letter.",

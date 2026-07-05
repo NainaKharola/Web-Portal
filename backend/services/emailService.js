@@ -10,12 +10,15 @@ function hasEmailConfig() {
 }
 
 function createTransporter() {
-  if (!hasEmailConfig()) return null;
+  if (!hasEmailConfig()) {
+    return null;
+  }
 
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT),
-    secure: String(process.env.SMTP_SECURE || "").toLowerCase() === "true",
+    secure:
+      String(process.env.SMTP_SECURE || "false").toLowerCase() === "true",
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
@@ -27,7 +30,10 @@ async function sendOfferLetterEmail(student) {
   const transporter = createTransporter();
 
   if (!transporter) {
-    return { skipped: true, reason: "SMTP is not configured." };
+    return {
+      skipped: true,
+      reason: "SMTP is not configured.",
+    };
   }
 
   const issueDate = student.offerLetterUploadedDate
@@ -41,10 +47,12 @@ async function sendOfferLetterEmail(student) {
     text: [
       `Dear ${student.name},`,
       "",
-      "Congratulations. Your internship application has been approved.",
+      "Congratulations!",
+      "Your internship application has been approved.",
+      "",
       `Offer Letter Issue Date: ${issueDate}`,
       "",
-      "Please review the attached offer letter and follow the joining instructions provided by the administration.",
+      "Please find your Offer Letter attached with this email.",
       "",
       "Regards,",
       "Internship Management Team",
@@ -57,14 +65,19 @@ async function sendOfferLetterEmail(student) {
     ],
   });
 
-  return { skipped: false };
+  return {
+    skipped: false,
+  };
 }
 
 async function sendRejectionEmail(student) {
   const transporter = createTransporter();
 
   if (!transporter) {
-    return { skipped: true, reason: "SMTP is not configured." };
+    return {
+      skipped: true,
+      reason: "SMTP is not configured.",
+    };
   }
 
   await transporter.sendMail({
@@ -74,15 +87,20 @@ async function sendRejectionEmail(student) {
     text: [
       `Dear ${student.name},`,
       "",
-      "Your internship application has been rejected.",
-      `Reason: ${student.remark || "Please contact the administration for more information."}`,
+      "We regret to inform you that your internship application has been rejected.",
+      "",
+      `Remark: ${
+        student.remark || "Please contact the administration for more information."
+      }`,
       "",
       "Regards,",
       "Internship Management Team",
     ].join("\n"),
   });
 
-  return { skipped: false };
+  return {
+    skipped: false,
+  };
 }
 
 module.exports = {
