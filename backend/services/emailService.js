@@ -26,9 +26,10 @@ function createTransporter() {
     secure: false,
     requireTLS: true,
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+    user: process.env.EMAIL_USER.trim(),
+    pass: process.env.EMAIL_PASS.trim(),
     },
+    family:4,
     connectionTimeout: 60000,
     greetingTimeout: 60000,
     socketTimeout: 60000,
