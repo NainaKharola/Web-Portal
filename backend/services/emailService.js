@@ -19,7 +19,7 @@ function createTransporter() {
   console.log("MAIL_FROM:", process.env.MAIL_FROM);
   console.log("EMAIL_PASS Exists:", !!process.env.EMAIL_PASS);
   console.log("==================================");
-
+  const dns = require("dns");
   return nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -29,7 +29,10 @@ function createTransporter() {
     user: process.env.EMAIL_USER.trim(),
     pass: process.env.EMAIL_PASS.trim(),
     },
-    family:4,
+    lookup(hostname, options, callback) {
+    return dns.lookup(hostname, { family: 4 }, callback);
+  },
+  
     connectionTimeout: 60000,
     greetingTimeout: 60000,
     socketTimeout: 60000,
