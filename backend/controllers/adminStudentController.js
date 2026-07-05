@@ -267,7 +267,7 @@ async function uploadOfferLetter(req, res) {
       student,
       email: emailResult,
       message: emailResult?.skipped
-        ? "Offer Letter uploaded. Email was skipped because SMTP is not configured."
+        ? "Offer Letter uploaded. Email was skipped because email is not configured."
         : "Offer Letter uploaded and sent successfully.",
     });
   } catch (error) {

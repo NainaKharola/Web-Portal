@@ -2,10 +2,9 @@ const nodemailer = require("nodemailer");
 
 function hasEmailConfig() {
   return Boolean(
-    process.env.SMTP_HOST &&
-      process.env.SMTP_PORT &&
-      process.env.SMTP_USER &&
-      process.env.SMTP_PASS
+    process.env.EMAIL_USER &&
+    process.env.EMAIL_PASS &&
+    process.env.MAIL_FROM
   );
 }
 
@@ -15,13 +14,10 @@ function createTransporter() {
   }
 
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure:
-      String(process.env.SMTP_SECURE || "false").toLowerCase() === "true",
+    service: "gmail",
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 }
@@ -29,30 +25,18 @@ function createTransporter() {
 async function sendOfferLetterEmail(student) {
   const transporter = createTransporter();
 
-  console.log("========== SMTP CONFIG ==========");
-  console.log({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    secure: process.env.SMTP_SECURE,
-    user: process.env.SMTP_USER,
-    from: process.env.MAIL_FROM,
-  });
-  console.log("=================================");
-
   if (!transporter) {
-    console.log("SMTP NOT CONFIGURED");
     return {
       skipped: true,
-      reason: "SMTP is not configured.",
+      reason: "Email is not configured.",
     };
   }
 
   try {
-    console.log("Verifying SMTP connection...");
     await transporter.verify();
-    console.log("SMTP connected successfully");
+    console.log("✅ Gmail SMTP Connected Successfully");
   } catch (err) {
-    console.error("SMTP VERIFY ERROR:");
+    console.error("❌ Gmail Verify Error");
     console.error(err);
     throw err;
   }
@@ -63,7 +47,7 @@ async function sendOfferLetterEmail(student) {
 
   try {
     const info = await transporter.sendMail({
-      from: process.env.MAIL_FROM || process.env.SMTP_USER,
+      from: process.env.MAIL_FROM,
       to: student.email,
       subject: "Internship Application Approved - Offer Letter",
       text: [
@@ -74,7 +58,7 @@ async function sendOfferLetterEmail(student) {
         "",
         `Offer Letter Issue Date: ${issueDate}`,
         "",
-        "Please find your Offer Letter attached with this email.",
+        "Please find your Offer Letter attached.",
         "",
         "Regards,",
         "Internship Management Team",
@@ -87,14 +71,14 @@ async function sendOfferLetterEmail(student) {
       ],
     });
 
-    console.log("MAIL SENT SUCCESSFULLY");
+    console.log("✅ Offer Letter Email Sent Successfully");
     console.log(info);
 
     return {
       skipped: false,
     };
   } catch (err) {
-    console.error("SEND MAIL ERROR:");
+    console.error("❌ Offer Letter Email Error");
     console.error(err);
     throw err;
   }
@@ -106,13 +90,22 @@ async function sendRejectionEmail(student) {
   if (!transporter) {
     return {
       skipped: true,
-      reason: "SMTP is not configured.",
+      reason: "Email is not configured.",
     };
   }
 
   try {
+    await transporter.verify();
+    console.log("✅ Gmail SMTP Connected Successfully");
+  } catch (err) {
+    console.error("❌ Gmail Verify Error");
+    console.error(err);
+    throw err;
+  }
+
+  try {
     const info = await transporter.sendMail({
-      from: process.env.MAIL_FROM || process.env.SMTP_USER,
+      from: process.env.MAIL_FROM,
       to: student.email,
       subject: "Internship Application Status",
       text: [
@@ -130,14 +123,14 @@ async function sendRejectionEmail(student) {
       ].join("\n"),
     });
 
-    console.log("REJECTION MAIL SENT");
+    console.log("✅ Rejection Email Sent Successfully");
     console.log(info);
 
     return {
       skipped: false,
     };
   } catch (err) {
-    console.error("REJECTION MAIL ERROR:");
+    console.error("❌ Rejection Email Error");
     console.error(err);
     throw err;
   }
