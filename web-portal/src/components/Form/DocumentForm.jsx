@@ -35,7 +35,6 @@ function DocumentForm({ form, errors, onChange }) {
             value={form.permissionLetterNumber}
             onChange={onChange}
             error={errors.permissionLetterNumber}
-            required
           />
           <TextInput
             label="College Permission Letter Date"
