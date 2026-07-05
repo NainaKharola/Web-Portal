@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api/admin";
+const API_URL = "https://web-portal-l7kv.onrender.com/api/admin";
 const TOKEN_KEY = "webPortalAdminToken";
 
 export function getAdminToken() {
