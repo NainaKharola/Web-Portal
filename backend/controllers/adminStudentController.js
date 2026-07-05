@@ -245,19 +245,31 @@ async function uploadOfferLetter(req, res) {
       });
     }
 
+    // Save Offer Letter details
     student.offerLetterUrl = req.uploadedOfferLetter.url;
     student.offerLetterPublicId = req.uploadedOfferLetter.publicId;
     student.offerLetterUploadedDate = new Date();
     student.offerLetterSentBy = req.admin.email;
 
-    const emailResult = await sendOfferLetterEmail(student);
+    let emailResult = null;
 
-    if (emailResult?.skipped) {
-      student.offerLetterStatus = "Not Sent";
+    try {
+      // Try sending email
+      emailResult = await sendOfferLetterEmail(student);
+
+      if (emailResult?.skipped) {
+        student.offerLetterStatus = "Not Sent";
+        student.offerLetterSentDate = undefined;
+      } else {
+        student.offerLetterStatus = "Sent";
+        student.offerLetterSentDate = new Date();
+      }
+    } catch (emailError) {
+      console.error("Email Error:", emailError);
+
+      // Don't fail the entire request if email sending fails
+      student.offerLetterStatus = "Email Failed";
       student.offerLetterSentDate = undefined;
-    } else {
-      student.offerLetterStatus = "Sent";
-      student.offerLetterSentDate = new Date();
     }
 
     await student.save();
@@ -266,16 +278,17 @@ async function uploadOfferLetter(req, res) {
       success: true,
       student,
       email: emailResult,
-      message: emailResult?.skipped
-        ? "Offer Letter uploaded. Email was skipped because email is not configured."
-        : "Offer Letter uploaded and sent successfully.",
+      message:
+        student.offerLetterStatus === "Sent"
+          ? "Offer Letter uploaded and emailed successfully."
+          : "Offer Letter uploaded successfully, but email could not be sent.",
     });
   } catch (error) {
     console.error(error);
 
     return res.status(500).json({
       success: false,
-      message: "Unable to upload and send Offer Letter.",
+      message: "Unable to upload Offer Letter.",
       error: error.message,
     });
   }
