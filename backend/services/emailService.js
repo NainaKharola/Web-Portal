@@ -13,11 +13,25 @@ function createTransporter() {
     return null;
   }
 
+  console.log("========== EMAIL CONFIG ==========");
+  console.log("EMAIL_USER:", process.env.EMAIL_USER);
+  console.log("MAIL_FROM:", process.env.MAIL_FROM);
+  console.log("EMAIL_PASS Exists:", !!process.env.EMAIL_PASS);
+  console.log("==================================");
+
   return nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
+    },
+    connectionTimeout: 30000,
+    greetingTimeout: 30000,
+    socketTimeout: 30000,
+    tls: {
+      rejectUnauthorized: false,
     },
   });
 }
@@ -28,17 +42,8 @@ async function sendOfferLetterEmail(student) {
   if (!transporter) {
     return {
       skipped: true,
-      reason: "Email is not configured.",
+      reason: "Email configuration missing.",
     };
-  }
-
-  try {
-    await transporter.verify();
-    console.log("✅ Gmail SMTP Connected Successfully");
-  } catch (err) {
-    console.error("❌ Gmail Verify Error");
-    console.error(err);
-    throw err;
   }
 
   const issueDate = student.offerLetterUploadedDate
@@ -46,6 +51,8 @@ async function sendOfferLetterEmail(student) {
     : new Date().toLocaleDateString("en-IN");
 
   try {
+    console.log("📧 Sending Offer Letter Email...");
+
     const info = await transporter.sendMail({
       from: process.env.MAIL_FROM,
       to: student.email,
@@ -72,7 +79,7 @@ async function sendOfferLetterEmail(student) {
     });
 
     console.log("✅ Offer Letter Email Sent Successfully");
-    console.log(info);
+    console.log("Message ID:", info.messageId);
 
     return {
       skipped: false,
@@ -80,7 +87,8 @@ async function sendOfferLetterEmail(student) {
   } catch (err) {
     console.error("❌ Offer Letter Email Error");
     console.error(err);
-    throw err;
+
+    throw new Error(`Email sending failed: ${err.message}`);
   }
 }
 
@@ -90,20 +98,13 @@ async function sendRejectionEmail(student) {
   if (!transporter) {
     return {
       skipped: true,
-      reason: "Email is not configured.",
+      reason: "Email configuration missing.",
     };
   }
 
   try {
-    await transporter.verify();
-    console.log("✅ Gmail SMTP Connected Successfully");
-  } catch (err) {
-    console.error("❌ Gmail Verify Error");
-    console.error(err);
-    throw err;
-  }
+    console.log("📧 Sending Rejection Email...");
 
-  try {
     const info = await transporter.sendMail({
       from: process.env.MAIL_FROM,
       to: student.email,
@@ -124,7 +125,7 @@ async function sendRejectionEmail(student) {
     });
 
     console.log("✅ Rejection Email Sent Successfully");
-    console.log(info);
+    console.log("Message ID:", info.messageId);
 
     return {
       skipped: false,
@@ -132,7 +133,8 @@ async function sendRejectionEmail(student) {
   } catch (err) {
     console.error("❌ Rejection Email Error");
     console.error(err);
-    throw err;
+
+    throw new Error(`Email sending failed: ${err.message}`);
   }
 }
 
