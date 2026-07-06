@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
+const dns = require("dns");
 
 function hasEmailConfig() {
   return Boolean(
@@ -25,10 +26,21 @@ async function createTransporter() {
     refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
   });
 
-  const accessToken = await oAuth2Client.getAccessToken();
+  const accessTokenResponse = await oAuth2Client.getAccessToken();
+  const accessToken =
+    typeof accessTokenResponse === "string"
+      ? accessTokenResponse
+      : accessTokenResponse?.token;
 
-  console.log("Access Token:", accessToken.token);
-  console.log("Refresh Token Exists:", !!process.env.GOOGLE_REFRESH_TOKEN);
+  console.log("========== EMAIL CONFIG ==========");
+  console.log("EMAIL_USER:", process.env.EMAIL_USER);
+  console.log("MAIL_FROM:", process.env.MAIL_FROM);
+  console.log("Access Token Exists:", !!accessToken);
+  console.log(
+    "Refresh Token Exists:",
+    !!process.env.GOOGLE_REFRESH_TOKEN
+  );
+  console.log("==================================");
 
   return nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -38,15 +50,24 @@ async function createTransporter() {
 
     auth: {
       type: "OAuth2",
-      user: process.env.EMAIL_USER,
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-      accessToken: accessToken.token,
+      user: process.env.EMAIL_USER.trim(),
+      clientId: process.env.GOOGLE_CLIENT_ID.trim(),
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET.trim(),
+      refreshToken: process.env.GOOGLE_REFRESH_TOKEN.trim(),
+      accessToken,
     },
+
+    lookup(hostname, options, callback) {
+      return dns.lookup(hostname, { family: 4 }, callback);
+    },
+
+    connectionTimeout: 60000,
+    greetingTimeout: 60000,
+    socketTimeout: 60000,
 
     tls: {
       rejectUnauthorized: false,
+      minVersion: "TLSv1.2",
     },
   });
 }
@@ -72,8 +93,8 @@ async function sendOfferLetterEmail(student) {
       from: process.env.MAIL_FROM,
       to: student.email,
       subject: "Internship Application Approved - Offer Letter",
-      text: `
-Dear ${student.name},
+
+      text: `Dear ${student.name},
 
 Congratulations!
 
@@ -84,8 +105,8 @@ Offer Letter Issue Date: ${issueDate}
 Please find your Offer Letter attached.
 
 Regards,
-Internship Management Team
-`,
+Internship Management Team`,
+
       attachments: [
         {
           filename: "Offer-Letter.pdf",
@@ -95,7 +116,7 @@ Internship Management Team
     });
 
     console.log("✅ Offer Letter Email Sent");
-    console.log(info.messageId);
+    console.log("Message ID:", info.messageId);
 
     return {
       skipped: false,
@@ -126,8 +147,8 @@ async function sendRejectionEmail(student) {
       from: process.env.MAIL_FROM,
       to: student.email,
       subject: "Internship Application Status",
-      text: `
-Dear ${student.name},
+
+      text: `Dear ${student.name},
 
 We regret to inform you that your internship application has been rejected.
 
@@ -135,12 +156,11 @@ Remark:
 ${student.remark || "Please contact the administration for more information."}
 
 Regards,
-Internship Management Team
-`,
+Internship Management Team`,
     });
 
     console.log("✅ Rejection Email Sent");
-    console.log(info.messageId);
+    console.log("Message ID:", info.messageId);
 
     return {
       skipped: false,
