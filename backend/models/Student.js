@@ -92,8 +92,13 @@ const studentSchema = new mongoose.Schema(
     },
     offerLetterStatus: {
       type: String,
-      enum: ["Not Sent", "Sent"],
-      default: "Not Sent",
+      enum: [
+        "Pending",
+        "Uploaded",
+        "Sent",
+        "Email Failed"
+      ],
+      default: "Pending"
     },
 
     submittedAt: {
