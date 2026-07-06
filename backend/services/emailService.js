@@ -1,64 +1,32 @@
 const nodemailer = require("nodemailer");
-const { google } = require("googleapis");
-const dns = require("dns");
 
 function hasEmailConfig() {
   return Boolean(
     process.env.EMAIL_USER &&
-      process.env.MAIL_FROM &&
-      process.env.GOOGLE_CLIENT_ID &&
-      process.env.GOOGLE_CLIENT_SECRET &&
-      process.env.GOOGLE_REFRESH_TOKEN
+      process.env.EMAIL_PASS &&
+      process.env.MAIL_FROM
   );
 }
 
-async function createTransporter() {
+function createTransporter() {
   if (!hasEmailConfig()) {
     return null;
   }
 
-  const oAuth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET
-  );
-
-  oAuth2Client.setCredentials({
-    refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
-  });
-
-  const accessTokenResponse = await oAuth2Client.getAccessToken();
-  const accessToken =
-    typeof accessTokenResponse === "string"
-      ? accessTokenResponse
-      : accessTokenResponse?.token;
-
   console.log("========== EMAIL CONFIG ==========");
   console.log("EMAIL_USER:", process.env.EMAIL_USER);
   console.log("MAIL_FROM:", process.env.MAIL_FROM);
-  console.log("Access Token Exists:", !!accessToken);
-  console.log(
-    "Refresh Token Exists:",
-    !!process.env.GOOGLE_REFRESH_TOKEN
-  );
+  console.log("EMAIL_PASS Exists:", !!process.env.EMAIL_PASS);
   console.log("==================================");
 
   return nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: "smtp-relay.brevo.com",
     port: 587,
     secure: false,
-    requireTLS: true,
 
     auth: {
-      type: "OAuth2",
       user: process.env.EMAIL_USER.trim(),
-      clientId: process.env.GOOGLE_CLIENT_ID.trim(),
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET.trim(),
-      refreshToken: process.env.GOOGLE_REFRESH_TOKEN.trim(),
-      accessToken,
-    },
-
-    lookup(hostname, options, callback) {
-      return dns.lookup(hostname, { family: 4 }, callback);
+      pass: process.env.EMAIL_PASS.trim(),
     },
 
     connectionTimeout: 60000,
