@@ -6,6 +6,7 @@ const cors = require("cors");
 
 const connectDB = require("./config/db");
 const adminRoutes = require("./routes/adminRoutes");
+const offerLetterRoutes = require("./routes/offerLetterRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 
 const app = express();
@@ -39,7 +40,7 @@ app.use(
       return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
-    methods: ["GET", "POST", "PATCH", "DELETE"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   })
 );
 
@@ -69,6 +70,7 @@ app.get("/", (req, res) => {
 // ========================
 app.use("/api/students", studentRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/offer-letter", offerLetterRoutes);
 
 // ========================
 // 404 Handler

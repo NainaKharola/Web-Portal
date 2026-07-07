@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DRDO Internship Offer Letter</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 18mm 18mm 16mm;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: #111827;
+        font-family: "Times New Roman", "Noto Serif Devanagari", serif;
+        font-size: 14px;
+        line-height: 1.45;
+        background: #ffffff;
+      }
+
+      .letter-page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .letter-header {
+        display: grid;
+        grid-template-columns: 92px 1fr;
+        gap: 18px;
+        align-items: center;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #1f2937;
+      }
+
+      .letter-logo {
+        width: 86px;
+        height: 86px;
+        object-fit: contain;
+      }
+
+      .header-copy {
+        text-align: center;
+      }
+
+      .hindi-title {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 700;
+      }
+
+      .english-title {
+        margin: 2px 0 0;
+        font-size: 18px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .lab-title,
+      .address-line {
+        margin: 2px 0 0;
+        font-size: 13px;
+      }
+
+      .meta-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        margin-top: 22px;
+      }
+
+      .recipient-block {
+        margin-top: 24px;
+      }
+
+      .subject {
+        margin: 22px 0 14px;
+        font-weight: 700;
+        text-align: center;
+        text-decoration: underline;
+      }
+
+      .letter-body p {
+        margin: 0 0 12px;
+        text-align: justify;
+      }
+
+      .student-table {
+        width: 100%;
+        margin: 14px 0 18px;
+        border-collapse: collapse;
+      }
+
+      .student-table th,
+      .student-table td {
+        padding: 8px 10px;
+        border: 1px solid #374151;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .student-table th {
+        width: 34%;
+        font-weight: 700;
+        background: #f3f4f6;
+      }
+
+      .remarks {
+        min-height: 48px;
+      }
+
+      .signature-block {
+        margin-top: 42px;
+        text-align: right;
+      }
+
+      .signature-space {
+        height: 58px;
+      }
+
+      .footer {
+        margin-top: auto;
+        padding-top: 14px;
+        border-top: 1px solid #6b7280;
+        color: #374151;
+        font-size: 12px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="letter-page">
+      <header class="letter-header">
+        <img class="letter-logo" src="{{logoUrl}}" alt="DRDO Logo" />
+        <div class="header-copy">
+          <p class="hindi-title">रक्षा अनुसंधान एवं विकास संगठन</p>
+          <p class="english-title">Defence Research & Development Organisation</p>
+          <p class="lab-title">Government of India, Ministry of Defence</p>
+          <p class="address-line">Internship Registration and Management Cell</p>
+        </div>
+      </header>
+
+      <section class="meta-row">
+        <div><strong>Letter No.:</strong> {{letterNumber}}</div>
+        <div><strong>Date:</strong> {{issueDate}}</div>
+      </section>
+
+      <section class="recipient-block">
+        <p>To,</p>
+        <p>
+          <strong>{{studentName}}</strong><br />
+          {{course}}, {{year}}<br />
+          {{branch}}<br />
+          {{collegeName}}
+        </p>
+      </section>
+
+      <p class="subject">{{subject}}</p>
+
+      <section class="letter-body">
+        {{letterBody}}
+
+        <table class="student-table">
+          <tbody>
+            <tr>
+              <th>Student Name</th>
+              <td>{{studentName}}</td>
+            </tr>
+            <tr>
+              <th>Course / Year</th>
+              <td>{{course}} / {{year}}</td>
+            </tr>
+            <tr>
+              <th>Branch</th>
+              <td>{{branch}}</td>
+            </tr>
+            <tr>
+              <th>College / University</th>
+              <td>{{collegeName}}</td>
+            </tr>
+            <tr>
+              <th>Internship Duration</th>
+              <td>{{internshipDuration}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="remarks">
+          {{additionalRemarks}}
+        </div>
+      </section>
+
+      <section class="signature-block">
+        <div class="signature-space"></div>
+        <p>
+          <strong>Authorized Signatory</strong><br />
+          Internship Registration and Management Cell<br />
+          DRDO
+        </p>
+      </section>
+
+      <footer class="footer">
+        <p>यह पत्र केवल आधिकारिक उपयोग के लिए है। / This letter is issued for official internship communication only.</p>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import Landing from "./pages/Landing";
+import OfferLetterEditor from "./pages/OfferLetterEditor";
+import OfferLetterPreview from "./pages/OfferLetterPreview";
 import StudentDetails from "./pages/StudentDetails";
 import { getAdminToken } from "./services/adminService";
 
@@ -35,6 +37,16 @@ function App() {
 
     if (path === "/admin/dashboard") {
       return <AdminDashboard />;
+    }
+
+    const offerLetterEditMatch = path.match(/^\/admin\/students\/([^/]+)\/offer-letter\/edit$/);
+    if (offerLetterEditMatch) {
+      return <OfferLetterEditor studentId={offerLetterEditMatch[1]} />;
+    }
+
+    const offerLetterMatch = path.match(/^\/admin\/students\/([^/]+)\/offer-letter$/);
+    if (offerLetterMatch) {
+      return <OfferLetterPreview studentId={offerLetterMatch[1]} />;
     }
 
     const studentMatch = path.match(/^\/admin\/students\/([^/]+)$/);

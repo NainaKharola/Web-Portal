@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import AdminReviewForm from "../components/Admin/AdminReviewForm";
-import OfferLetterPreview from "../components/Admin/OfferLetterPreview";
-import OfferLetterUpload from "../components/Admin/OfferLetterUpload";
 import StatusBadge from "../components/Admin/StatusBadge";
 import { fetchAdminStudent } from "../services/adminService";
+import {
+  generateOfferLetter,
+  uploadOfferLetterPdf,
+} from "../services/offerLetterService";
 import "../styles/admin.css";
 
 function formatDate(value) {
@@ -40,7 +42,10 @@ function DocumentButton({ label, file }) {
 function StudentDetails({ id }) {
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [letterFile, setLetterFile] = useState(null);
+  const [letterBusy, setLetterBusy] = useState("");
   const [error, setError] = useState("");
+  const [letterError, setLetterError] = useState("");
 
   useEffect(() => {
     let ignore = false;
@@ -69,6 +74,48 @@ function StudentDetails({ id }) {
   const goBack = () => {
     window.history.pushState({}, "", "/admin/dashboard");
     window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
+  const openOfferLetterPreview = () => {
+    window.history.pushState({}, "", `/admin/students/${id}/offer-letter`);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
+  const handleGenerateOfferLetter = async () => {
+    setLetterBusy("generate");
+    setLetterError("");
+
+    try {
+      const response = await generateOfferLetter(id);
+      setStudent(response.student);
+      openOfferLetterPreview();
+    } catch (err) {
+      setLetterError(err.message);
+    } finally {
+      setLetterBusy("");
+    }
+  };
+
+  const handleUploadOfferLetter = async (event) => {
+    event.preventDefault();
+
+    if (!letterFile) {
+      setLetterError("Select the official Offer Letter PDF.");
+      return;
+    }
+
+    setLetterBusy("upload");
+    setLetterError("");
+
+    try {
+      const response = await uploadOfferLetterPdf(id, letterFile);
+      setStudent(response.student);
+      openOfferLetterPreview();
+    } catch (err) {
+      setLetterError(err.message);
+    } finally {
+      setLetterBusy("");
+    }
   };
 
   if (loading) {
@@ -184,9 +231,49 @@ function StudentDetails({ id }) {
         />
       )}
 
-      <OfferLetterPreview student={student} />
+      {student.status === "Approved" && (
+        <section className="offer-letter-box offer-letter-box--actions">
+          <div>
+            <h2>Offer Letter</h2>
+            <p>Generate from the DRDO template or upload an official PDF, then review it before sending.</p>
+          </div>
+
+          <div className="offer-letter-actions">
+            <button
+              className="primary-button"
+              disabled={letterBusy === "generate"}
+              type="button"
+              onClick={handleGenerateOfferLetter}
+            >
+              {letterBusy === "generate" ? "Generating..." : "Generate Offer Letter"}
+            </button>
+
+            {(student.offerLetter?.html || student.offerLetter?.url || student.offerLetterUrl) && (
+              <button className="secondary-button" type="button" onClick={openOfferLetterPreview}>
+                Preview Offer Letter
+              </button>
+            )}
+          </div>
+
+          <form className="offer-letter-upload-inline" onSubmit={handleUploadOfferLetter}>
+            <label className="admin-field">
+              <span>Upload Offer Letter PDF</span>
+              <input
+                accept="application/pdf"
+                type="file"
+                onChange={(event) => setLetterFile(event.target.files?.[0] || null)}
+              />
+            </label>
+            <button className="secondary-button" disabled={letterBusy === "upload"} type="submit">
+              {letterBusy === "upload" ? "Uploading..." : "Upload Offer Letter"}
+            </button>
+          </form>
+
+          {letterError && <p className="admin-error">{letterError}</p>}
+        </section>
+      )}
+
       <AdminReviewForm student={student} onUpdated={setStudent} />
-      <OfferLetterUpload student={student} onUploaded={setStudent} />
     </main>
   );
 }

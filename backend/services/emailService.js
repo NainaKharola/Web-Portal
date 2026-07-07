@@ -40,7 +40,7 @@ async function createTransporter() {
   });
 }
 
-async function sendOfferLetterEmail(student) {
+async function sendOfferLetterEmail(student, attachment = {}) {
   const transporter = await createTransporter();
 
   if (!transporter) {
@@ -50,32 +50,38 @@ async function sendOfferLetterEmail(student) {
     };
   }
 
-  const issueDate = student.offerLetterUploadedDate
+  const issueDate = student.offerLetter?.issueDate
+    ? new Date(student.offerLetter.issueDate).toLocaleDateString("en-IN")
+    : student.offerLetterUploadedDate
     ? new Date(student.offerLetterUploadedDate).toLocaleDateString("en-IN")
     : new Date().toLocaleDateString("en-IN");
+
+  const pdfAttachment = attachment.buffer
+    ? {
+        filename: attachment.filename || "DRDO-Internship-Offer-Letter.pdf",
+        content: attachment.buffer,
+        contentType: "application/pdf",
+      }
+    : {
+        filename: attachment.filename || "DRDO-Internship-Offer-Letter.pdf",
+        path: attachment.url || student.offerLetter?.url || student.offerLetterUrl,
+      };
 
   const info = await transporter.sendMail({
     from: process.env.MAIL_FROM,
     to: student.email,
-    subject: "Internship Application Approved - Offer Letter",
+    subject: "DRDO Internship Offer Letter",
     text: `Dear ${student.name},
 
 Congratulations!
 
-Your internship application has been approved.
+Your internship application has been approved. Please find your DRDO Internship Offer Letter attached.
 
 Offer Letter Issue Date: ${issueDate}
 
-Please find your Offer Letter attached.
-
 Regards,
 Internship Management Team`,
-    attachments: [
-      {
-        filename: "Offer-Letter.pdf",
-        path: student.offerLetterUrl,
-      },
-    ],
+    attachments: [pdfAttachment],
   });
 
   return {

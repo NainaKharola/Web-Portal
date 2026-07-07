@@ -94,11 +94,68 @@ const studentSchema = new mongoose.Schema(
       type: String,
       enum: [
         "Pending",
+        "Not Sent",
         "Uploaded",
+        "Generated",
         "Sent",
         "Email Failed"
       ],
       default: "Pending"
+    },
+    offerLetter: {
+      generatedBy: {
+        type: String,
+        default: "",
+      },
+      url: {
+        type: String,
+        default: "",
+      },
+      publicId: {
+        type: String,
+        default: "",
+      },
+      issueDate: Date,
+      sent: {
+        type: Boolean,
+        default: false,
+      },
+      sentAt: Date,
+      edited: {
+        type: Boolean,
+        default: false,
+      },
+      uploadType: {
+        type: String,
+        enum: ["", "Generated", "Uploaded"],
+        default: "",
+      },
+      letterNumber: {
+        type: String,
+        default: "",
+      },
+      status: {
+        type: String,
+        enum: ["Not Generated", "Generated", "Uploaded", "Sent", "Email Failed"],
+        default: "Not Generated",
+      },
+      html: {
+        type: String,
+        default: "",
+      },
+      pdfBuffer: Buffer,
+      subject: {
+        type: String,
+        default: "",
+      },
+      letterBody: {
+        type: String,
+        default: "",
+      },
+      additionalRemarks: {
+        type: String,
+        default: "",
+      },
     },
 
     submittedAt: {

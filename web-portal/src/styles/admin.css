@@ -268,9 +268,43 @@
   gap: 16px;
 }
 
+.offer-letter-box--actions {
+  grid-template-columns: 1fr;
+  align-items: stretch;
+}
+
 .offer-letter-box p {
   margin: 6px 0 0;
   color: var(--muted);
+}
+
+.offer-letter-actions,
+.offer-letter-upload-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+}
+
+.offer-letter-upload-inline .admin-field {
+  min-width: min(100%, 360px);
+}
+
+.offer-letter-viewer {
+  width: 100%;
+  height: min(78vh, 920px);
+  margin-top: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.offer-letter-viewer iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #ffffff;
 }
 
 .admin-error,
