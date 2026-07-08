@@ -5,9 +5,11 @@ const {
   registerAdmin,
 } = require("../controllers/adminAuthController");
 const {
+  deleteStudents,
   getStudentById,
   getStudents,
   recommendedByOptions,
+  saveTrainingManagement,
   updateStudentReview,
   uploadOfferLetter,
 } = require("../controllers/adminStudentController");
@@ -29,8 +31,14 @@ router.get("/recommended-by-options", protectAdmin, (req, res) => {
 });
 
 router.get("/students", protectAdmin, getStudents);
+router.delete("/students", protectAdmin, deleteStudents);
 router.get("/students/:id", protectAdmin, getStudentById);
 router.patch("/students/:id/review", protectAdmin, updateStudentReview);
+router.patch(
+  "/students/:id/training-management",
+  protectAdmin,
+  saveTrainingManagement
+);
 router.post(
   "/students/:id/offer-letter",
   protectAdmin,

@@ -2,17 +2,27 @@ import "../styles/landing.css";
 
 const portalCards = [
   {
-    title: "Student Portal",
+    title: "Student Registration",
     description: [
       "Register for Internship",
       "Fill the Application Form",
       "Upload Required Documents",
     ],
-    buttonText: "Proceed to Student Registration",
+    buttonText: "Student Registration",
     path: "/student",
   },
   {
-    title: "Admin Portal",
+    title: "Student Login",
+    description: [
+      "Use Registered Email",
+      "Enter Reference ID",
+      "View Status and Documents",
+    ],
+    buttonText: "Student Login",
+    path: "/student/login",
+  },
+  {
+    title: "Admin Login",
     description: [
       "View Registered Students",
       "Review Applications",

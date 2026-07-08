@@ -1,210 +1,329 @@
 <!doctype html>
-<html lang="en">
+<html lang="hi">
   <head>
     <meta charset="UTF-8" />
     <title>DRDO Internship Offer Letter</title>
     <style>
       @page {
         size: A4;
-        margin: 18mm 18mm 16mm;
+        margin: 0;
       }
 
       * {
         box-sizing: border-box;
       }
 
+      html,
       body {
         margin: 0;
-        color: #111827;
-        font-family: "Times New Roman", "Noto Serif Devanagari", serif;
-        font-size: 14px;
-        line-height: 1.45;
+        padding: 0;
         background: #ffffff;
       }
 
-      .letter-page {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
+      body {
+        color: #222222;
+        font-family: "Noto Serif Devanagari", "Mangal", "Kokila", "Times New Roman", serif;
+        font-size: 16px;
+        line-height: 1.38;
       }
 
-      .letter-header {
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        position: relative;
+        padding: 13mm 20mm 14mm 20mm;
+      }
+
+      .header {
         display: grid;
-        grid-template-columns: 92px 1fr;
-        gap: 18px;
-        align-items: center;
-        padding-bottom: 12px;
-        border-bottom: 2px solid #1f2937;
+        grid-template-columns: 35% 24% 41%;
+        min-height: 51mm;
+        color: #4a4a4a;
       }
 
-      .letter-logo {
-        width: 86px;
-        height: 86px;
-        object-fit: contain;
+      .contact {
+        font-size: 11.6px;
+        line-height: 1.55;
+        padding-top: 2mm;
       }
 
-      .header-copy {
+      .contact-row {
+        display: grid;
+        grid-template-columns: 18mm 1fr;
+        column-gap: 3mm;
+        margin-bottom: 2mm;
+      }
+
+      .contact .note {
+        margin-top: 6mm;
+        width: 58mm;
+        font-size: 11px;
+        line-height: 1.45;
+      }
+
+      .emblem {
         text-align: center;
+        padding-top: 7mm;
       }
 
-      .hindi-title {
-        margin: 0;
-        font-size: 19px;
-        font-weight: 700;
+      .logo {
+        width: 30mm;
+        height: 30mm;
+        object-fit: contain;
+        opacity: 0.76;
       }
 
-      .english-title {
-        margin: 2px 0 0;
-        font-size: 18px;
-        font-weight: 700;
+      .iso {
+        margin-top: 1.8mm;
+        font-size: 10.5px;
+        letter-spacing: 0;
+      }
+
+      .org {
+        padding-top: 6mm;
+        padding-left: 5mm;
+        font-size: 11.2px;
+        line-height: 1.32;
+      }
+
+      .org .english {
+        margin-top: 3.8mm;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12.2px;
+        line-height: 1.25;
+        text-transform: uppercase;
+        letter-spacing: 0.2px;
+      }
+
+      .meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin-top: 9mm;
+        font-size: 16px;
+        color: #383838;
+      }
+
+      .meta div:last-child {
+        text-align: right;
+        padding-right: 27mm;
+      }
+
+      .to {
+        margin-top: 11mm;
+        margin-left: 26mm;
+      }
+
+      .address {
+        margin-top: 6mm;
+        margin-left: 15mm;
+        font-family: "Times New Roman", serif;
+        font-size: 16px;
+        line-height: 1.22;
+        letter-spacing: 0.5px;
         text-transform: uppercase;
       }
 
-      .lab-title,
-      .address-line {
-        margin: 2px 0 0;
-        font-size: 13px;
-      }
-
-      .meta-row {
-        display: flex;
-        justify-content: space-between;
-        gap: 24px;
-        margin-top: 22px;
-      }
-
-      .recipient-block {
-        margin-top: 24px;
-      }
-
       .subject {
-        margin: 22px 0 14px;
+        margin-top: 16mm;
+        margin-left: 38mm;
+        font-size: 17px;
         font-weight: 700;
-        text-align: center;
-        text-decoration: underline;
       }
 
-      .letter-body p {
-        margin: 0 0 12px;
+      .body {
+        margin-top: 25mm;
+        margin-left: 17mm;
+        margin-right: 21mm;
+        font-size: 17px;
+        line-height: 1.46;
+      }
+
+      .student-line {
+        margin-bottom: 1mm;
+        font-family: "Times New Roman", serif;
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: underline;
+        text-transform: uppercase;
+      }
+
+      .indent {
+        text-indent: 17mm;
+      }
+
+      .para {
+        margin: 0 0 8mm 0;
         text-align: justify;
       }
 
-      .student-table {
-        width: 100%;
-        margin: 14px 0 18px;
-        border-collapse: collapse;
+      .para-tight {
+        margin-bottom: 5.6mm;
       }
 
-      .student-table th,
-      .student-table td {
-        padding: 8px 10px;
-        border: 1px solid #374151;
-        text-align: left;
-        vertical-align: top;
+      .signature {
+        position: absolute;
+        right: 32mm;
+        bottom: 44mm;
+        width: 48mm;
+        color: #222222;
+        font-family: "Times New Roman", "Noto Serif Devanagari", serif;
+        font-size: 15.5px;
+        line-height: 1.45;
       }
 
-      .student-table th {
-        width: 34%;
-        font-weight: 700;
-        background: #f3f4f6;
+      .sign-mark {
+        height: 12mm;
+        font-family: "Segoe Script", "Brush Script MT", cursive;
+        font-size: 28px;
+        line-height: 1;
+        padding-left: 9mm;
       }
 
-      .remarks {
-        min-height: 48px;
+      .signature p {
+        margin: 0 0 4mm 0;
       }
 
-      .signature-block {
-        margin-top: 42px;
-        text-align: right;
+      .enclosures {
+        position: absolute;
+        left: 25mm;
+        bottom: 45mm;
+        font-size: 16px;
+        line-height: 1.56;
       }
 
-      .signature-space {
-        height: 58px;
+      .enclosures .title {
+        margin-bottom: 7mm;
       }
 
       .footer {
-        margin-top: auto;
-        padding-top: 14px;
-        border-top: 1px solid #6b7280;
-        color: #374151;
-        font-size: 12px;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 12mm;
         text-align: center;
+        color: #222222;
+      }
+
+      .footer-band {
+        display: inline-block;
+        min-width: 55mm;
+        border-top: 1.8px solid #222222;
+        border-bottom: 1.8px solid #222222;
+        padding: 1mm 5mm 0.5mm;
+        font-weight: 700;
+        font-size: 13px;
+        line-height: 1;
+      }
+
+      .footer-hindi {
+        margin-top: 1.4mm;
+        font-size: 12px;
+      }
+
+      .footer-english {
+        margin-top: 0.6mm;
+        font-family: "Times New Roman", serif;
+        font-size: 11px;
       }
     </style>
   </head>
   <body>
-    <main class="letter-page">
-      <header class="letter-header">
-        <img class="letter-logo" src="{{logoUrl}}" alt="DRDO Logo" />
-        <div class="header-copy">
-          <p class="hindi-title">रक्षा अनुसंधान एवं विकास संगठन</p>
-          <p class="english-title">Defence Research & Development Organisation</p>
-          <p class="lab-title">Government of India, Ministry of Defence</p>
-          <p class="address-line">Internship Registration and Management Cell</p>
-        </div>
+    <main class="page">
+      <header class="header">
+        <section class="contact">
+          <div class="contact-row">
+            <span>दूरभाष/</span>
+            <span>Phones : 0135-2787004 to 2787007</span>
+          </div>
+          <div class="contact-row">
+            <span>फैक्स/</span>
+            <span>Fax : 0091-135 2787161 &amp;<br />2787128</span>
+          </div>
+          <div class="contact-row" style="margin-top: 6mm">
+            <span>तार /</span>
+            <span>Telegrams : IRDE</span>
+          </div>
+          <div class="note">
+            सभी पत्राचार निदेशक से सम्बोधित हो। चाहिए, जिसमें वैज्ञानिक/अधिकारी के नाम से नहीं।
+          </div>
+        </section>
+
+        <section class="emblem">
+          <img class="logo" src="{{logoUrl}}" alt="DRDO Logo" />
+          <div class="iso">ISO 9001:2015</div>
+        </section>
+
+        <section class="org">
+          <div>भारत सरकार रक्षा मंत्रालय</div>
+          <div>रक्षा अनुसंधान तथा विकास संगठन</div>
+          <div>यंत्र अनुसंधान एवं विकास संस्थान</div>
+          <div>रायपुर रोड, देहरादून - 248008</div>
+          <div class="english">
+            GOVT. OF INDIA, MINISTRY OF DEFENCE<br />
+            DEFENCE R &amp; D ORGANISATION<br />
+            INSTRUMENTS R &amp; D ESTABLISHMENT<br />
+            RAIPUR ROAD, DEHRADUN - 248 008
+          </div>
+        </section>
       </header>
 
-      <section class="meta-row">
-        <div><strong>Letter No.:</strong> {{letterNumber}}</div>
-        <div><strong>Date:</strong> {{issueDate}}</div>
+      <section class="meta">
+        <div>पत्रांक / Letter No.: {{letterNumber}}</div>
+        <div>दिनांक/ Dated: {{issueDate}}</div>
       </section>
 
-      <section class="recipient-block">
-        <p>To,</p>
-        <p>
-          <strong>{{studentName}}</strong><br />
-          {{course}}, {{year}}<br />
-          {{branch}}<br />
-          {{collegeName}}
-        </p>
-      </section>
-
-      <p class="subject">{{subject}}</p>
-
-      <section class="letter-body">
-        {{letterBody}}
-
-        <table class="student-table">
-          <tbody>
-            <tr>
-              <th>Student Name</th>
-              <td>{{studentName}}</td>
-            </tr>
-            <tr>
-              <th>Course / Year</th>
-              <td>{{course}} / {{year}}</td>
-            </tr>
-            <tr>
-              <th>Branch</th>
-              <td>{{branch}}</td>
-            </tr>
-            <tr>
-              <th>College / University</th>
-              <td>{{collegeName}}</td>
-            </tr>
-            <tr>
-              <th>Internship Duration</th>
-              <td>{{internshipDuration}}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="remarks">
-          {{additionalRemarks}}
+      <section class="recipient">
+        <div class="to">सेवा में,</div>
+        <div class="address">
+          TRAINING &amp; PLACEMENT CO-ORDINATOR<br />
+          {{collegeName}}<br />
+          {{collegeAddressLine1}}<br />
+          {{collegeAddressLine2}}
         </div>
       </section>
 
-      <section class="signature-block">
-        <div class="signature-space"></div>
-        <p>
-          <strong>Authorized Signatory</strong><br />
-          Internship Registration and Management Cell<br />
-          DRDO
+      <section class="subject">विषय : &nbsp;&nbsp;&nbsp; आई. आर. डी. ई. में विद्यार्थियों को प्रशिक्षण सुविधा</section>
+
+      <section class="body">
+        <div class="student-line">{{studentName}}, {{course}} {{year}}, {{branch}}</div>
+        <p class="para para-tight">
+          को इस संस्थान में {{internshipDuration}} अवधि का प्रयोगात्मक
+          प्रशिक्षण / परियोजना कार्य करने की सुविधा दी जा सकती है ।
         </p>
+
+        <p class="para indent">
+          इस संस्थान में प्रशिक्षण परियोजना कार्य प्रारम्भ करने से पूर्व विद्यार्थियों को
+          अपने चरित्र एवं पूर्ववृत्त का पुलिस प्राधिकारी से सत्यापन कराना आवश्यक है ।
+          इसके लिये निर्धारित फार्म, एक वचनबंध के साथ पूर्ण कर वापस करने के लिये
+          यहाँ संलग्न किया जा रहा है । चरित्र सत्यापन के बिना, प्रशिक्षण दिया जाना सम्भव
+          न हो पायेगा ।
+        </p>
+
+        <p class="para indent">
+          कृपया, छात्र / छात्रा को यह भी सलाह दें कि, वे प्रशिक्षण के लिये आते समय
+          अपने 02 नवीनतम पासपोर्ट आकार के फोटोग्राफ भी साथ लाएं । प्रशिक्षण अवधि में
+          आवास की सुविधा नहीं दी जा सकती है, अतः रहने का प्रबन्ध स्वयं करें।
+        </p>
+      </section>
+
+      <section class="enclosures">
+        <div class="title">संलग्न :</div>
+        <div>1. विद्यार्थी द्वारा घोषणा पत्र</div>
+        <div>2. कॉलेज द्वारा प्रमाण पत्र</div>
+        <div>3. पुलिस प्राधिकारी द्वारा चरित्र प्रमाण पत्र</div>
+      </section>
+
+      <section class="signature">
+        <div class="sign-mark">VG</div>
+        <p>(Dr.Vaibhav Gupta)</p>
+        <p>Technical Officer 'C'</p>
+        <p>कृते &nbsp;&nbsp; निदेशक</p>
       </section>
 
       <footer class="footer">
-        <p>यह पत्र केवल आधिकारिक उपयोग के लिए है। / This letter is issued for official internship communication only.</p>
+        <div class="footer-band">सर्व दिशा अभियान</div>
+        <div class="footer-hindi">मैनुअल की रक्षा, देश की सुरक्षा</div>
+        <div class="footer-english">Training Management System</div>
       </footer>
     </main>
   </body>

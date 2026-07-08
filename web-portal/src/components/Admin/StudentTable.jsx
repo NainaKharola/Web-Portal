@@ -1,11 +1,19 @@
 import StudentRow from "./StudentRow";
 
-function StudentTable({ students, onView }) {
+function StudentTable({
+  deleteMode = false,
+  onSelect,
+  onView,
+  selectedIds = [],
+  students,
+}) {
   return (
     <div className="admin-table-wrap">
       <table className="admin-table">
         <thead>
           <tr>
+            {deleteMode && <th>Select</th>}
+            <th>Serial No.</th>
             <th>Student Name</th>
             <th>College / University</th>
             <th>Branch</th>
@@ -22,6 +30,9 @@ function StudentTable({ students, onView }) {
           {students.map((student) => (
             <StudentRow
               key={student._id}
+              deleteMode={deleteMode}
+              isSelected={selectedIds.includes(student._id)}
+              onSelect={(checked) => onSelect(student._id, checked)}
               student={student}
               onView={() => onView(student._id)}
             />

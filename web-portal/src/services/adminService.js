@@ -68,8 +68,34 @@ export async function fetchAdminStudent(id) {
   return parseResponse(response);
 }
 
+export async function deleteAdminStudents(ids) {
+  const response = await fetch(`${API_URL}/students`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(),
+    },
+    body: JSON.stringify({ ids }),
+  });
+
+  return parseResponse(response);
+}
+
 export async function updateStudentReview(id, payload) {
   const response = await fetch(`${API_URL}/students/${id}/review`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(),
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return parseResponse(response);
+}
+
+export async function saveTrainingManagement(id, payload) {
+  const response = await fetch(`${API_URL}/students/${id}/training-management`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",

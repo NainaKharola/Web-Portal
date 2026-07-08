@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Declaration Form for Practical Training/Project Work at IRDE, Dehradun</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #ffffff;
+      }
+
+      body {
+        color: #222222;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 17px;
+        line-height: 1.22;
+      }
+
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        position: relative;
+        padding: 12mm 17mm 14mm 17mm;
+      }
+
+      .title {
+        margin: 0 0 7mm;
+        text-align: center;
+        font-size: 25px;
+        line-height: 1.12;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+      }
+
+      .top-section {
+        position: relative;
+      }
+
+      .fields {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 19px;
+        line-height: 1.38;
+      }
+
+      .fields td {
+        padding: 1.35mm 0;
+        vertical-align: bottom;
+      }
+
+      .serial {
+        width: 6.2mm;
+        font-weight: 700;
+      }
+
+      .label {
+        width: 54mm;
+        font-weight: 700;
+      }
+
+      .value {
+        border-bottom: 1px solid #222222;
+        height: 6mm;
+        padding-left: 2mm;
+        font-size: 17px;
+      }
+
+      .blank .value {
+        border-bottom: 0;
+      }
+
+      .photo-box {
+        position: absolute;
+        top: 4mm;
+        right: 5mm;
+        width: 39mm;
+        height: 39mm;
+        border: 1px solid #c2c2c2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #555555;
+        font-family: "Courier New", monospace;
+        font-size: 11px;
+        line-height: 1.25;
+        letter-spacing: 0.7px;
+      }
+
+      .contact-row {
+        display: grid;
+        grid-template-columns: 56mm 62mm 1fr;
+        gap: 7mm;
+        margin-top: 1mm;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .contact-item {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 2mm;
+        align-items: end;
+      }
+
+      .contact-line {
+        border-bottom: 1px solid #222222;
+        min-height: 6mm;
+        font-weight: 400;
+        font-size: 16px;
+      }
+
+      .declaration {
+        margin: 15mm 7mm 0;
+        font-size: 18px;
+        line-height: 1.28;
+      }
+
+      .date-sign {
+        display: grid;
+        grid-template-columns: 1fr 80mm;
+        margin: 6mm 7mm 0;
+        font-size: 18px;
+      }
+
+      .date-place {
+        line-height: 1.42;
+      }
+
+      .student-sign {
+        padding-top: 7mm;
+        text-align: right;
+        font-size: 14px;
+        font-style: italic;
+      }
+
+      .sign-line {
+        display: inline-block;
+        width: 57mm;
+        border-top: 1px solid #222222;
+        padding-top: 1mm;
+        text-align: right;
+      }
+
+      .terms-title {
+        margin: 9mm 0 8mm;
+        text-align: center;
+        font-size: 19px;
+        font-weight: 700;
+      }
+
+      .agreement {
+        display: flex;
+        align-items: flex-end;
+        margin: 0 7mm 8mm;
+        font-size: 18px;
+      }
+
+      .student-name-line {
+        display: inline-block;
+        width: 63mm;
+        border-bottom: 1px solid #222222;
+        text-align: center;
+        min-height: 6mm;
+        margin: 0 2mm;
+        font-size: 16px;
+      }
+
+      .name-caption {
+        position: absolute;
+        margin-top: 6mm;
+        margin-left: 25mm;
+        font-size: 12px;
+      }
+
+      .terms {
+        margin: 0 0 0 0;
+        padding-left: 6mm;
+        font-size: 17px;
+        line-height: 1.2;
+      }
+
+      .terms li {
+        margin: 0 0 4.2mm 0;
+        padding-left: 1mm;
+      }
+
+      .footer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 9mm;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding: 0 56mm;
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+      }
+
+      .footer div:last-child {
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <h1 class="title">
+        DECLARATION FORM FOR PRACTICAL TRAINING/PROJECT WORK<br />
+        AT IRDE, DEHRADUN
+      </h1>
+
+      <section class="top-section">
+        <div class="photo-box">
+          AFFIX YOUR<br />
+          PHOTOGRAPH<br />
+          ATTESTED BY<br />
+          GAZETTED<br />
+          OFFICER
+        </div>
+
+        <table class="fields">
+          <tbody>
+            <tr>
+              <td class="serial">1.</td>
+              <td class="label">Name</td>
+              <td class="value">{{studentName}}</td>
+            </tr>
+            <tr>
+              <td class="serial">2.</td>
+              <td class="label">Father's Name</td>
+              <td class="value">{{fatherName}}</td>
+            </tr>
+            <tr>
+              <td class="serial">3.</td>
+              <td class="label">Parents Occupation</td>
+              <td class="value">{{parentOccupation}}</td>
+            </tr>
+            <tr>
+              <td class="serial">4.</td>
+              <td class="label">Temp. Address</td>
+              <td class="value">{{temporaryAddress}}</td>
+            </tr>
+            <tr>
+              <td class="serial">5.</td>
+              <td class="label">Permanent Address</td>
+              <td class="value">{{permanentAddress}}</td>
+            </tr>
+            <tr>
+              <td class="serial">6.</td>
+              <td class="label" colspan="2">Name of the Inst. / Univ./ College: <span class="value" style="display: inline-block; width: 86mm">{{collegeName}}</span></td>
+            </tr>
+            <tr>
+              <td class="serial">7.</td>
+              <td class="label" colspan="2">Degree, Year of study : <span class="value" style="display: inline-block; width: 96mm">{{course}} {{year}} {{branch}}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="contact-row">
+        <div class="contact-item">
+          <span>8. Mobile No.</span>
+          <span class="contact-line">{{mobileNumber}}</span>
+        </div>
+        <div class="contact-item">
+          <span>9. Res. Phone No.</span>
+          <span class="contact-line">{{residencePhone}}</span>
+        </div>
+        <div class="contact-item">
+          <span>10. Email-ID</span>
+          <span class="contact-line">{{email}}</span>
+        </div>
+      </section>
+
+      <table class="fields" style="margin-top: 2mm">
+        <tbody>
+          <tr>
+            <td class="serial">11.</td>
+            <td class="label">Date of Birth</td>
+            <td class="value">{{dateOfBirth}}</td>
+          </tr>
+          <tr>
+            <td class="serial">12.</td>
+            <td class="label">Nationality</td>
+            <td class="value">{{nationality}}</td>
+          </tr>
+          <tr>
+            <td class="serial">13.</td>
+            <td class="label">College Identity Card No.</td>
+            <td class="value">{{collegeIdNumber}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <section class="declaration">
+        I declare that the information given by me at Srl. No. 1 to 13 above is true to the best of my<br />
+        Knowledge.
+      </section>
+
+      <section class="date-sign">
+        <div class="date-place">
+          Date: {{issueDate}}<br />
+          Place: {{place}}
+        </div>
+        <div class="student-sign">
+          <span class="sign-line">Sig. Of Student</span>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="terms-title">TERM &amp; CONDITIONS</h2>
+        <div class="agreement">
+          I <span class="student-name-line">{{studentName}}</span> hereby agree to abide the following&nbsp; terms &amp;conditions.
+        </div>
+        <div class="name-caption">(Name of Student)</div>
+
+        <ol class="terms">
+          <li>I agree that my attachment will not involve any expenditure to the State.</li>
+          <li>I will not claim any remuneration or compensation for personal injuries caused by accident arising out of and in the course of my attachment /training/project work at IRDE,</li>
+          <li>I understand that IRDE, Dehra Dun will in no way be obliged to offer employment to me after completion of my attachment/training/project work.</li>
+          <li>I will abide by all the existing Govt. rules &amp;, regulations/instructions/orders enforced by the Director, IRDE, Dehra Dun.</li>
+          <li>I will produce my character certificate from College/Institute/ University/ Sponsored authority at the time of joining my training at IRDE.</li>
+          <li>I will be regular in attendance &amp; sincere towards the work assigned to me and will submit my Training/Project work report to Director, IRDE on completion of my training /project</li>
+          <li>I have no objection if the period of my training /project work at IRDE is extended or terminated before its date of completion without any prior intimations by the establishment.</li>
+          <li>I will make my own arrangement for stay 'during practical training/project work at IRDE, Dehrad Dun.</li>
+        </ol>
+      </section>
+
+      <footer class="footer">
+        <div>Training Management System</div>
+        <div>IRDE DEHRADUN</div>
+      </footer>
+    </main>
+  </body>
+</html>

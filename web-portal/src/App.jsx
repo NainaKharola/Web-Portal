@@ -6,6 +6,8 @@ import Landing from "./pages/Landing";
 import OfferLetterEditor from "./pages/OfferLetterEditor";
 import OfferLetterPreview from "./pages/OfferLetterPreview";
 import StudentDetails from "./pages/StudentDetails";
+import StudentDashboard from "./pages/StudentDashboard";
+import StudentLogin from "./pages/StudentLogin";
 import { getAdminToken } from "./services/adminService";
 
 function App() {
@@ -60,6 +62,14 @@ function App() {
 
   if (path === "/student") {
     return <Home />;
+  }
+
+  if (path === "/student/login") {
+    return <StudentLogin />;
+  }
+
+  if (path === "/student/dashboard") {
+    return <StudentDashboard />;
   }
 
   if (path !== "/") {

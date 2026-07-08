@@ -5,9 +5,20 @@ function formatDate(value) {
   return new Date(value).toLocaleDateString("en-IN");
 }
 
-function StudentRow({ student, onView }) {
+function StudentRow({ deleteMode = false, isSelected = false, onSelect, student, onView }) {
   return (
     <tr>
+      {deleteMode && (
+        <td>
+          <input
+            checked={isSelected}
+            type="checkbox"
+            onChange={(event) => onSelect(event.target.checked)}
+            aria-label={`Select ${student.name}`}
+          />
+        </td>
+      )}
+      <td>{student.serialNumber || "-"}</td>
       <td>{student.name}</td>
       <td>{student.collegeName}</td>
       <td>{student.branch}</td>

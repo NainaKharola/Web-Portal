@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import AdminReviewForm from "../components/Admin/AdminReviewForm";
 import StatusBadge from "../components/Admin/StatusBadge";
-import { fetchAdminStudent } from "../services/adminService";
+import {
+  fetchAdminStudent,
+  saveTrainingManagement,
+} from "../services/adminService";
 import {
   generateOfferLetter,
   uploadOfferLetterPdf,
@@ -36,6 +39,132 @@ function DocumentButton({ label, file }) {
     <a className="secondary-button admin-link-button" href={file.url} target="_blank" rel="noreferrer">
       View {label}
     </a>
+  );
+}
+
+function addDurationToDate(fromDate, duration) {
+  if (!fromDate) return "";
+  const date = new Date(fromDate);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const monthMatch = String(duration || "").match(/(\d+)\s*month/i);
+  const weekMatch = String(duration || "").match(/(\d+)\s*week/i);
+
+  if (monthMatch) date.setMonth(date.getMonth() + Number(monthMatch[1]));
+  else if (weekMatch) date.setDate(date.getDate() + Number(weekMatch[1]) * 7);
+  else return "";
+
+  return date.toISOString().slice(0, 10);
+}
+
+function TrainingManagementForm({ student, onUpdated }) {
+  const existing = student.trainingManagement || {};
+  const [form, setForm] = useState({
+    studentName: existing.studentName || student.name || "",
+    courseName: existing.courseName || student.course || "",
+    courseYear: existing.courseYear || student.year || "",
+    branch: existing.branch || student.branch || "",
+    collegeName: existing.collegeName || student.collegeName || "",
+    collegeLocation: existing.collegeLocation || student.location || "",
+    trainingDuration: existing.trainingDuration || student.internshipDuration || "",
+    fromDate: existing.fromDate || "",
+    toDate: existing.toDate || "",
+    joined: existing.joined || "",
+    projectTitle: existing.projectTitle || "",
+    projectGuide: existing.projectGuide || "",
+    designation: existing.designation || "",
+    leaveAvailed: existing.leaveAvailed || "",
+    completed: existing.completed || "",
+  });
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setForm((current) => {
+      const next = { ...current, [name]: value };
+      if (name === "fromDate" || name === "trainingDuration") {
+        next.toDate = addDurationToDate(
+          name === "fromDate" ? value : current.fromDate,
+          name === "trainingDuration" ? value : current.trainingDuration
+        );
+      }
+      return next;
+    });
+    setMessage("");
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setSaving(true);
+    setMessage("");
+
+    try {
+      const response = await saveTrainingManagement(student._id, form);
+      onUpdated(response.student);
+      setMessage(response.message);
+    } catch (err) {
+      setMessage(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <section className="details-section">
+      <div className="details-section__header">
+        <h2>Training Management System</h2>
+        <button className="primary-button" type="button" onClick={() => setOpen((value) => !value)}>
+          Training Management System
+        </button>
+      </div>
+
+      {open && (
+        <form className="training-form" onSubmit={handleSubmit}>
+          {[
+            ["studentName", "Student Name"],
+            ["courseName", "Course Name"],
+            ["courseYear", "Course Year"],
+            ["branch", "Branch"],
+            ["collegeName", "College Name"],
+            ["collegeLocation", "College Location"],
+            ["trainingDuration", "Training Duration"],
+            ["fromDate", "From Date", "date"],
+            ["toDate", "To Date", "date"],
+            ["projectTitle", "Project Title"],
+            ["projectGuide", "Project Guide"],
+            ["designation", "Designation"],
+            ["leaveAvailed", "Leave Availed"],
+          ].map(([name, label, type = "text"]) => (
+            <label className="admin-field" key={name}>
+              <span>{label}</span>
+              <input name={name} type={type} value={form[name]} onChange={handleChange} />
+            </label>
+          ))}
+
+          {[
+            ["joined", "Joined"],
+            ["completed", "Completed"],
+          ].map(([name, label]) => (
+            <label className="admin-field" key={name}>
+              <span>{label}</span>
+              <select name={name} value={form[name]} onChange={handleChange}>
+                <option value="">Select</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </label>
+          ))}
+
+          <button className="primary-button" type="submit" disabled={saving}>
+            {saving ? "Saving..." : "Save Changes"}
+          </button>
+          {message && <p className="admin-muted">{message}</p>}
+        </form>
+      )}
+    </section>
   );
 }
 
@@ -199,7 +328,7 @@ function StudentDetails({ id }) {
         title="Internship Details"
         rows={[
           ["Internship Duration", student.internshipDuration],
-          ["Joining Date", student.internshipJoiningDate],
+          ["Joining Month", student.internshipJoiningMonth || student.internshipJoiningDate],
           ["Permission Letter Number", student.permissionLetterNumber],
           ["Permission Letter Date", student.permissionLetterDate],
         ]}
@@ -229,6 +358,20 @@ function StudentDetails({ id }) {
             ["Student Email Address", student.email],
           ]}
         />
+      )}
+
+      {student.status === "Approved" && (
+        <section className="details-section">
+          <h2>Student Documents</h2>
+          <div className="document-actions">
+            <DocumentButton label="Uploaded Combined PDF" file={student.completedDocuments} />
+            <DocumentButton label="Gyapan" file={student.gyapan} />
+          </div>
+        </section>
+      )}
+
+      {student.status === "Approved" && (
+        <TrainingManagementForm student={student} onUpdated={setStudent} />
       )}
 
       {student.status === "Approved" && (

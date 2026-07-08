@@ -22,6 +22,10 @@
   animation: pageIn 420ms ease both;
 }
 
+.portal-card--narrow {
+  width: min(560px, 100%);
+}
+
 .portal-header {
   display: flex;
   align-items: center;
@@ -176,6 +180,13 @@ textarea.field__control {
 .field__control:not(:placeholder-shown) + .field__label,
 select.field__control + .field__label,
 input[type="date"].field__control + .field__label {
+  top: 7px;
+  color: var(--primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+input[type="month"].field__control + .field__label {
   top: 7px;
   color: var(--primary);
   font-size: 0.72rem;
@@ -381,6 +392,55 @@ input[type="date"].field__control + .field__label {
   font-size: 2.2rem;
   font-weight: 900;
   animation: successPop 480ms ease both;
+}
+
+.reference-box {
+  display: grid;
+  gap: 12px;
+  min-width: min(100%, 340px);
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.reference-box span,
+.copy-message {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.reference-box strong {
+  color: var(--heading);
+  font-size: 2rem;
+  letter-spacing: 0.08em;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.input-field span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.input-field input {
+  min-height: 50px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+.input-field input:focus {
+  border-color: rgba(10, 78, 163, 0.72);
+  box-shadow: 0 0 0 4px rgba(10, 78, 163, 0.1);
 }
 
 @keyframes pageIn {

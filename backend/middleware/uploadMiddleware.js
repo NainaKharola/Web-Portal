@@ -3,6 +3,7 @@ const streamifier = require("streamifier");
 const cloudinary = require("../config/cloudinary");
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const PHOTO_MAX_FILE_SIZE = 1 * 1024 * 1024;
 
 const uploadFolders = {
   resume: "resumes",
@@ -40,9 +41,30 @@ function fileFilter(req, file, cb) {
   cb(null, true);
 }
 
+function validatePerFieldSize(req, file, cb) {
+  const maxSize = file.fieldname === "photo" ? PHOTO_MAX_FILE_SIZE : MAX_FILE_SIZE;
+
+  if (file.size > maxSize) {
+    return cb(
+      new Error(
+        file.fieldname === "photo"
+          ? "Photo size should not exceed 1 MB."
+          : `${file.fieldname} size should not exceed 10 MB.`
+      )
+    );
+  }
+
+  cb(null, true);
+}
+
 const upload = multer({
   storage,
-  fileFilter,
+  fileFilter(req, file, cb) {
+    fileFilter(req, file, (error) => {
+      if (error) return cb(error);
+      validatePerFieldSize(req, file, cb);
+    });
+  },
   limits: {
     fileSize: MAX_FILE_SIZE,
   },
@@ -98,6 +120,13 @@ function uploadStudentDocuments(req, res, next) {
         for (const fieldName of Object.keys(req.files)) {
           const file = req.files[fieldName][0];
 
+          if (fieldName === "photo" && file.size > PHOTO_MAX_FILE_SIZE) {
+            return res.status(400).json({
+              success: false,
+              message: "Photo size should not exceed 1 MB.",
+            });
+          }
+
           const result = await uploadToCloudinary(
             file,
             uploadFolders[fieldName]
@@ -130,4 +159,58 @@ function uploadStudentDocuments(req, res, next) {
   });
 }
 
-module.exports = { uploadStudentDocuments };
+const completedDocumentsUpload = multer({
+  storage,
+  fileFilter(req, file, cb) {
+    if (file.mimetype !== "application/pdf") {
+      return cb(new Error("Completed documents must be uploaded as a single PDF."));
+    }
+
+    cb(null, true);
+  },
+  limits: {
+    fileSize: MAX_FILE_SIZE,
+  },
+}).single("completedDocuments");
+
+function uploadCompletedDocuments(req, res, next) {
+  completedDocumentsUpload(req, res, async (error) => {
+    if (error) {
+      const message =
+        error instanceof multer.MulterError && error.code === "LIMIT_FILE_SIZE"
+          ? "Completed documents size should not exceed 10 MB."
+          : error.message;
+
+      return res.status(400).json({
+        success: false,
+        message,
+      });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Upload the combined completed documents PDF.",
+      });
+    }
+
+    try {
+      const result = await uploadToCloudinary(req.file, "completedDocuments");
+
+      req.uploadedCompletedDocuments = {
+        url: result.secure_url,
+        publicId: result.public_id,
+      };
+
+      next();
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        message: "Cloudinary upload failed.",
+        error: err.message,
+      });
+    }
+  });
+}
+
+module.exports = { uploadCompletedDocuments, uploadStudentDocuments };

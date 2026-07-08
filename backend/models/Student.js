@@ -29,6 +29,19 @@ const studentSchema = new mongoose.Schema(
 
     internshipDuration: String,
     internshipJoiningDate: String,
+    internshipJoiningMonth: String,
+
+    referenceId: {
+      type: String,
+      unique: true,
+      index: true,
+    },
+    serialNumber: {
+      type: Number,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
 
     permissionLetterNumber: String,
     permissionLetterDate: String,
@@ -153,6 +166,60 @@ const studentSchema = new mongoose.Schema(
         default: "",
       },
       additionalRemarks: {
+        type: String,
+        default: "",
+      },
+    },
+    completedDocuments: {
+      url: {
+        type: String,
+        default: "",
+      },
+      publicId: {
+        type: String,
+        default: "",
+      },
+      uploadedAt: Date,
+    },
+    trainingManagement: {
+      studentName: String,
+      courseName: String,
+      courseYear: String,
+      branch: String,
+      collegeName: String,
+      collegeLocation: String,
+      trainingDuration: String,
+      fromDate: String,
+      toDate: String,
+      joined: {
+        type: String,
+        enum: ["", "Yes", "No"],
+        default: "",
+      },
+      projectTitle: String,
+      projectGuide: String,
+      designation: String,
+      leaveAvailed: String,
+      completed: {
+        type: String,
+        enum: ["", "Yes", "No"],
+        default: "",
+      },
+      updatedBy: String,
+      updatedAt: Date,
+    },
+    gyapan: {
+      url: {
+        type: String,
+        default: "",
+      },
+      publicId: {
+        type: String,
+        default: "",
+      },
+      generatedAt: Date,
+      emailedAt: Date,
+      emailStatus: {
         type: String,
         default: "",
       },

@@ -33,7 +33,7 @@ const initialForm = {
   photo: null,
   collegeId: "",
   internshipDuration: "",
-  internshipJoiningDate: "",
+  internshipJoiningMonth: "",
   permissionLetterNumber: "",
   permissionLetterDate: "",
   permissionLetter: null,
@@ -41,6 +41,12 @@ const initialForm = {
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+const fileLimits = {
+  photo: 1 * 1024 * 1024,
+  resume: 10 * 1024 * 1024,
+  result: 10 * 1024 * 1024,
+  permissionLetter: 10 * 1024 * 1024,
+};
 
 function isValidDateValue(value) {
   if (!datePattern.test(value)) return false;
@@ -120,7 +126,7 @@ function validateStepTwo(form) {
 
   const requiredFields = [
     "internshipDuration",
-    "internshipJoiningDate",
+    "internshipJoiningMonth",
     "permissionLetterNumber",
     "permissionLetterDate",
   ];
@@ -134,12 +140,17 @@ function validateStepTwo(form) {
       errors[field] = "This field is required.";
     } else if (!allowedTypes.includes(form[field].type)) {
       errors[field] = message;
+    } else if (form[field].size > fileLimits[field]) {
+      errors[field] =
+        field === "photo"
+          ? "Photo size should not exceed 1 MB."
+          : `${field === "permissionLetter" ? "Permission Letter" : field[0].toUpperCase() + field.slice(1)} size should not exceed 10 MB.`;
     }
   });
 
   if (!form.collegeId.trim()) errors.collegeId = "College identity card number is required.";
-  if (form.internshipJoiningDate && !isValidDateValue(form.internshipJoiningDate)) {
-    errors.internshipJoiningDate = "Select a valid internship joining date.";
+  if (form.internshipJoiningMonth && !/^\d{4}-\d{2}$/.test(form.internshipJoiningMonth)) {
+    errors.internshipJoiningMonth = "Select a valid internship joining month.";
   }
   if (form.permissionLetterDate && !isValidDateValue(form.permissionLetterDate)) {
     errors.permissionLetterDate = "Select a valid permission letter date.";
@@ -154,6 +165,7 @@ function StudentForm() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [registrationResult, setRegistrationResult] = useState(null);
 
   const handleChange = (event) => {
     const { name, value, type, checked, files } = event.target;
@@ -187,7 +199,8 @@ function StudentForm() {
 
     try {
       setIsSubmitting(true);
-      await submitStudentRegistration(payload);
+      const response = await submitStudentRegistration(payload);
+      setRegistrationResult(response);
       setIsSubmitted(true);
     } catch (error) {
       setErrors((current) => ({ ...current, submit: error.message }));
@@ -196,7 +209,7 @@ function StudentForm() {
     }
   };
 
-  if (isSubmitted) return <Success />;
+  if (isSubmitted) return <Success registration={registrationResult} />;
 
   return (
     <main className="portal-shell">

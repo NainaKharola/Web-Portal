@@ -112,6 +112,21 @@
   margin-bottom: 16px;
 }
 
+.admin-actions-row,
+.details-section__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.admin-muted {
+  color: var(--muted);
+  font-weight: 700;
+}
+
 .admin-field {
   display: flex;
   flex-direction: column;
@@ -290,6 +305,17 @@
   min-width: min(100%, 360px);
 }
 
+.training-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.training-form .primary-button,
+.training-form .admin-muted {
+  align-self: end;
+}
+
 .offer-letter-viewer {
   width: 100%;
   height: min(78vh, 920px);
@@ -334,6 +360,7 @@
   .admin-panel__header,
   .admin-control-grid,
   .details-grid,
+  .training-form,
   .offer-letter-box {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -360,6 +387,7 @@
   .admin-panel__header,
   .admin-control-grid,
   .details-grid,
+  .training-form,
   .offer-letter-box {
     grid-template-columns: 1fr;
   }

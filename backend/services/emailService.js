@@ -121,7 +121,82 @@ Internship Management Team`,
   };
 }
 
+async function sendRegistrationConfirmationEmail(student) {
+  const transporter = await createTransporter();
+
+  if (!transporter) {
+    return {
+      skipped: true,
+      reason: "Email configuration missing.",
+    };
+  }
+
+  const info = await transporter.sendMail({
+    from: process.env.MAIL_FROM,
+    to: student.email,
+    subject: "DRDO Internship Registration Confirmation",
+    text: `Dear ${student.name},
+
+Your internship registration has been submitted successfully.
+
+Reference ID: ${student.referenceId}
+Serial Number: ${student.serialNumber || "-"}
+
+Please keep this Reference ID safe. You will need your registered email address and Reference ID to log in to the Student Portal.
+
+Regards,
+Internship Management Team`,
+  });
+
+  return {
+    skipped: false,
+    messageId: info.messageId,
+  };
+}
+
+async function sendGyapanEmail(student, attachment = {}) {
+  const transporter = await createTransporter();
+
+  if (!transporter) {
+    return {
+      skipped: true,
+      reason: "Email configuration missing.",
+    };
+  }
+
+  const pdfAttachment = attachment.buffer
+    ? {
+        filename: attachment.filename || "DRDO-Gyapan.pdf",
+        content: attachment.buffer,
+        contentType: "application/pdf",
+      }
+    : {
+        filename: attachment.filename || "DRDO-Gyapan.pdf",
+        path: attachment.url || student.gyapan?.url,
+      };
+
+  const info = await transporter.sendMail({
+    from: process.env.MAIL_FROM,
+    to: student.email,
+    subject: "DRDO Training Management Gyapan",
+    text: `Dear ${student.name},
+
+Your Training Management System Gyapan has been generated. Please find it attached.
+
+Regards,
+Internship Management Team`,
+    attachments: [pdfAttachment],
+  });
+
+  return {
+    skipped: false,
+    messageId: info.messageId,
+  };
+}
+
 module.exports = {
+  sendGyapanEmail,
   sendOfferLetterEmail,
+  sendRegistrationConfirmationEmail,
   sendRejectionEmail,
 };

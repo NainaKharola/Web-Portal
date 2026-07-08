@@ -21,12 +21,12 @@ function DocumentForm({ form, errors, onChange }) {
             required
           />
           <TextInput
-            label="Internship Joining Date"
-            name="internshipJoiningDate"
-            type="date"
-            value={form.internshipJoiningDate}
+            label="Joining Month"
+            name="internshipJoiningMonth"
+            type="month"
+            value={form.internshipJoiningMonth}
             onChange={onChange}
-            error={errors.internshipJoiningDate}
+            error={errors.internshipJoiningMonth}
             required
           />
           <TextInput
@@ -47,7 +47,7 @@ function DocumentForm({ form, errors, onChange }) {
             required
           />
           <FileInput
-            label="College Permission Letter"
+            label="Permission Letter (Maximum File Size: 10 MB)"
             name="permissionLetter"
             onChange={onChange}
             error={errors.permissionLetter}
@@ -61,7 +61,7 @@ function DocumentForm({ form, errors, onChange }) {
         <h2>Upload Documents</h2>
         <div className="form-grid">
           <FileInput
-            label="Resume"
+            label="Resume (Maximum File Size: 10 MB)"
             name="resume"
             onChange={onChange}
             error={errors.resume}
@@ -69,7 +69,7 @@ function DocumentForm({ form, errors, onChange }) {
             required
           />
           <FileInput
-            label="Result"
+            label="Result (Last Semester Result showing CGPA) (Maximum File Size: 10 MB)"
             name="result"
             onChange={onChange}
             error={errors.result}
@@ -77,7 +77,7 @@ function DocumentForm({ form, errors, onChange }) {
             required
           />
           <FileInput
-            label="Passport Size Photograph"
+            label="Photo (Maximum File Size: 1 MB)"
             name="photo"
             onChange={onChange}
             error={errors.photo}

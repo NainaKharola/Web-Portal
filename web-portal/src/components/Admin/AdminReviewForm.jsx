@@ -30,6 +30,11 @@ const recommendedByOptions = [
   "P & C",
   "AV",
   "CMD",
+  "DIR",
+  "HRD",
+  "WORKS",
+  "MI",
+  "SECURITY",
 ];
 
 function AdminReviewForm({ student, onUpdated }) {

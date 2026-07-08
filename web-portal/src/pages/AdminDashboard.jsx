@@ -4,7 +4,11 @@ import FilterBar from "../components/Admin/FilterBar";
 import SearchBar from "../components/Admin/SearchBar";
 import SortControls from "../components/Admin/SortControls";
 import StudentTable from "../components/Admin/StudentTable";
-import { clearAdminToken, fetchAdminStudents } from "../services/adminService";
+import {
+  clearAdminToken,
+  deleteAdminStudents,
+  fetchAdminStudents,
+} from "../services/adminService";
 import "../styles/admin.css";
 
 const initialFilters = {
@@ -23,6 +27,8 @@ function AdminDashboard() {
   const [filters, setFilters] = useState(initialFilters);
   const [sort, setSort] = useState({ sortBy: "submittedAt", sortOrder: "desc" });
   const [loading, setLoading] = useState(true);
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
   const [error, setError] = useState("");
 
   const query = useMemo(
@@ -46,6 +52,7 @@ function AdminDashboard() {
         if (ignore) return;
         setStudents(response.students);
         setSummary(response.summary);
+        setSelectedIds([]);
       } catch (err) {
         if (err.message.toLowerCase().includes("token")) {
           clearAdminToken();
@@ -94,6 +101,37 @@ function AdminDashboard() {
     window.dispatchEvent(new PopStateEvent("popstate"));
   };
 
+  const toggleApprovedStudents = () => {
+    setFilters((current) => ({
+      ...current,
+      status: current.status === "Approved" ? "" : "Approved",
+    }));
+  };
+
+  const toggleSelected = (id, checked) => {
+    setSelectedIds((current) =>
+      checked ? [...current, id] : current.filter((value) => value !== id)
+    );
+  };
+
+  const deleteSelected = async () => {
+    if (!selectedIds.length) {
+      setError("Select one or more registrations to delete.");
+      return;
+    }
+
+    try {
+      await deleteAdminStudents(selectedIds);
+      const response = await fetchAdminStudents(query);
+      setStudents(response.students);
+      setSummary(response.summary);
+      setSelectedIds([]);
+      setDeleteMode(false);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <main className="admin-shell">
       <header className="admin-topbar">
@@ -114,6 +152,24 @@ function AdminDashboard() {
           <SortControls sort={sort} onChange={setSort} />
         </div>
 
+        <div className="admin-actions-row">
+          <button className="secondary-button" type="button" onClick={toggleApprovedStudents}>
+            {filters.status === "Approved" ? "All Students" : "Approved Students"}
+          </button>
+          <button
+            className="secondary-button"
+            type="button"
+            onClick={() => setDeleteMode((current) => !current)}
+          >
+            {deleteMode ? "Cancel Delete" : "Delete Entry"}
+          </button>
+          {deleteMode && (
+            <button className="primary-button" type="button" onClick={deleteSelected}>
+              Delete Selected
+            </button>
+          )}
+        </div>
+
         <FilterBar
           filters={filters}
           onChange={setFilters}
@@ -124,7 +180,13 @@ function AdminDashboard() {
         {loading ? (
           <div className="admin-loading">Loading applications...</div>
         ) : (
-          <StudentTable students={students} onView={openStudent} />
+          <StudentTable
+            deleteMode={deleteMode}
+            onSelect={toggleSelected}
+            onView={openStudent}
+            selectedIds={selectedIds}
+            students={students}
+          />
         )}
       </section>
     </main>
