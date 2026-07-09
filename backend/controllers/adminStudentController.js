@@ -8,12 +8,7 @@ const {
   sendRejectionEmail,
 } = require("../services/emailService");
 
-const reviewFields = [
-  "status",
-  "remark",
-  "referenceBy",
-  "recommendedBy",
-];
+const reviewFields = ["status", "remark", "referenceBy", "recommendedBy"];
 
 const allowedStatuses = ["Pending", "Approved", "Rejected"];
 
@@ -65,10 +60,7 @@ function buildStudentFilter(query) {
   if (query.year) filter.year = query.year;
 
   if (query.status === "Pending") {
-    filter.$or = [
-      { status: "Pending" },
-      { status: { $exists: false } },
-    ];
+    filter.$or = [{ status: "Pending" }, { status: { $exists: false } }];
   } else if (query.status) {
     filter.status = query.status;
   }
@@ -142,7 +134,10 @@ function buildGyapanHtml(student, training) {
     ["Course Year", training.courseYear],
     ["Branch", training.branch],
     ["Training Duration", training.trainingDuration],
-    ["Training Period", `${formatDate(training.fromDate)} to ${formatDate(training.toDate)}`],
+    [
+      "Training Period",
+      `${formatDate(training.fromDate)} to ${formatDate(training.toDate)}`,
+    ],
     ["Joined", training.joined],
     ["Project Title", training.projectTitle],
     ["Project Guide", training.projectGuide],
@@ -177,7 +172,7 @@ function buildGyapanHtml(student, training) {
       ${rows
         .map(
           ([label, value]) =>
-            `<tr><th>${escapeHtml(label)}</th><td>${escapeHtml(value || "-")}</td></tr>`
+            `<tr><th>${escapeHtml(label)}</th><td>${escapeHtml(value || "-")}</td></tr>`,
         )
         .join("")}
     </tbody>
@@ -192,7 +187,9 @@ function buildGyapanHtml(student, training) {
 
 async function destroyCloudinaryFile(file, resourceType = "auto") {
   if (!file?.publicId) return;
-  await cloudinary.uploader.destroy(file.publicId, { resource_type: resourceType });
+  await cloudinary.uploader.destroy(file.publicId, {
+    resource_type: resourceType,
+  });
 }
 
 async function removeStudentAssets(student) {
@@ -203,9 +200,12 @@ async function removeStudentAssets(student) {
     destroyCloudinaryFile(student.permissionLetter),
     destroyCloudinaryFile(student.completedDocuments, "raw"),
     destroyCloudinaryFile(student.gyapan, "raw"),
-    destroyCloudinaryFile({
-      publicId: student.offerLetter?.publicId || student.offerLetterPublicId,
-    }, "raw"),
+    destroyCloudinaryFile(
+      {
+        publicId: student.offerLetter?.publicId || student.offerLetterPublicId,
+      },
+      "raw",
+    ),
   ]);
 }
 
@@ -237,7 +237,7 @@ async function getStudents(req, res) {
         approvedStudents: 0,
         rejectedStudents: 0,
         offerLettersSent: 0,
-      }
+      },
     );
 
     return res.status(200).json({
@@ -355,7 +355,9 @@ async function deleteStudents(req, res) {
 
     const students = await Student.find({ _id: { $in: ids } });
     await Promise.all(students.map(removeStudentAssets));
-    await Student.deleteMany({ _id: { $in: students.map((student) => student._id) } });
+    await Student.deleteMany({
+      _id: { $in: students.map((student) => student._id) },
+    });
 
     return res.status(200).json({
       success: true,
@@ -385,7 +387,8 @@ async function saveTrainingManagement(req, res) {
     if (student.status !== "Approved") {
       return res.status(400).json({
         success: false,
-        message: "Training Management System is available only for approved students.",
+        message:
+          "Training Management System is available only for approved students.",
       });
     }
 
@@ -400,7 +403,10 @@ async function saveTrainingManagement(req, res) {
       fromDate: req.body.fromDate || "",
       toDate:
         req.body.toDate ||
-        addDurationToDate(req.body.fromDate, req.body.trainingDuration || student.internshipDuration),
+        addDurationToDate(
+          req.body.fromDate,
+          req.body.trainingDuration || student.internshipDuration,
+        ),
       joined: req.body.joined || "",
       projectTitle: req.body.projectTitle || "",
       projectGuide: req.body.projectGuide || "",
@@ -420,42 +426,58 @@ async function saveTrainingManagement(req, res) {
 
     student.trainingManagement = training;
 
-    const html = buildGyapanHtml(student, training);
-    const pdfBuffer = await generatePdfFromHtml(html);
-    const uploadResult = await uploadBufferToCloudinary(pdfBuffer, {
-      folder: "web-portal/gyapan",
-      public_id: `gyapan-${student._id}-${Date.now()}`,
-    });
+    console.log("STEP 1: HTML generated");
 
-    let emailResult = null;
-    try {
-      emailResult = await sendGyapanEmail(student, {
-        buffer: pdfBuffer,
-        filename: `DRDO-Gyapan-${student.referenceId || student._id}.pdf`,
-      });
-    } catch (emailError) {
-      emailResult = {
-        skipped: true,
-        reason: emailError.message,
-      };
-    }
+console.log("STEP 1: Building HTML");
+const html = buildGyapanHtml(student, training);
 
-    student.gyapan = {
-      url: uploadResult.secure_url,
-      publicId: uploadResult.public_id,
-      generatedAt: new Date(),
-      emailedAt: emailResult?.skipped ? undefined : new Date(),
-      emailStatus: emailResult?.skipped ? "Email Failed" : "Sent",
-    };
+console.log("STEP 2: Starting PDF generation");
+const pdfBuffer = await generatePdfFromHtml(html);
 
-    await student.save();
+console.log("STEP 3: PDF generated successfully");
+const uploadResult = await uploadBufferToCloudinary(pdfBuffer, {
+  folder: "web-portal/gyapan",
+  public_id: `gyapan-${student._id}-${Date.now()}`,
+});
 
-    return res.status(200).json({
-      success: true,
-      student,
-      email: emailResult,
-      message: "Training details saved and Gyapan generated successfully.",
-    });
+console.log("STEP 4: Uploaded to Cloudinary");
+
+let emailResult = null;
+
+try {
+  console.log("STEP 5: Sending email");
+
+  emailResult = await sendGyapanEmail(student, {
+    buffer: pdfBuffer,
+    filename: `DRDO-Gyapan-${student.referenceId || student._id}.pdf`,
+  });
+
+  console.log("STEP 6: Email completed");
+} catch (emailError) {
+  console.error("Email Error:", emailError);
+
+  emailResult = {
+    skipped: true,
+    reason: emailError.message,
+  };
+}
+
+student.gyapan = {
+  url: uploadResult.secure_url,
+  publicId: uploadResult.public_id,
+  generatedAt: new Date(),
+  emailedAt: emailResult?.skipped ? undefined : new Date(),
+  emailStatus: emailResult?.skipped ? "Email Failed" : "Sent",
+};
+
+await student.save();
+
+return res.status(200).json({
+  success: true,
+  student,
+  email: emailResult,
+  message: "Training details saved and Gyapan generated successfully.",
+});
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -541,3 +563,5 @@ module.exports = {
   saveTrainingManagement,
   recommendedByOptions,
 };
+/*ky krna h?
+*/ 

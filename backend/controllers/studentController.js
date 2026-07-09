@@ -447,11 +447,15 @@ async function downloadStudentDocument(req, res) {
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
     return res.send(pdf);
-  } catch (error) {
+  } 
+  catch (error) {
+    console.error("DOCUMENT ERROR:");
+    console.error(error);
+
     return res.status(500).json({
       success: false,
-      message: "Unable to generate document.",
-      error: error.message,
+      message: error.message,
+      stack: error.stack,
     });
   }
 }
