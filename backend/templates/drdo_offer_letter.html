@@ -1,330 +1,235 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="hi">
-  <head>
-    <meta charset="UTF-8" />
-    <title>DRDO Internship Offer Letter</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRDE Training Letter</title>
     <style>
-      @page {
-        size: A4;
-        margin: 0;
-      }
+        body {
+            font-family: 'Arial', 'Mangal', 'Nirmala UI', sans-serif;
+            line-height: 1.5;
+            margin: 40px;
+            color: #000;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        /* Header section */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .header-table td {
+            vertical-align: top;
+            font-size: 11px;
+            line-height: 1.3;
+        }
+        .left-header {
+            width: 35%;
+        }
+        .center-header {
+            width: 30%;
+            text-align: center;
+        }
+        .right-header {
+            width: 35%;
+            text-align: left;
+            padding-left: 20px;
+        }
+        .logo-placeholder {
+            width: 85px;
+            height: 85px;
+            border: 2px double #555;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: bold;
+            color: #444;
+            text-align: center;
+        }
 
-      * {
-        box-sizing: border-box;
-      }
+        /* Meta Information Rows */
+        .meta-info {
+            width: 100%;
+            margin-top: 30px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+        }
 
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        background: #ffffff;
-      }
+        /* Address Blocks */
+        .recipient-address {
+            margin-left: 60px;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            font-size: 14px;
+        }
 
-      body {
-        color: #222222;
-        font-family: "Noto Serif Devanagari", "Mangal", "Kokila", "Times New Roman", serif;
-        font-size: 16px;
-        line-height: 1.38;
-      }
+        /* Subject Line */
+        .subject-block {
+            margin-left: 60px;;
+            margin-bottom: 40px;
+            font-size: 16px;
+            font-weight: bold;
+        }
 
-      .page {
-        width: 210mm;
-        min-height: 297mm;
-        position: relative;
-        padding: 13mm 20mm 14mm 20mm;
-      }
+        /* Letter Body Content */
+        .letter-body {
+            text-align: justify;
+            text-indent: 50px;
+            margin-bottom: 20px;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+        .student-highlight {
+            display: inline-block;
+            text-indent: 0;
+            border-bottom: 1px solid #000;
+            padding-bottom: 1px;
+            font-weight: bold;
+        }
 
-      .header {
-        display: grid;
-        grid-template-columns: 35% 24% 41%;
-        min-height: 51mm;
-        color: #4a4a4a;
-      }
+        /* Sign-off Block */
+        .signature-block {
+            float: right;
+            width: 250px;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            font-size: 15px;
+        }
+        .signature-space {
+            height: 45px;
+        }
 
-      .contact {
-        font-size: 11.6px;
-        line-height: 1.55;
-        padding-top: 2mm;
-      }
+        /* Enclosure / Encl List */
+        .enclosure-block {
+            clear: both;
+            margin-top: -0px;    /* Pulls the entire block upwards */
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        .enclosure-list {
+            list-style-type: none;
+            padding-left: 25px;
+            margin-top: 5px;
+        }
 
-      .contact-row {
-        display: grid;
-        grid-template-columns: 18mm 1fr;
-        column-gap: 3mm;
-        margin-bottom: 2mm;
-      }
-
-      .contact .note {
-        margin-top: 6mm;
-        width: 58mm;
-        font-size: 11px;
-        line-height: 1.45;
-      }
-
-      .emblem {
-        text-align: center;
-        padding-top: 7mm;
-      }
-
-      .logo {
-        width: 30mm;
-        height: 30mm;
-        object-fit: contain;
-        opacity: 0.76;
-      }
-
-      .iso {
-        margin-top: 1.8mm;
-        font-size: 10.5px;
-        letter-spacing: 0;
-      }
-
-      .org {
-        padding-top: 6mm;
-        padding-left: 5mm;
-        font-size: 11.2px;
-        line-height: 1.32;
-      }
-
-      .org .english {
-        margin-top: 3.8mm;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 12.2px;
-        line-height: 1.25;
-        text-transform: uppercase;
-        letter-spacing: 0.2px;
-      }
-
-      .meta {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        margin-top: 9mm;
-        font-size: 16px;
-        color: #383838;
-      }
-
-      .meta div:last-child {
-        text-align: right;
-        padding-right: 27mm;
-      }
-
-      .to {
-        margin-top: 11mm;
-        margin-left: 26mm;
-      }
-
-      .address {
-        margin-top: 6mm;
-        margin-left: 15mm;
-        font-family: "Times New Roman", serif;
-        font-size: 16px;
-        line-height: 1.22;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-      }
-
-      .subject {
-        margin-top: 16mm;
-        margin-left: 38mm;
-        font-size: 17px;
-        font-weight: 700;
-      }
-
-      .body {
-        margin-top: 25mm;
-        margin-left: 17mm;
-        margin-right: 21mm;
-        font-size: 17px;
-        line-height: 1.46;
-      }
-
-      .student-line {
-        margin-bottom: 1mm;
-        font-family: "Times New Roman", serif;
-        font-size: 15px;
-        font-weight: 700;
-        text-decoration: underline;
-        text-transform: uppercase;
-      }
-
-      .indent {
-        text-indent: 17mm;
-      }
-
-      .para {
-        margin: 0 0 8mm 0;
-        text-align: justify;
-      }
-
-      .para-tight {
-        margin-bottom: 5.6mm;
-      }
-
-      .signature {
-        position: absolute;
-        right: 32mm;
-        bottom: 44mm;
-        width: 48mm;
-        color: #222222;
-        font-family: "Times New Roman", "Noto Serif Devanagari", serif;
-        font-size: 15.5px;
-        line-height: 1.45;
-      }
-
-      .sign-mark {
-        height: 12mm;
-        font-family: "Segoe Script", "Brush Script MT", cursive;
-        font-size: 28px;
-        line-height: 1;
-        padding-left: 9mm;
-      }
-
-      .signature p {
-        margin: 0 0 4mm 0;
-      }
-
-      .enclosures {
-        position: absolute;
-        left: 25mm;
-        bottom: 45mm;
-        font-size: 16px;
-        line-height: 1.56;
-      }
-
-      .enclosures .title {
-        margin-bottom: 7mm;
-      }
-
-      .footer {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 12mm;
-        text-align: center;
-        color: #222222;
-      }
-
-      .footer-band {
-        display: inline-block;
-        min-width: 55mm;
-        border-top: 1.8px solid #222222;
-        border-bottom: 1.8px solid #222222;
-        padding: 1mm 5mm 0.5mm;
-        font-weight: 700;
-        font-size: 13px;
-        line-height: 1;
-      }
-
-      .footer-hindi {
-        margin-top: 1.4mm;
-        font-size: 12px;
-      }
-
-      .footer-english {
-        margin-top: 0.6mm;
-        font-family: "Times New Roman", serif;
-        font-size: 11px;
-      }
+        /* Bottom Decorative Banner */
+        .bottom-banner {
+            margin-top: 70px;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+        .banner-graphic {
+            width: 180px;
+            height: 25px;
+            border: 1px dashed #777;
+            margin: 0 auto 5px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
     </style>
-  </head>
-  <body>
-    <main class="page">
-      <header class="header">
-        <section class="contact">
-          <div class="contact-row">
-            <span>दूरभाष/</span>
-            <span>Phones : 0135-2787004 to 2787007</span>
-          </div>
-          <div class="contact-row">
-            <span>फैक्स/</span>
-            <span>Fax : 0091-135 2787161 &amp;<br />2787128</span>
-          </div>
-          <div class="contact-row" style="margin-top: 6mm">
-            <span>तार /</span>
-            <span>Telegrams : IRDE</span>
-          </div>
-          <div class="note">
-            सभी पत्राचार निदेशक से सम्बोधित हो। चाहिए, जिसमें वैज्ञानिक/अधिकारी के नाम से नहीं।
-          </div>
-        </section>
+</head>
+<body>
 
-        <section class="emblem">
-          <img class="logo" src="{{logoUrl}}" alt="DRDO Logo" />
-          <div class="iso">ISO 9001:2015</div>
-        </section>
+<div class="container">
 
-        <section class="org">
-          <div>भारत सरकार रक्षा मंत्रालय</div>
-          <div>रक्षा अनुसंधान तथा विकास संगठन</div>
-          <div>यंत्र अनुसंधान एवं विकास संस्थान</div>
-          <div>रायपुर रोड, देहरादून - 248008</div>
-          <div class="english">
-            GOVT. OF INDIA, MINISTRY OF DEFENCE<br />
-            DEFENCE R &amp; D ORGANISATION<br />
-            INSTRUMENTS R &amp; D ESTABLISHMENT<br />
-            RAIPUR ROAD, DEHRADUN - 248 008
-          </div>
-        </section>
-      </header>
+    <table class="header-table">
+        <tr>
+            <td class="left-header">
+                दूरभाष / Phones : 0135-2787004 to 2787007<br>
+                फैक्स / Fax : 0091-135 2787161 &<br>
+                <span style="padding-left: 63px;">2787128</span><br><br>
+                तार / Telegrams : IRDE<br><br>
+                सभी पत्रादि निदेशक को ही सम्बोधित होने<br>
+                चाहिये, किसी वैज्ञानिक/अधिकारी के नाम से<br>
+                नही।
+            </td>
+            <td class="center-header">
+                <div class="logo-placeholder">
+                    IRDE - DRDO<br>ISO 9001:2015
+                </div>
+            </td>
+            <td class="right-header">
+                भारत सरकार, रक्षा मंत्रालय<br>
+                रक्षा अनुसंधान तथा विकास संगठन<br>
+                यंत्र अनुसंधान एवं विकास संस्थान<br>
+                रायपुर रोड, देहरादून - 248008<br>
+                GOVT. OF INDIA, MINISTRY OF DEFENCE<br>
+                DEFENCE R & D ORGANISATION<br>
+                INSTRUMENTS R & D ESTABLISHMENT<br>
+                RAIPUR ROAD, DEHRADUN - 248 008
+            </td>
+        </tr>
+    </table>
 
-      <section class="meta">
-        <div>पत्रांक / Letter No.: {{letterNumber}}</div>
-        <div>दिनांक/ Dated: {{issueDate}}</div>
-      </section>
+    <div class="meta-info">
+        <div>पत्रांक / Letter No.: 47617/ टीसी / 4186 0</div>
+        <div>दिनाँक / Dated: 15-05-2026</div>
+    </div>
 
-      <section class="recipient">
-        <div class="to">सेवा में,</div>
-        <div class="address">
-          TRAINING &amp; PLACEMENT CO-ORDINATOR<br />
-          {{collegeName}}<br />
-          {{collegeAddressLine1}}<br />
-          {{collegeAddressLine2}}
-        </div>
-      </section>
+    <div style="font-size: 15px; margin-bottom: 5px;">सेवा में,</div>
+    <div class="recipient-address">
+        TRAINING & PLACEMENT CO-ORDINATOR<br>
+        BANASTHALI UNIVERSITY<br>
+        P.O. BANASTHALI<br>
+        VIDYAPITH-304022, RAJASTHAN
+    </div>
 
-      <section class="subject">विषय : &nbsp;&nbsp;&nbsp; आई. आर. डी. ई. में विद्यार्थियों को प्रशिक्षण सुविधा</section>
+    <div class="subject-block">
+        विषय : आई.आर.डी.ई. में विद्यार्थियों को प्रशिक्षण सुविधा
+    </div>
 
-      <section class="body">
-        <div class="student-line">{{studentName}}, {{course}} {{year}}, {{branch}}</div>
-        <p class="para para-tight">
-          को इस संस्थान में {{internshipDuration}} अवधि का प्रयोगात्मक
-          प्रशिक्षण / परियोजना कार्य करने की सुविधा दी जा सकती है ।
-        </p>
+    <div class="letter-body">
+        <span class="student-highlight">SAKSHI CHOUHAN, B.TECH 3 Year, CSE</span> को इस संस्थान में 20 सप्ताह अवधि का प्रयोगात्मक प्रशिक्षण / परियोजना कार्य करने की सुविधा दी जा सकती है ।
+    </div>
 
-        <p class="para indent">
-          इस संस्थान में प्रशिक्षण परियोजना कार्य प्रारम्भ करने से पूर्व विद्यार्थियों को
-          अपने चरित्र एवं पूर्ववृत्त का पुलिस प्राधिकारी से सत्यापन कराना आवश्यक है ।
-          इसके लिये निर्धारित फार्म, एक वचनबंध के साथ पूर्ण कर वापस करने के लिये
-          यहाँ संलग्न किया जा रहा है । चरित्र सत्यापन के बिना, प्रशिक्षण दिया जाना सम्भव
-          न हो पायेगा ।
-        </p>
+    <div class="letter-body">
+        इस संस्थान में प्रशिक्षण परियोजना कार्य प्रारम्भ करने से पूर्व विद्यार्थियों को अपने चरित्र एवं पूर्ववृत्त का पुलिस प्राधिकारी से सत्यापन कराना आवश्यक है । इसके लिये निर्धारित फार्म, एक वचनबंध के साथ पूर्ण कर वापस करने के लिये यहाँ संलग्न किया जा रहा है । चरित्र सत्यापन के बिना, प्रशिक्षण दिया जाना सम्भव न हो पायेगा ।
+    </div>
 
-        <p class="para indent">
-          कृपया, छात्र / छात्रा को यह भी सलाह दें कि, वे प्रशिक्षण के लिये आते समय
-          अपने 02 नवीनतम पासपोर्ट आकार के फोटोग्राफ भी साथ लाएं । प्रशिक्षण अवधि में
-          आवास की सुविधा नहीं दी जा सकती है, अतः रहने का प्रबन्ध स्वयं करें।
-        </p>
-      </section>
+    <div class="letter-body">
+        कृपया, छात्र / छात्रा को यह भी सलाह दें कि, वे प्रशिक्षण के लिये आते समय अपने 02 नवीनतम पासपोर्ट आकार के फोटोग्राफ भी साथ लाएँ । प्रशिक्षण अवधि में आवास की सुविधा नही दी जा सकती है, अतः रहने का प्रबन्ध स्वयं करें ।
+    </div>
 
-      <section class="enclosures">
-        <div class="title">संलग्न :</div>
-        <div>1. विद्यार्थी द्वारा घोषणा पत्र</div>
-        <div>2. कॉलेज द्वारा प्रमाण पत्र</div>
-        <div>3. पुलिस प्राधिकारी द्वारा चरित्र प्रमाण पत्र</div>
-      </section>
+    <div class="signature-block">
+        <div class="signature-space"></div>
+        (Dr. Vaibhav Gupta)<br>
+        Technical Officer 'C'<br><br>
+        कृते निदेशक
+    </div>
 
-      <section class="signature">
-        <div class="sign-mark">VG</div>
-        <p>(Dr.Vaibhav Gupta)</p>
-        <p>Technical Officer 'C'</p>
-        <p>कृते &nbsp;&nbsp; निदेशक</p>
-      </section>
+    <div class="enclosure-block">
+        संलग्न :<br>
+        <ul class="enclosure-list">
+            <li>1. विद्यार्थी द्वारा घोषणा पत्र</li>
+            <li>2. कॉलेज द्वारा प्रमाण पत्र</li>
+            <li>3. पुलिस प्राधिकारी द्वारा चरित्र प्रमाण पत्र</li>
+        </ul>
+    </div>
 
-      <footer class="footer">
-        <div class="footer-band">सर्व दिशा अभियान</div>
-        <div class="footer-hindi">मैनुअल की रक्षा, देश की सुरक्षा</div>
-        <div class="footer-english">Training Management System</div>
-      </footer>
-    </main>
-  </body>
+    <div class="bottom-banner">
+        <div class="banner-graphic">सर्व शिक्षा अभियान</div>
+        <strong>राजभाषा की रक्षा, देश की सुरक्षा</strong><br>
+        <span style="font-size: 11px; color: #333;">Training Management System</span>
+    </div>
+
+</div>
+
+</body>
 </html>

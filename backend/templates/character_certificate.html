@@ -1,238 +1,169 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Sponsorship and Character Certificate</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsorship and Character Certificate Form</title>
     <style>
-      @page {
-        size: A4;
-        margin: 0;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        background: #ffffff;
-      }
-
-      body {
-        color: #222222;
-        font-family: "Times New Roman", Times, serif;
-        font-size: 18px;
-        line-height: 1.22;
-      }
-
-      .page {
-        width: 210mm;
-        min-height: 297mm;
-        position: relative;
-        padding: 19mm 20mm 12mm 20mm;
-      }
-
-      .title {
-        margin: 0 10mm 7mm;
-        text-align: center;
-        font-size: 24px;
-        line-height: 1.15;
-        font-weight: 700;
-        letter-spacing: 0.4px;
-      }
-
-      .paragraph {
-        margin: 0 0 0 0;
-        text-align: justify;
-        font-size: 18px;
-        line-height: 1.28;
-      }
-
-      .line {
-        display: inline-block;
-        border-bottom: 1px solid #222222;
-        min-width: 47mm;
-        min-height: 5mm;
-        padding: 0 1mm;
-        vertical-align: baseline;
-      }
-
-      .wide-line {
-        min-width: 56mm;
-      }
-
-      .sponsor-sign-row {
-        display: grid;
-        grid-template-columns: 1fr 86mm;
-        gap: 11mm;
-        margin-top: 25mm;
-        font-size: 18px;
-      }
-
-      .place-date {
-        line-height: 1.9;
-      }
-
-      .authority {
-        line-height: 1.9;
-      }
-
-      .divider {
-        margin: 55mm -15mm 21mm;
-        border: 0;
-        border-top: 1px solid #bdbdbd;
-      }
-
-      .character-title {
-        margin: 0;
-        text-align: center;
-        font-size: 24px;
-        font-weight: 700;
-      }
-
-      .subtitle {
-        margin: 3mm 0 8mm;
-        text-align: center;
-        font-size: 18px;
-        font-weight: 700;
-      }
-
-      .character-text {
-        margin: 0 2mm;
-        text-align: justify;
-        font-size: 18px;
-        line-height: 1.31;
-      }
-
-      .purpose {
-        margin: 11mm 2mm 0;
-        font-size: 18px;
-      }
-
-      .bottom-row {
-        display: grid;
-        grid-template-columns: 42mm 57mm 1fr;
-        align-items: start;
-        gap: 9mm;
-        margin: 12mm 2mm 0;
-        font-size: 18px;
-      }
-
-      .police-photo {
-        width: 38mm;
-        height: 38mm;
-        border: 1px solid #c2c2c2;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        color: #555555;
-        font-family: "Courier New", monospace;
-        font-size: 11px;
-        line-height: 1.25;
-        letter-spacing: 0.7px;
-      }
-
-      .stamp-sign {
-        line-height: 1.6;
-      }
-
-      .footer {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 5mm;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        padding: 0 11mm 0 10mm;
-        font-family: "Courier New", monospace;
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-      }
-
-      .footer div:last-child {
-        text-align: right;
-        padding-right: 33mm;
-      }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+            color: #000;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h2 {
+            text-align: center;
+            font-size: 1.25rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 25px;
+            line-height: 1.4;
+            font-weight: bold;
+        }
+        h3 {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-top: 40px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 25px;
+            font-weight: normal;
+        }
+        p {
+            text-align: justify;
+            text-justify: inter-word;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+        .line {
+            display: inline-block;
+            border-bottom: 1px dashed #000;
+            min-width: 150px;
+            height: 1.2em;
+            vertical-align: bottom;
+        }
+        .section-separator {
+            border-top: 1px dotted #000;
+            margin: 60px 0;
+        }
+        .footer-table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+        .footer-table td {
+            vertical-align: top;
+            padding: 5px 0;
+        }
+        .left-col {
+            width: 50%;
+            line-height: 2;
+        }
+        .right-col {
+            width: 50%;
+            padding-left: 20px;
+            line-height: 1.8;
+        }
+        .photo-box {
+            width: 130px;
+            height: 150px;
+            border: 1px solid #777;
+            font-size: 0.65rem;
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+            padding: 5px;
+            box-sizing: border-box;
+            text-transform: uppercase;
+            color: #444;
+            line-height: 1.4;
+        }
+        .photo-container {
+            width: 35%;
+            vertical-align: middle;
+        }
+        .footer-nav {
+            margin-top: 80px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: normal;
+            border-top: none;
+        }
     </style>
-  </head>
-  <body>
-    <main class="page">
-      <section class="sponsorship">
-        <h1 class="title">
-          SPONSORSHIP &amp; CHARACTER CERTIFICATE BY/ INSTITUTE /<br />
-          UNIVERSITY / COLLEGE/ SPONSORED AUTHORITY
-        </h1>
+</head>
+<body>
 
-        <p class="paragraph">
-          Certified that declaration from Sr.No. 1 to 13 in respect of Mr./Ms.
-          <span class="line wide-line">{{studentName}}</span>
-          who is being sponsored for practical training / project work at IRDE, Dehra Dun has been verified from our
-          official record and is true to the best of my knowledge, He/She bears a good moral character. The terms &amp;
-          conditions stipulated as above are acceptable and are agreed by the student and signed in my presence. The
-          student will be under the overall control of Director, IRDE, Dehra Dun during the period of his practical
-          training/project work.
-        </p>
+<div class="container">
 
-        <div class="sponsor-sign-row">
-          <div class="place-date">
-            Place: {{place}}<br />
-            Date: {{issueDate}}
-          </div>
-          <div class="authority">
-            (Signature of Sponsoring Authority with stamp)<br />
-            Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sponsoringAuthorityName}}<br />
-            Designation&nbsp;&nbsp;&nbsp;{{sponsoringAuthorityDesignation}}
-          </div>
-        </div>
-      </section>
+    <h2>SPONSORSHIP & CHARACTER CERTIFICATE BY/ INSTITUTE /<br>UNIVERSITY / COLLEGE/ SPONSORED AUTHORITY</h2>
 
-      <hr class="divider" />
+    <p>
+        Certified that declaration from Sr.No. 1 to 13 in respect of Mr./Ms.<span class="line" style="width: 250px;"></span> 
+        who is being sponsored for practical training / project work at IRDE, Dehra Dun has been verified from our official record and is true to the best of my knowledge, He/She bears a good moral character. The terms & conditions stipulated as above are acceptable and are agreed by the student and signed in my presence. The student will be under the overall control of Director, IRDE, Dehra Dun during the period of his practical training/project work.
+    </p>
 
-      <section class="character">
-        <h2 class="character-title">CHARACTER CERTIFICATE</h2>
-        <div class="subtitle">(To be verified by local Police authority)</div>
+    <table class="footer-table">
+        <tr>
+            <td class="left-col">
+                Place:<br>
+                Date:
+            </td>
+            <td class="right-col">
+                (Signature of Sponsoring Authority with stamp)<br><br>
+                Name <span class="line" style="width: 200px;"></span><br>
+                Designation <span class="line" style="width: 161px;"></span>
+            </td>
+        </tr>
+    </table>
 
-        <p class="character-text">
-          The character &amp; antecedent of Mr. /Ms.
-          <span class="line">{{studentName}}</span>
-          S/o / D/o<span class="line">{{fatherName}}</span>
-          resident of <span class="line wide-line">{{permanentAddress}}</span>
-          have been verified by us. As per our records he / She is not connected with any political party and he has not
-          been convicted/fined by any court of Law for any criminal offence.
-        </p>
+    <div class="section-separator"></div>
 
-        <p class="purpose">
-          This certificate is issued only for the purpose of short term training at IRDE, Dehradun.
-        </p>
+    <h3>CHARACTER CERTIFICATE</h3>
+    <div class="subtitle">(To be verified by local Police authority)</div>
 
-        <div class="bottom-row">
-          <div class="place-date">
-            Place: {{policePlace}}<br />
-            Dated: {{policeDate}}
-          </div>
-          <div class="police-photo">
-            AFFIX YOUR<br />
-            PHOTOGRAPH<br />
-            ATTESTED BY<br />
-            POLICE<br />
-            AUTHORITY
-          </div>
-          <div class="stamp-sign">
-            (Signature with stamp)<br />
-            Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{policeAuthorityName}}<br />
-            Designation&nbsp;&nbsp;&nbsp;{{policeAuthorityDesignation}}
-          </div>
-        </div>
-      </section>
+    <p>
+        The character & antecedent of Mr. /Ms. <span class="line" style="width: 240px;"></span> S/o / D/o <span class="line" style="width: 215px;"></span> 
+        resident of <span class="line" style="width: 340px;"></span> have been verified by us. As per our records he / She is not connected with any political party and he has not been convicted/fined by any court of Law for any criminal offence.
+    </p>
 
-      <footer class="footer">
+    <p>
+        This certificate is issued only for the purpose of short term training at IRDE, Dehradun.
+    </p>
+
+    <table class="footer-table" style="margin-top: 40px;">
+        <tr>
+            <td class="left-col" style="width: 25%;">
+                Place:<br>
+                Dated:
+            </td>
+            <td class="photo-container">
+                <div class="photo-box">
+                    AFFIX YOUR<br>PHOTOGRAPH<br>ATTESTED BY<br>POLICE<br>AUTHORITY
+                </div>
+            </td>
+            <td class="right-col" style="width: 40%; padding-left: 10px;">
+                (Signature with stamp)<br><br>
+                Name <span class="line" style="width: 180px;"></span><br>
+                Designation <span class="line" style="width: 141px;"></span>
+            </td>
+        </tr>
+    </table>
+
+    <div class="footer-nav">
         <div>Training Management System</div>
         <div>IRDE, DEHRADUN</div>
-      </footer>
-    </main>
-  </body>
+    </div>
+
+</div>
+
+</body>
 </html>
