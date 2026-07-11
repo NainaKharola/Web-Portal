@@ -18,9 +18,31 @@ async function generatePdfFromHtml(html) {
 
     const page = await browser.newPage();
 
+    // Allow loading of Base64 images
+    await page.setBypassCSP(true);
+
     await page.setContent(html, {
-      waitUntil: "networkidle0",
+      waitUntil: ["domcontentloaded", "networkidle0"],
     });
+
+    // Wait until all images are loaded
+    await page.evaluate(async () => {
+      const images = Array.from(document.images);
+
+      await Promise.all(
+        images.map((img) => {
+          if (img.complete) return Promise.resolve();
+
+          return new Promise((resolve) => {
+            img.onload = resolve;
+            img.onerror = resolve;
+          });
+        })
+      );
+    });
+
+    // Small delay to ensure rendering is complete
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const pdfBuffer = await page.pdf({
       format: "A4",

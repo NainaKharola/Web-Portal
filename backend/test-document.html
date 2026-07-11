@@ -1,9 +1,9 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sponsorship and Character Certificate Form</title>
+    <title>Declaration Form for Practical Training/Project Work at IRDE, Dehradun</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,89 +14,132 @@
         .container {
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
         }
         h2 {
             text-align: center;
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             letter-spacing: 0.5px;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             line-height: 1.4;
-            font-weight: bold;
-        }
-        h3 {
-            text-align: center;
-            font-size: 1.2rem;
-            margin-top: 40px;
-            margin-bottom: 5px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-        .subtitle {
-            text-align: center;
-            font-size: 1rem;
-            margin-bottom: 25px;
-            font-weight: normal;
-        }
-        p {
-            text-align: justify;
-            text-justify: inter-word;
-            margin-bottom: 20px;
-            font-size: 1.05rem;
-        }
-        .line {
-            display: inline-block;
-            border-bottom: 1px dashed #000;
-            min-width: 150px;
-            height: 1.2em;
-            vertical-align: bottom;
-        }
-        .section-separator {
-            border-top: 1px dotted #000;
-            margin: 60px 0;
-        }
-        .footer-table {
-            width: 100%;
-            margin-top: 30px;
-            border-collapse: collapse;
-        }
-        .footer-table td {
-            vertical-align: top;
-            padding: 5px 0;
-        }
-        .left-col {
-            width: 50%;
-            line-height: 2;
-        }
-        .right-col {
-            width: 50%;
-            padding-left: 20px;
-            line-height: 1.8;
         }
         .photo-box {
+            position: absolute;
+            top: 60px;
+            right: 0;
             width: 130px;
-            height: 150px;
+            height: 160px;
             border: 1px solid #777;
             font-size: 0.65rem;
             text-align: center;
-            display: table-cell;
-            vertical-align: middle;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 5px;
             box-sizing: border-box;
             text-transform: uppercase;
-            color: #444;
-            line-height: 1.4;
+            color: #555;
         }
-        .photo-container {
-            width: 35%;
-            vertical-align: middle;
+        .form-section {
+            margin-bottom: 20px;
+            max-width: 75%;
         }
-        .footer-nav {
-            margin-top: 80px;
+        .form-group {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-end;
+        }
+        .form-group label {
+            font-weight: bold;
+            white-space: nowrap;
+            margin-right: 5px;
+        }
+        .line {
+            flex-grow: 1;
+            border-bottom: 1px dotted #000;
+            height: 1.2em;
+        }
+        .inline-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .inline-group .form-group {
+            margin-bottom: 0;
+        }
+        .declaration-text {
+            margin-top: 40px;
+            text-indent: 20px;
+        }
+        .sig-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 30px;
+        }
+        .sig-left {
+            line-height: 2;
+        }
+        .sig-right {
+            text-align: center;
+            width: 200px;
+        }
+        .sig-line {
+            border-bottom: 1px solid #000;
+            width: 100%;
+            margin-bottom: 5px;
+            height: 30px;
+        }
+        h3 {
+            text-align: center;
+            text-decoration: underline;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+        .terms-intro {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-end;
+        }
+        .terms-intro .name-line {
+            flex-grow: 0.4;
+            border-bottom: 1px solid #000;
+            text-align: center;
+            position: relative;
+            height: 1.2em;
+            margin-right: 5px;
+            margin-left: 5px;
+        }
+        .terms-intro .subtext {
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+        .terms-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .terms-list li {
+            margin-bottom: 12px;
+            text-align: justify;
+            text-indent: -20px;
+            padding-left: 20px;
+        }
+        footer {
+            margin-top: 50px;
             display: flex;
             justify-content: space-between;
             font-size: 0.8rem;
-            font-weight: normal;
-            border-top: none;
+            color: #333;
+        }
+        @media print {
+            body { margin: 20px; }
+            .line { border-bottom: 1px solid #000; }
         }
     </style>
 </head>
@@ -104,82 +147,97 @@
 
 <div class="container">
 
-    <h2>SPONSORSHIP & CHARACTER CERTIFICATE BY/ INSTITUTE /<br>UNIVERSITY / COLLEGE/ SPONSORED AUTHORITY</h2>
+    <h2>DECLARATION FORM FOR PRACTICAL TRAINING/PROJECT WORK<br>AT IRDE, DEHRADUN</h2>
 
-    <p>
-        Certified that declaration from Sr.No. 1 to 13 in respect of Mr./Ms.<span class="line" style="width: 250px;"></span> 
-        who is being sponsored for practical training / project work at IRDE, Dehra Dun has been verified from our official record and is true to the best of my knowledge, He/She bears a good moral character. The terms & conditions stipulated as above are acceptable and are agreed by the student and signed in my presence. The student will be under the overall control of Director, IRDE, Dehra Dun during the period of his practical training/project work.
-    </p>
-
-    <table class="footer-table">
-        <tr>
-            <td class="left-col">
-                Place:<br>
-                Date:
-            </td>
-            <td class="right-col">
-                (Signature of Sponsoring Authority with stamp)<br><br>
-                Name <span class="line" style="width: 200px;"></span><br>
-                Designation <span class="line" style="width: 161px;"></span>
-            </td>
-        </tr>
-    </table>
-
-    <div class="section-separator"></div>
-
-    <h3>CHARACTER CERTIFICATE</h3>
-    <div class="subtitle">(To be verified by local Police authority)</div>
-
-    <p>
-        The character & antecedent of Mr. /Ms. <span class="line" style="width: 240px;"></span> S/o / D/o <span class="line" style="width: 215px;"></span> 
-        resident of <span class="line" style="width: 340px;"></span> have been verified by us. As per our records he / She is not connected with any political party and he has not been convicted/fined by any court of Law for any criminal offence.
-    </p>
-
-    <p>
-        This certificate is issued only for the purpose of short term training at IRDE, Dehradun.
-    </p>
-
-    <table class="footer-table" style="margin-top: 40px;">
-        <tr>
-            <td class="left-col" style="width: 25%;">
-                Place:<br>
-                Dated:
-            </td>
-            <td class="photo-container">
-                <div class="photo-box">
-                    AFFIX YOUR<br>PHOTOGRAPH<br>ATTESTED BY<br>POLICE<br>AUTHORITY
-                </div>
-            </td>
-            <td class="right-col" style="width: 40%; padding-left: 10px;">
-                (Signature with stamp)<br><br>
-                Name <span class="line" style="width: 180px;"></span><br>
-                Designation <span class="line" style="width: 141px;"></span>
-            </td>
-        </tr>
-    </table>
-
-    <div class="footer-nav">
-        <div>Training Management System</div>
-        <div>IRDE, DEHRADUN</div>
+    <div class="photo-box">
+        AFFIX YOUR<br>PHOTOGRAPH<br>ATTESTED BY<br>GAZETTED<br>OFFICER
     </div>
+
+    <div class="form-section">
+        <div class="form-group">
+            <label>1. Name</label><div class="line"></div>
+        </div>
+        <div class="form-group">
+            <label>2. Father's Name</label><div class="line"></div>
+        </div>
+        <div class="form-group">
+            <label>3. Parents Occupation</label><div class="line"></div>
+        </div>
+        <div class="form-group">
+            <label>4. Temp. Address</label><div class="line"></div>
+        </div>
+        <div class="form-group">
+            <label>5. Permanent Address</label><div class="line"></div>
+        </div>
+        <div class="form-group">
+            <label>6. Name of the Inst. / Univ./ College:</label><div class="line"></div>
+        </div>
+        <div class="form-group">
+            <label>7. Degree, Year of study :</label><div class="line"></div>
+        </div>
+    </div>
+
+    <div class="inline-group">
+        <div class="form-group" style="width: 30%;">
+            <label>8. Mobile No.</label><div class="line"></div>
+        </div>
+        <div class="form-group" style="width: 35%;">
+            <label>9. Res. Phone No.</label><div class="line"></div>
+        </div>
+        <div class="form-group" style="width: 30%;">
+            <label>10. Email-ID</label><div class="line"></div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>11. Date of Birth</label><div class="line"></div>
+    </div>
+    <div class="form-group">
+        <label>12. Nationality</label><div class="line"></div>
+    </div>
+    <div class="form-group">
+        <label>13. College Identity Card No.</label><div class="line"></div>
+    </div>
+
+    <p class="declaration-text">I declare that the information given by me at Sri. No. 1 to 13 above is true to the best of my Knowledge.</p>
+
+    <div class="sig-container">
+        <div class="sig-left">
+            Date:<br>
+            Place:
+        </div>
+        <div class="sig-right">
+            <div class="sig-line"></div>
+            <span style="font-size: 0.85rem;">Sig. Of Student</span>
+        </div>
+    </div>
+
+    <h3>TERM & CONDITIONS</h3>
+
+    <div class="terms-intro">
+        I <div class="name-line"><span class="subtext">(Name of Student)</span></div> hereby agree to abide the following terms & conditions.
+    </div>
+    <br>
+
+    <ol class="terms-list">
+        <li>1. I agree that my attachment will not involve any expenditure to the State.</li>
+        <li>2. I will not claim any remuneration or compensation for personal injuries caused by accident arising out of and in the course of my attachment /training/project work at IRDE.</li>
+        <li>3. I understand that IRDE, Dehra Dun will in no way be obliged to offer employment to me after completion of my attachment /training/project work.</li>
+        <li>4. I will abide by all the existing Govt. rules &amp; regulations/instructions/orders enforced by the Director, IRDE, Dehra Dun.</li>
+        <li>5. I will produce my character certificate from College/Institute/ University/ Sponsored authority at the time of joining my training at IRDE.</li>
+        <li>6. I will be regular in attendance &amp; sincere towards the work assigned to me and will submit my Training/Project work report to Director, IRDE on completion of my training /project.</li>
+        <li>7. I have no objection if the period of my training /project work at IRDE is extended or terminated before its date of completion without any prior intimations by the establishment.</li>
+        <li>8. I will make my own arrangement for stay 'during practical training/project work at IRDE, Dehradun Dun.</li>
+    </ol>
+
+    <footer>
+        <div>Training Management System</div>
+        <div>IRDE DEHRADUN</div>
+    </footer>
 
 </div>
 
 </body>
-</html> -->
-
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Test</title>
-</head>
-
-<body>
-
-<h1>Hello DRDO</h1>
-
-<p>This is a test PDF.</p>
-
-</body>
 </html>
+
+```

@@ -1,13 +1,36 @@
 const fs = require("fs");
 const fsp = require("fs/promises");
 const path = require("path");
-const { pathToFileURL } = require("url");
 
-const templatePath = path.join(__dirname, "..", "templates", "drdo_offer_letter.html");
-const logoPath = path.join(__dirname, "..", "..", "web-portal", "public", "drdo-logo.png");
-const logoUrl = fs.existsSync(logoPath)
-  ? pathToFileURL(logoPath).href
-  : "https://web-portal-hazel-six.vercel.app/drdo-logo.png";
+const templatePath = path.join(
+  __dirname,
+  "..",
+  "templates",
+  "drdo_offer_letter.html"
+);
+
+const logoPath = path.join(
+  __dirname,
+  "..",
+  "templates",
+  "drdo_logo.png"
+);
+
+const bannerPath = path.join(
+  __dirname,
+  "..",
+  "templates",
+  "ssa_banner.png"
+);
+
+// Convert images to Base64 so Puppeteer always renders them
+const logoBase64 = fs.existsSync(logoPath)
+  ? `data:image/png;base64,${fs.readFileSync(logoPath).toString("base64")}`
+  : "";
+
+const bannerBase64 = fs.existsSync(bannerPath)
+  ? `data:image/png;base64,${fs.readFileSync(bannerPath).toString("base64")}`
+  : "";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -46,26 +69,59 @@ function getDefaultEditableContent(student) {
     letterBody: `Dear ${student.name || "Student"},
 
 With reference to your application, we are pleased to offer you an internship opportunity with DRDO for the duration mentioned below. This offer is subject to verification of submitted documents and compliance with all instructions issued by the department.`,
-    additionalRemarks: "You are requested to report as per the instructions shared by the Internship Registration and Management Cell.",
+    additionalRemarks:
+      "You are requested to report as per the instructions shared by the Internship Registration and Management Cell.",
   };
 }
 
 function buildTemplateData(student, overrides = {}) {
   const defaults = getDefaultEditableContent(student);
-  const issueDate = overrides.issueDate || student.offerLetter?.issueDate || new Date();
+
+  const issueDate =
+    overrides.issueDate ||
+    student.offerLetter?.issueDate ||
+    new Date();
 
   return {
-    logoUrl: overrides.logoUrl || process.env.DRDO_LOGO_URL || logoUrl,
+    logoUrl: overrides.logoUrl || logoBase64,
+    bannerUrl: bannerBase64,
+
     studentName: overrides.studentName || student.name || "",
     course: overrides.course || student.course || "",
     year: overrides.year || student.year || "",
     branch: overrides.branch || student.branch || "",
+
     collegeName: overrides.collegeName || student.collegeName || "",
-    internshipDuration: overrides.internshipDuration || student.internshipDuration || "",
+    collegeLocation: overrides.collegeLocation || student.location || "",
+    collegeAddress: overrides.collegeAddress || "",
+
+    internshipDuration:
+      overrides.internshipDuration ||
+      student.internshipDuration ||
+      "",
+
+    duration:
+      overrides.duration ||
+      student.internshipDuration ||
+      "",
+
     issueDate: formatDate(issueDate),
-    letterNumber: overrides.letterNumber || student.offerLetter?.letterNumber || defaultLetterNumber(student),
-    subject: overrides.subject || student.offerLetter?.subject || defaults.subject,
-    letterBody: overrides.letterBody || student.offerLetter?.letterBody || defaults.letterBody,
+
+    letterNumber:
+      overrides.letterNumber ||
+      student.offerLetter?.letterNumber ||
+      defaultLetterNumber(student),
+
+    subject:
+      overrides.subject ||
+      student.offerLetter?.subject ||
+      defaults.subject,
+
+    letterBody:
+      overrides.letterBody ||
+      student.offerLetter?.letterBody ||
+      defaults.letterBody,
+
     additionalRemarks:
       overrides.additionalRemarks ||
       student.offerLetter?.additionalRemarks ||
@@ -81,13 +137,20 @@ async function generateOfferLetterHtml(student, overrides = {}) {
   const template = await readOfferLetterTemplate();
   const data = buildTemplateData(student, overrides);
 
-  return template.replace(/{{(\w+)}}/g, (match, key) => {
+  const finalHtml = template.replace(/{{(\w+)}}/g, (match, key) => {
     if (key === "letterBody" || key === "additionalRemarks") {
       return paragraphsFromText(data[key]);
     }
 
-    return escapeHtml(data[key] ?? match);
+    // Don't escape Base64 image URLs
+    if (key === "logoUrl" || key === "bannerUrl") {
+      return data[key];
+    }
+
+    return escapeHtml(data[key] ?? "");
   });
+
+  return finalHtml;
 }
 
 module.exports = {

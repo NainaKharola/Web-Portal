@@ -1,228 +1,242 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IRDE Training Letter</title>
     <style>
-        body {
-            font-family: 'Arial', 'Mangal', 'Nirmala UI', sans-serif;
-            line-height: 1.5;
-            margin: 40px;
-            color: #000;
-            font-size: 14px;
-        }
-        .container {
-            max-width: 850px;
-            margin: 0 auto;
-            position: relative;
-        }
-        
-        /* Header section */
-        .header-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        .header-table td {
-            vertical-align: top;
-            font-size: 11px;
-            line-height: 1.3;
-        }
-        .left-header {
-            width: 33%; /* लोगो बड़ा करने के लिए स्पेस एडजस्ट किया */
-        }
-        .center-header {
-            width: 34%; /* चौड़ाई 30% से बढ़ाकर 34% की ताकि बड़ा लोगो आराम से फिट हो सके */
-            text-align: center;
-        }
-        .right-header {
-            width: 33%; /* स्पेस बैलेंस रखने के लिए */
-            text-align: left;
-            padding-left: 20px;
-        }
-        .logo-img {
-            width: 135px; /* इमेज का साइज यहाँ से बड़ा किया गया है */
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
+      body {
+        font-family: "Arial", "Mangal", "Nirmala UI", sans-serif;
+        line-height: 1.5;
+        margin: 40px;
+        color: #000;
+        font-size: 14px;
+      }
+      .container {
+        max-width: 850px;
+        margin: 0 auto;
+        position: relative;
+      }
 
-        /* Meta Information Rows */
-        .meta-info {
-            width: 100%;
-            margin-top: 35px;
-            margin-bottom: 25px;
-            display: flex;
-            gap: 350px;
-            font-size: 15px;
-        }
+      /* Header section */
+      .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      .header-table td {
+        vertical-align: top;
+        font-size: 11px;
+        line-height: 1.3;
+      }
+      .left-header {
+        width: 33%; /* लोगो बड़ा करने के लिए स्पेस एडजस्ट किया */
+      }
+      .center-header {
+        width: 34%; /* चौड़ाई 30% से बढ़ाकर 34% की ताकि बड़ा लोगो आराम से फिट हो सके */
+        text-align: center;
+      }
+      .right-header {
+        width: 33%; /* स्पेस बैलेंस रखने के लिए */
+        text-align: left;
+        padding-left: 20px;
+      }
+      .logo-img {
+        width: 135px; /* इमेज का साइज यहाँ से बड़ा किया गया है */
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
 
-        /* Address Blocks */
-        .recipient-address {
-            margin-left: 60px;
-            margin-bottom: 30px;
-            line-height: 1.4;
-            font-size: 14px;
-        }
+      /* Meta Information Rows */
+      .meta-info {
+        width: 100%;
+        margin-top: 35px;
+        margin-bottom: 25px;
+        display: flex;
+        gap: 350px;
+        font-size: 15px;
+      }
 
-        /* Subject Line */
-        .subject-block {
-            text-align: right;
-            margin-right: 440px;
-            margin-bottom: 40px;
-            font-size: 16px;
-            font-weight: bold;
-        }
+      /* Address Blocks */
+      .recipient-address {
+        margin-left: 60px;
+        margin-bottom: 30px;
+        line-height: 1.4;
+        font-size: 14px;
+      }
 
-        /* Letter Body Content */
-        .letter-body {
-            text-align: justify;
-            text-indent: 50px;
-            margin-bottom: 20px;
-            font-size: 15px;
-            line-height: 1.7;
-        }
-        .student-highlight {
-            display: inline-block;
-            text-indent: 0;
-            border-bottom: 1px solid #000;
-            padding-bottom: 1px;
-            font-weight: bold;
-        }
+      /* Subject Line */
+      .subject-block {
+        text-align: right;
+        margin-right: 440px;
+        margin-bottom: 40px;
+        font-size: 16px;
+        font-weight: bold;
+      }
 
-        /* Sign-off Block */
-        .signature-block {
-            float: right;
-            width: 250px;
-            text-align: center;
-            margin-top: 10px;
-            margin-bottom: 30px;
-            line-height: 1.4;
-            font-size: 15px;
-        }
-        .signature-space {
-            height: 45px;
-        }
+      /* Letter Body Content */
+      .letter-body {
+        text-align: justify;
+        text-indent: 50px;
+        margin-bottom: 20px;
+        font-size: 15px;
+        line-height: 1.7;
+      }
+      .student-highlight {
+        display: inline-block;
+        text-indent: 0;
+        border-bottom: 1px solid #000;
+        padding-bottom: 1px;
+        font-weight: bold;
+      }
 
-        /* Enclosure / Encl List */
-        .enclosure-block {
-            margin-top: 80px;
-            font-size: 15px;
-            line-height: 1.6;
-        }
-        .enclosure-list {
-            list-style-type: none;
-            padding-left: 25px;
-            margin-top: 5px;
-        }
+      /* Sign-off Block */
+      .signature-block {
+        float: right;
+        width: 250px;
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 30px;
+        line-height: 1.4;
+        font-size: 15px;
+      }
+      .signature-space {
+        height: 45px;
+      }
 
-        /* Bottom Decorative Banner */
-        .bottom-banner {
-            margin-top: 70px;
-            text-align: center;
-            font-size: 12px;
-            line-height: 1.3;
-        }
-        .banner-img {
-            width: 180px;
-            height: auto;
-            display: block;
-            margin: 0 auto 5px auto;
-        }
+      /* Enclosure / Encl List */
+      .enclosure-block {
+        margin-top: 80px;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      .enclosure-list {
+        list-style-type: none;
+        padding-left: 25px;
+        margin-top: 5px;
+      }
+
+      /* Bottom Decorative Banner */
+      .bottom-banner {
+        margin-top: 70px;
+        text-align: center;
+        font-size: 12px;
+        line-height: 1.3;
+      }
+      .banner-img {
+        width: 180px;
+        height: auto;
+        display: block;
+        margin: 0 auto 5px auto;
+      }
     </style>
-</head>
-<body>
-
-<div class="container">
-
-    <table class="header-table">
+  </head>
+  <body>
+    <div class="container">
+      <table class="header-table">
         <tr>
-            <td class="left-header">
-                दूरभाष / Phones : 0135-2787004 to 2787007<br>
-                फैक्स / Fax : 0091-135 2787161 &<br>
-                <span style="padding-left: 63px;">2787128</span><br><br>
-                तार / Telegrams : IRDE<br><br>
-                सभी पत्रादि निदेशक को ही सम्बोधित होने<br>
-                चाहिये, किसी वैज्ञानिक/अधिकारी के नाम से<br>
-                नही।
-            </td>
-            <td class="center-header">
-                <!-- DRDO का बड़ा लोगो -->
-                <img src="drdo_logo.png" alt="DRDO Logo" class="logo-img">
-            </td>
-            <td class="right-header">
-                भारत सरकार, रक्षा मंत्रालय<br>
-                रक्षा अनुसंधान तथा विकास संगठन<br>
-                यंत्र अनुसंधान एवं विकास संस्थान<br>
-                रायपुर रोड, देहरादून - 248008<br>
-                GOVT. OF INDIA, MINISTRY OF DEFENCE<br>
-                DEFENCE R & D ORGANISATION<br>
-                INSTRUMENTS R & D ESTABLISHMENT<br>
-                RAIPUR ROAD, DEHRADUN - 248 008
-            </td>
-        </tr>
-    </table>
+          <td class="left-header">
+            दूरभाष / Phones : 0135-2787004 to 2787007<br />
+            फैक्स / Fax : 0091-135 2787161 &<br />
+            <span style="padding-left: 63px">2787128</span><br /><br />
 
-    <div class="meta-info">
+            तार / Telegrams : IRDE<br /><br />
+
+            सभी पत्रादि निदेशक को ही सम्बोधित होने<br />
+            चाहिये, किसी वैज्ञानिक/अधिकारी के नाम से<br />
+            नही।
+          </td>
+
+          <td class="center-header">
+            <!-- DRDO Logo -->
+            <img src="{{logoUrl}}" alt="DRDO Logo" class="logo-img" />
+          </td>
+
+          <td class="right-header">
+            भारत सरकार, रक्षा मंत्रालय<br />
+            रक्षा अनुसंधान तथा विकास संगठन<br />
+            यंत्र अनुसंधान एवं विकास संस्थान<br />
+            रायपुर रोड, देहरादून - 248008<br />
+
+            GOVT. OF INDIA, MINISTRY OF DEFENCE<br />
+            DEFENCE R & D ORGANISATION<br />
+            INSTRUMENTS R & D ESTABLISHMENT<br />
+            RAIPUR ROAD, DEHRADUN - 248008
+          </td>
+        </tr>
+      </table>
+
+      <div class="meta-info">
         <div>पत्रांक / Letter No.: 47617/ टीसी / 4186 0</div>
         <div>दिनाँक / Dated: 15-05-2026</div>
-    </div>
+      </div>
 
-    <div style="font-size: 15px; margin-bottom: 5px;">सेवा में,</div>
-    <div class="recipient-address">
-        TRAINING & PLACEMENT CO-ORDINATOR<br>
-        BANASTHALI UNIVERSITY<br>
-        P.O. BANASTHALI<br>
-        VIDYAPITH-304022, RAJASTHAN
-    </div>
+      <div style="font-size: 15px; margin-bottom: 5px">सेवा में,</div>
+      <div class="recipient-address">
+        TRAINING & PLACEMENT CO-ORDINATOR<br />
+        {{collegeName}}<br />
+        {{collegeLocation}}<br />
+        {{collegeAddress}}
+      </div>
 
-    <div class="subject-block">
+      <div class="subject-block">
         विषय : आई.आर.डी.ई. में विद्यार्थियों को प्रशिक्षण सुविधा
-    </div>
+      </div>
 
-    <div class="letter-body">
-        <span class="student-highlight">SAKSHI CHOUHAN, B.TECH 3 Year, CSE</span> को इस संस्थान में <span class="student-highlight">20 सप्ताह</span> अवधि का प्रयोगात्मक प्रशिक्षण / परियोजना कार्य करने की सुविधा दी जा सकती है ।
-    </div>
+      <div class="letter-body">
+        <span class="student-highlight">
+          {{studentName}}, {{course}} {{year}}, {{branch}}
+        </span>
+        को इस संस्थान में
+        <span class="student-highlight">{{duration}}</span>
+        अवधि का प्रयोगात्मक प्रशिक्षण / परियोजना कार्य करने की सुविधा दी जा सकती
+        है ।
+      </div>
 
-    <div class="letter-body">
-        इस संस्थान में प्रशिक्षण परियोजना कार्य प्रारम्भ करने से पूर्व विद्यार्थियों को अपने चरित्र एवं पूर्ववृत्त का पुलिस प्राधिकारी से सत्यापन कराना आवश्यक है । इसके लिये निर्धारित फार्म, एक वचनबंध के साथ पूर्ण कर वापस करने के लिये यहाँ संलग्न किया जा रहा है । चरित्र सत्यापन के बिना, प्रशिक्षण दिया जाना सम्भव न हो पायेगा ।
-    </div>
+      <div class="letter-body">
+        इस संस्थान में प्रशिक्षण परियोजना कार्य प्रारम्भ करने से पूर्व
+        विद्यार्थियों को अपने चरित्र एवं पूर्ववृत्त का पुलिस प्राधिकारी से
+        सत्यापन कराना आवश्यक है । इसके लिये निर्धारित फार्म, एक वचनबंध के साथ
+        पूर्ण कर वापस करने के लिये यहाँ संलग्न किया जा रहा है । चरित्र सत्यापन
+        के बिना, प्रशिक्षण दिया जाना सम्भव न हो पायेगा ।
+      </div>
 
-    <div class="letter-body">
-        कृपया, छात्र / छात्रा को यह भी सलाह दें कि, वे प्रशिक्षण के लिये आते समय अपने 02 नवीनतम पासपोर्ट आकार के फोटोग्राफ भी साथ लाएँ । प्रशिक्षण अवधि में आवास की सुविधा नही दी जा सकती है, अतः रहने का प्रबन्ध स्वयं करें ।
-    </div>
+      <div class="letter-body">
+        कृपया, छात्र / छात्रा को यह भी सलाह दें कि, वे प्रशिक्षण के लिये आते समय
+        अपने 02 नवीनतम पासपोर्ट आकार के फोटोग्राफ भी साथ लाएँ । प्रशिक्षण अवधि
+        में आवास की सुविधा नही दी जा सकती है, अतः रहने का प्रबन्ध स्वयं करें ।
+      </div>
 
-    <div class="signature-block">
+      <div class="signature-block">
         <div class="signature-space"></div>
-        (Dr. Vaibhav Gupta)<br>
-        Technical Officer 'C'<br><br>
+        (Dr. Vaibhav Gupta)<br />
+        Technical Officer 'C'<br /><br />
         कृते निदेशक
-    </div>
+      </div>
 
-    <div class="enclosure-block">
-        संलग्न :<br>
+      <div class="enclosure-block">
+        संलग्न :<br />
         <ul class="enclosure-list">
-            <li>1. विद्यार्थी द्वारा घोषणा पत्र</li>
-            <li>2. कॉलेज द्वारा प्रमाण पत्र</li>
-            <li>3. पुलिस प्राधिकारी द्वारा चरित्र प्रमाण पत्र</li>
+          <li>1. विद्यार्थी द्वारा घोषणा पत्र</li>
+          <li>2. कॉलेज द्वारा प्रमाण पत्र</li>
+          <li>3. पुलिस प्राधिकारी द्वारा चरित्र प्रमाण पत्र</li>
         </ul>
-    </div>
+      </div>
 
-    <div class="bottom-banner">
+      <div class="bottom-banner">
         <!-- सर्व शिक्षा अभियान का पेन्सिल वाला वाइट बैकग्राउंड बैनर -->
-        <img src="ssa_banner.png" alt="सर्व शिक्षा अभियान" class="banner-img">
-        <strong>राजभाषा की रक्षा, देश की सुरक्षा</strong><br>
-        <span style="font-size: 11px; color: #333;">Training Management System</span>
+        <img src="{{bannerUrl}}" alt="सर्व शिक्षा अभियान" class="banner-img" />
+        <strong>राजभाषा की रक्षा, देश की सुरक्षा</strong><br />
+        <span style="font-size: 11px; color: #333"
+          >Training Management System</span
+        >
+      </div>
     </div>
-
-</div>
-
-</body>
+  </body>
 </html>
 
 ```
-
 
 <!-- <!DOCTYPE html>
 <html lang="hi">
@@ -375,7 +389,7 @@
             </td>
             <td class="center-header">
                 यहाँ DRDO का गोल लोगो आएगा -->
-                <!-- <img src="drdo_logo.png" alt="DRDO Logo" class="logo-img">
+<!-- <img src="drdo_logo.png" alt="DRDO Logo" class="logo-img">
             </td>
             <td class="right-header">
                 भारत सरकार, रक्षा मंत्रालय<br>
@@ -438,7 +452,7 @@
 
     <div class="bottom-banner">
         यहाँ सर्व शिक्षा अभियान का पेन्सिल वाला बैनर आएगा -->
-        <!-- <img src="ssa_banner.png" alt="सर्व शिक्षा अभियान" class="banner-img">
+<!-- <img src="ssa_banner.png" alt="सर्व शिक्षा अभियान" class="banner-img">
         <strong>राजभाषा की रक्षा, देश की सुरक्षा</strong><br>
         <span style="font-size: 11px; color: #333;">Training Management System</span>
     </div>
