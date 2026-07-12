@@ -6,6 +6,8 @@ const {
 } = require("../controllers/adminAuthController");
 const {
   deleteStudents,
+  downloadCertificates,
+  getCertificateStudents,
   getStudentById,
   getStudents,
   recommendedByOptions,
@@ -31,6 +33,8 @@ router.get("/recommended-by-options", protectAdmin, (req, res) => {
 });
 
 router.get("/students", protectAdmin, getStudents);
+router.get("/certificates/students", protectAdmin, getCertificateStudents);
+router.post("/certificates/download", protectAdmin, downloadCertificates);
 router.delete("/students", protectAdmin, deleteStudents);
 router.get("/students/:id", protectAdmin, getStudentById);
 router.patch("/students/:id/review", protectAdmin, updateStudentReview);

@@ -220,4 +220,7 @@ const studentSchema = new mongoose.Schema(
   }
 );
 
+studentSchema.index({ status: 1, submittedAt: -1 });
+studentSchema.index({ "trainingManagement.completed": 1 });
+
 module.exports = mongoose.model("Student", studentSchema);

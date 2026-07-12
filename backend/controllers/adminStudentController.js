@@ -1,6 +1,11 @@
 const Student = require("../models/Student");
+const archiver = require("archiver");
 const cloudinary = require("../config/cloudinary");
-const { generatePdfFromHtml } = require("../services/pdfService");
+const { generatePdfsFromHtml } = require("../services/pdfService");
+const {
+  certificateFileName,
+  generateCertificateHtml,
+} = require("../services/certificateService");
 const { uploadBufferToCloudinary } = require("../services/cloudinaryService");
 const {
   sendOfferLetterEmail,
@@ -49,9 +54,11 @@ const recommendedByOptions = [
 
 function buildStudentFilter(query) {
   const filter = {};
+  const conditions = [];
 
   if (query.search) {
-    filter.name = { $regex: query.search, $options: "i" };
+    const expression = { $regex: query.search, $options: "i" };
+    conditions.push({ $or: [{ name: expression }, { referenceId: expression }] });
   }
 
   if (query.collegeName) filter.collegeName = query.collegeName;
@@ -59,10 +66,12 @@ function buildStudentFilter(query) {
   if (query.year) filter.year = query.year;
 
   if (query.status === "Pending") {
-    filter.$or = [{ status: "Pending" }, { status: { $exists: false } }];
+    conditions.push({ $or: [{ status: "Pending" }, { status: { $exists: false } }] });
   } else if (query.status) {
     filter.status = query.status;
   }
+
+  if (conditions.length) filter.$and = conditions;
 
   if (query.registrationDate) {
     const start = new Date(query.registrationDate);
@@ -154,7 +163,7 @@ async function getStudents(req, res) {
     const filter = buildStudentFilter(req.query);
     const sort = buildSort(req.query.sortBy, req.query.sortOrder);
 
-    const students = await Student.find(filter).sort(sort);
+    const students = await Student.find(filter).sort(sort).lean();
 
     const allStudents = await Student.find({}, "status offerLetterStatus");
 
@@ -191,6 +200,72 @@ async function getStudents(req, res) {
       message: "Unable to fetch students.",
       error: error.message,
     });
+  }
+}
+
+async function getCertificateStudents(req, res) {
+  try {
+    const students = await Student.find(
+      { "trainingManagement.completed": "Yes" },
+      "name referenceId collegeName course branch internshipDuration trainingManagement"
+    )
+      .sort({ "trainingManagement.toDate": -1, name: 1 })
+      .lean();
+
+    return res.status(200).json({ success: true, students });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Unable to fetch completed trainees.",
+    });
+  }
+}
+
+async function downloadCertificates(req, res) {
+  try {
+    const ids = [...new Set(Array.isArray(req.body.ids) ? req.body.ids : [])];
+
+    if (!ids.length) {
+      return res.status(400).json({ success: false, message: "Select at least one student." });
+    }
+
+    const students = await Student.find({
+      _id: { $in: ids },
+      "trainingManagement.completed": "Yes",
+    }).lean();
+
+    if (students.length !== ids.length) {
+      return res.status(400).json({
+        success: false,
+        message: "Certificates are available only for students marked as completed.",
+      });
+    }
+
+    const pdfs = await generatePdfsFromHtml(students.map(generateCertificateHtml));
+    const certificates = students.map((student, index) => ({
+      name: certificateFileName(student),
+      pdf: pdfs[index],
+    }));
+
+    if (certificates.length === 1) {
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `attachment; filename="${certificates[0].name}"`);
+      return res.status(200).send(certificates[0].pdf);
+    }
+
+    res.setHeader("Content-Type", "application/zip");
+    res.setHeader("Content-Disposition", 'attachment; filename="DRDO-Certificates.zip"');
+
+    const archive = archiver("zip", { zlib: { level: 9 } });
+    archive.on("error", (error) => res.destroy(error));
+    archive.pipe(res);
+    certificates.forEach(({ name, pdf }) => archive.append(pdf, { name }));
+    await archive.finalize();
+  } catch (error) {
+    if (!res.headersSent) {
+      return res.status(500).json({ success: false, message: "Certificate generation failed." });
+    }
+    res.destroy(error);
   }
 }
 
@@ -451,6 +526,8 @@ async function uploadOfferLetter(req, res) {
 
 module.exports = {
   deleteStudents,
+  downloadCertificates,
+  getCertificateStudents,
   getStudents,
   getStudentById,
   updateStudentReview,

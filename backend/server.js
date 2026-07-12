@@ -8,6 +8,7 @@ const connectDB = require("./config/db");
 const adminRoutes = require("./routes/adminRoutes");
 const offerLetterRoutes = require("./routes/offerLetterRoutes");
 const studentRoutes = require("./routes/studentRoutes");
+const collegeRoutes = require("./routes/collegeRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -71,7 +72,7 @@ app.get("/", (req, res) => {
 app.use("/api/students", studentRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/offer-letter", offerLetterRoutes);
-
+app.use("/api/colleges", collegeRoutes);
 // ========================
 // 404 Handler
 // ========================
@@ -93,6 +94,7 @@ app.use((err, req, res, next) => {
     message: err.message || "Internal Server Error",
   });
 });
+
 
 // ========================
 // Connect Database
