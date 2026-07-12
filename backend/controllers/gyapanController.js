@@ -4,18 +4,23 @@ const { generatePdfFromHtml } = require("../services/pdfService");
 const { uploadBufferToCloudinary } = require("../services/cloudinaryService");
 const { generateGyapanHtml, studentToRow } = require("../services/gyapanService");
 
-function dayRange(dateValue) {
-  const start = new Date(`${dateValue}T00:00:00.000Z`);
-  if (Number.isNaN(start.getTime())) return null;
-  const end = new Date(start); end.setUTCDate(end.getUTCDate() + 1);
-  return { $gte: start, $lt: end };
-}
-
 async function getGyapanStudents(req, res) {
-  const range = dayRange(req.query.date);
-  if (!range) return res.status(400).json({ success: false, message: "Select a valid joined date." });
   try {
-    const students = await Student.find({ "trainingManagement.joined": "Yes", "trainingManagement.joinedDate": range }).sort({ name: 1 }).lean();
+    const filter = {
+      $or: [
+        { joinedStatus: "Yes" },
+        { "trainingManagement.joined": "Yes" },
+      ],
+    };
+
+    if (req.query.date) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(req.query.date)) {
+        return res.status(400).json({ success: false, message: "Select a valid training start date." });
+      }
+      filter["trainingManagement.fromDate"] = req.query.date;
+    }
+
+    const students = await Student.find(filter).sort({ name: 1 }).lean();
     return res.json({ success: true, students });
   } catch (error) { return res.status(500).json({ success: false, message: "Unable to fetch joined students." }); }
 }
@@ -23,7 +28,10 @@ async function getGyapanStudents(req, res) {
 async function selectedRows(ids) {
   const uniqueIds = [...new Set(Array.isArray(ids) ? ids : [])];
   if (!uniqueIds.length) { const error = new Error("Select at least one student."); error.statusCode = 400; throw error; }
-  const students = await Student.find({ _id: { $in: uniqueIds }, "trainingManagement.joined": "Yes" }).lean();
+  const students = await Student.find({
+    _id: { $in: uniqueIds },
+    $or: [{ joinedStatus: "Yes" }, { "trainingManagement.joined": "Yes" }],
+  }).lean();
   if (students.length !== uniqueIds.length) { const error = new Error("Only students marked Joined: Yes can be added to Gyapan."); error.statusCode = 400; throw error; }
   return students.map(studentToRow);
 }
@@ -61,7 +69,7 @@ async function generateFinalPdf(req, res) {
   try {
     const gyapan = await Gyapan.findById(req.params.id); if (!gyapan) return res.status(404).json({ success: false, message: "Gyapan not found." });
     const pdf = await generatePdfFromHtml(gyapan.html); const upload = await uploadBufferToCloudinary(pdf, { folder: "web-portal/gyapan", public_id: `Gyapan-${gyapan._id}-${Date.now()}` });
-    gyapan.generated = true; gyapan.generatedDate = new Date(); gyapan.generatedBy = req.admin.email; gyapan.pdfUrl = upload.secure_url; gyapan.publicId = upload.public_id; await gyapan.save();
+    gyapan.generated = true; gyapan.generatedDate = new Date(); gyapan.generatedBy = req.admin.email; gyapan.pdfUrl = upload.secure_url; gyapan.gyapanUrl = upload.secure_url; gyapan.publicId = upload.public_id; await gyapan.save();
     return res.json({ success: true, gyapan, pdfUrl: gyapan.pdfUrl, message: "Gyapan PDF generated and uploaded successfully." });
   } catch (error) { return res.status(500).json({ success: false, message: error.message || "Gyapan PDF generation failed." }); }
 }

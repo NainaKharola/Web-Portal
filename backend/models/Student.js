@@ -210,6 +210,21 @@ const studentSchema = new mongoose.Schema(
       updatedBy: String,
       updatedAt: Date,
     },
+
+    // Canonical workflow fields. The nested trainingManagement fields remain
+    // supported for existing records and the training-management form.
+    joinedStatus: {
+      type: String,
+      enum: ["", "Yes", "No"],
+      default: "",
+    },
+    joinedDate: Date,
+    completedStatus: {
+      type: String,
+      enum: ["", "Yes", "No"],
+      default: "",
+    },
+    completedDate: Date,
     
 
     submittedAt: {
@@ -226,5 +241,7 @@ studentSchema.index({ status: 1, submittedAt: -1 });
 studentSchema.index({ "trainingManagement.completed": 1 });
 studentSchema.index({ "trainingManagement.joined": 1, "trainingManagement.joinedDate": 1 });
 studentSchema.index({ "trainingManagement.completionDate": 1 });
+studentSchema.index({ joinedStatus: 1, joinedDate: 1 });
+studentSchema.index({ completedStatus: 1, completedDate: 1 });
 
 module.exports = mongoose.model("Student", studentSchema);

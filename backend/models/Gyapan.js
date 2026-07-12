@@ -17,6 +17,7 @@ const gyapanSchema = new mongoose.Schema({
   generatedDate: Date,
   generatedBy: { type: String, default: "" },
   pdfUrl: { type: String, default: "" },
+  gyapanUrl: { type: String, default: "" },
   publicId: { type: String, default: "" },
   uploadType: { type: String, default: "Generated" },
   letterNumber: { type: String, default: "" },

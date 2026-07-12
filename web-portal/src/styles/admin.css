@@ -323,6 +323,10 @@
   align-self: end;
 }
 
+.training-form__project-title {
+  grid-column: 1 / -1;
+}
+
 .offer-letter-viewer {
   width: 100%;
   height: min(78vh, 920px);

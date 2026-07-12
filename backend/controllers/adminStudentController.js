@@ -11,6 +11,7 @@ const {
   sendOfferLetterEmail,
   sendRejectionEmail,
 } = require("../services/emailService");
+const { indiaDayRange } = require("../utils/dateRange");
 
 const reviewFields = ["status", "remark", "referenceBy", "recommendedBy"];
 
@@ -58,7 +59,9 @@ function buildStudentFilter(query) {
 
   if (query.search) {
     const expression = { $regex: query.search, $options: "i" };
-    conditions.push({ $or: [{ name: expression }, { referenceId: expression }] });
+    conditions.push({
+      $or: [{ name: expression }, { referenceId: expression }],
+    });
   }
 
   if (query.collegeName) filter.collegeName = query.collegeName;
@@ -66,7 +69,9 @@ function buildStudentFilter(query) {
   if (query.year) filter.year = query.year;
 
   if (query.status === "Pending") {
-    conditions.push({ $or: [{ status: "Pending" }, { status: { $exists: false } }] });
+    conditions.push({
+      $or: [{ status: "Pending" }, { status: { $exists: false } }],
+    });
   } else if (query.status) {
     filter.status = query.status;
   }
@@ -132,8 +137,6 @@ function addDurationToDate(fromDate, duration) {
 
   return date.toISOString().slice(0, 10);
 }
-
-
 
 async function destroyCloudinaryFile(file, resourceType = "auto") {
   if (!file?.publicId) return;
@@ -205,19 +208,26 @@ async function getStudents(req, res) {
 
 async function getCertificateStudents(req, res) {
   try {
-    const filter = { "trainingManagement.completed": "Yes" };
+    const completionStatus = [
+      { completedStatus: "Yes" },
+      { "trainingManagement.completed": "Yes" },
+    ];
+    const filter = { $or: completionStatus };
     if (req.query.date) {
-      const start = new Date(`${req.query.date}T00:00:00.000Z`);
-      const end = new Date(start);
-      end.setUTCDate(end.getUTCDate() + 1);
-      if (Number.isNaN(start.getTime())) {
+      const range = indiaDayRange(req.query.date);
+      if (!range) {
         return res.status(400).json({ success: false, message: "Select a valid completion date." });
       }
-      filter["trainingManagement.completionDate"] = { $gte: start, $lt: end };
+      filter.$and = [{
+        $or: [
+          { completedStatus: "Yes", completedDate: range },
+          { "trainingManagement.completed": "Yes", "trainingManagement.completionDate": range },
+        ],
+      }];
     }
     const students = await Student.find(
       filter,
-      "name referenceId collegeName course branch internshipDuration trainingManagement"
+      "name referenceId collegeName course branch internshipDuration trainingManagement",
     )
       .sort({ "trainingManagement.toDate": -1, name: 1 })
       .lean();
@@ -236,22 +246,30 @@ async function downloadCertificates(req, res) {
     const ids = [...new Set(Array.isArray(req.body.ids) ? req.body.ids : [])];
 
     if (!ids.length) {
-      return res.status(400).json({ success: false, message: "Select at least one student." });
+      return res
+        .status(400)
+        .json({ success: false, message: "Select at least one student." });
     }
 
     const students = await Student.find({
       _id: { $in: ids },
-      "trainingManagement.completed": "Yes",
+      $or: [
+        { completedStatus: "Yes" },
+        { "trainingManagement.completed": "Yes" },
+      ],
     }).lean();
 
     if (students.length !== ids.length) {
       return res.status(400).json({
         success: false,
-        message: "Certificates are available only for students marked as completed.",
+        message:
+          "Certificates are available only for students marked as completed.",
       });
     }
 
-    const pdfs = await generatePdfsFromHtml(students.map(generateCertificateHtml));
+    const pdfs = await generatePdfsFromHtml(
+      students.map(generateCertificateHtml),
+    );
     const certificates = students.map((student, index) => ({
       name: certificateFileName(student),
       pdf: pdfs[index],
@@ -259,12 +277,18 @@ async function downloadCertificates(req, res) {
 
     if (certificates.length === 1) {
       res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", `attachment; filename="${certificates[0].name}"`);
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="${certificates[0].name}"`,
+      );
       return res.status(200).send(certificates[0].pdf);
     }
 
     res.setHeader("Content-Type", "application/zip");
-    res.setHeader("Content-Disposition", 'attachment; filename="DRDO-Certificates.zip"');
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="DRDO-Certificates.zip"',
+    );
 
     const archive = archiver("zip", { zlib: { level: 9 } });
     archive.on("error", (error) => res.destroy(error));
@@ -273,7 +297,9 @@ async function downloadCertificates(req, res) {
     await archive.finalize();
   } catch (error) {
     if (!res.headersSent) {
-      return res.status(500).json({ success: false, message: "Certificate generation failed." });
+      return res
+        .status(500)
+        .json({ success: false, message: "Certificate generation failed." });
     }
     res.destroy(error);
   }
@@ -435,7 +461,9 @@ async function saveTrainingManagement(req, res) {
       joined: req.body.joined || "",
       joinedDate:
         req.body.joined === "Yes"
-          ? (student.trainingManagement?.joined === "Yes" && student.trainingManagement?.joinedDate) || new Date()
+          ? (student.trainingManagement?.joined === "Yes" &&
+              student.trainingManagement?.joinedDate) ||
+            new Date()
           : null,
       projectTitle: req.body.projectTitle || "",
       projectGuide: req.body.projectGuide || "",
@@ -444,7 +472,9 @@ async function saveTrainingManagement(req, res) {
       completed: req.body.completed || "",
       completionDate:
         req.body.completed === "Yes"
-          ? (student.trainingManagement?.completed === "Yes" && student.trainingManagement?.completionDate) || new Date()
+          ? (student.trainingManagement?.completed === "Yes" &&
+              student.trainingManagement?.completionDate) ||
+            new Date()
           : null,
       updatedBy: req.admin.email,
       updatedAt: new Date(),
@@ -458,14 +488,18 @@ async function saveTrainingManagement(req, res) {
     }
 
     student.trainingManagement = training;
+    student.joinedStatus = training.joined;
+    student.joinedDate = training.joinedDate || undefined;
+    student.completedStatus = training.completed;
+    student.completedDate = training.completionDate || undefined;
 
     await student.save();
 
-return res.status(200).json({
-  success: true,
-  student,
-  message: "Training details saved successfully.",
-});
+    return res.status(200).json({
+      success: true,
+      student,
+      message: "Training details saved successfully.",
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,

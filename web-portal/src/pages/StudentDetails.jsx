@@ -80,12 +80,12 @@ function TrainingManagementForm({ student, onUpdated }) {
     trainingDuration: existing.trainingDuration || student.internshipDuration || "",
     fromDate: existing.fromDate || "",
     toDate: existing.toDate || "",
-    joined: existing.joined || "",
+    joined: existing.joined || student.joinedStatus || "",
     projectTitle: existing.projectTitle || "",
     projectGuide: existing.projectGuide || "",
     designation: existing.designation || "",
     leaveAvailed: existing.leaveAvailed || "",
-    completed: existing.completed || "",
+    completed: existing.completed || student.completedStatus || "",
   });
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -148,7 +148,7 @@ function TrainingManagementForm({ student, onUpdated }) {
             ["designation", "Designation"],
             ["leaveAvailed", "Leave Availed"],
           ].map(([name, label, type = "text"]) => (
-            <label className="admin-field" key={name}>
+            <label className={`admin-field${name === "projectTitle" ? " training-form__project-title" : ""}`} key={name}>
               <span>{label}</span>
               <input name={name} type={type} value={form[name]} onChange={handleChange} readOnly={name === "toDate"} />
             </label>
