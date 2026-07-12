@@ -197,7 +197,7 @@ console.log("Offer Letter URL =", student.offerLetterUrl);
             <FileLink label="View Offer Letter" href={student.offerLetter?.url || student.offerLetterUrl} />
             <FileLink label="Download Declaration Form" href={studentDocumentUrl("declaration", credentials)} />
             <FileLink label="Download Character Certificate" href={studentDocumentUrl("character", credentials)} />
-            <FileLink label="Download Gyapan" href={student.gyapan?.url} />
+            
           </div>
         ) : (
           <p className="admin-muted">Approval documents become available after your application is approved.</p>

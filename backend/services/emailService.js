@@ -154,48 +154,7 @@ Internship Management Team`,
   };
 }
 
-async function sendGyapanEmail(student, attachment = {}) {
-  const transporter = await createTransporter();
-
-  if (!transporter) {
-    return {
-      skipped: true,
-      reason: "Email configuration missing.",
-    };
-  }
-
-  const pdfAttachment = attachment.buffer
-    ? {
-        filename: attachment.filename || "DRDO-Gyapan.pdf",
-        content: attachment.buffer,
-        contentType: "application/pdf",
-      }
-    : {
-        filename: attachment.filename || "DRDO-Gyapan.pdf",
-        path: attachment.url || student.gyapan?.url,
-      };
-
-  const info = await transporter.sendMail({
-    from: process.env.MAIL_FROM,
-    to: student.email,
-    subject: "DRDO Training Management Gyapan",
-    text: `Dear ${student.name},
-
-Your Training Management System Gyapan has been generated. Please find it attached.
-
-Regards,
-Internship Management Team`,
-    attachments: [pdfAttachment],
-  });
-
-  return {
-    skipped: false,
-    messageId: info.messageId,
-  };
-}
-
 module.exports = {
-  sendGyapanEmail,
   sendOfferLetterEmail,
   sendRegistrationConfirmationEmail,
   sendRejectionEmail,

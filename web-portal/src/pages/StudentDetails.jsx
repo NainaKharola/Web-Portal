@@ -361,16 +361,6 @@ function StudentDetails({ id }) {
       )}
 
       {student.status === "Approved" && (
-        <section className="details-section">
-          <h2>Student Documents</h2>
-          <div className="document-actions">
-            <DocumentButton label="Uploaded Combined PDF" file={student.completedDocuments} />
-            <DocumentButton label="Gyapan" file={student.gyapan} />
-          </div>
-        </section>
-      )}
-
-      {student.status === "Approved" && (
         <TrainingManagementForm student={student} onUpdated={setStudent} />
       )}
 

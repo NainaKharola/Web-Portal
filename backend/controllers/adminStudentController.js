@@ -3,7 +3,6 @@ const cloudinary = require("../config/cloudinary");
 const { generatePdfFromHtml } = require("../services/pdfService");
 const { uploadBufferToCloudinary } = require("../services/cloudinaryService");
 const {
-  sendGyapanEmail,
   sendOfferLetterEmail,
   sendRejectionEmail,
 } = require("../services/emailService");
@@ -125,65 +124,7 @@ function addDurationToDate(fromDate, duration) {
   return date.toISOString().slice(0, 10);
 }
 
-function buildGyapanHtml(student, training) {
-  const rows = [
-    ["Student Name", training.studentName],
-    ["College Name", training.collegeName],
-    ["College Location", training.collegeLocation],
-    ["Course", training.courseName],
-    ["Course Year", training.courseYear],
-    ["Branch", training.branch],
-    ["Training Duration", training.trainingDuration],
-    [
-      "Training Period",
-      `${formatDate(training.fromDate)} to ${formatDate(training.toDate)}`,
-    ],
-    ["Joined", training.joined],
-    ["Project Title", training.projectTitle],
-    ["Project Guide", training.projectGuide],
-    ["Designation", training.designation],
-    ["Leave Availed", training.leaveAvailed],
-    ["Completed", training.completed],
-  ];
 
-  return `<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <style>
-    body { font-family: Arial, sans-serif; color: #111827; padding: 36px; }
-    .header { text-align: center; border-bottom: 2px solid #1d4ed8; padding-bottom: 18px; margin-bottom: 28px; }
-    h1 { margin: 0; font-size: 26px; text-transform: uppercase; }
-    h2 { margin: 8px 0 0; font-size: 18px; color: #1d4ed8; }
-    table { width: 100%; border-collapse: collapse; margin-top: 24px; }
-    th, td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; font-size: 13px; }
-    th { width: 34%; background: #eff6ff; }
-    .footer { margin-top: 36px; display: flex; justify-content: space-between; font-size: 13px; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1>Gyapan</h1>
-    <h2>Defence Research and Development Organisation</h2>
-  </div>
-  <p>This training record has been generated for ${escapeHtml(student.name)} based on the approved internship registration and Training Management System details.</p>
-  <table>
-    <tbody>
-      ${rows
-        .map(
-          ([label, value]) =>
-            `<tr><th>${escapeHtml(label)}</th><td>${escapeHtml(value || "-")}</td></tr>`,
-        )
-        .join("")}
-    </tbody>
-  </table>
-  <div class="footer">
-    <span>Generated on ${formatDate(new Date())}</span>
-    <span>Internship Management Team</span>
-  </div>
-</body>
-</html>`;
-}
 
 async function destroyCloudinaryFile(file, resourceType = "auto") {
   if (!file?.publicId) return;
@@ -199,7 +140,6 @@ async function removeStudentAssets(student) {
     destroyCloudinaryFile(student.photo, "image"),
     destroyCloudinaryFile(student.permissionLetter),
     destroyCloudinaryFile(student.completedDocuments, "raw"),
-    destroyCloudinaryFile(student.gyapan, "raw"),
     destroyCloudinaryFile(
       {
         publicId: student.offerLetter?.publicId || student.offerLetterPublicId,
@@ -426,57 +366,12 @@ async function saveTrainingManagement(req, res) {
 
     student.trainingManagement = training;
 
-    console.log("STEP 1: HTML generated");
-
-console.log("STEP 1: Building HTML");
-const html = buildGyapanHtml(student, training);
-
-console.log("STEP 2: Starting PDF generation");
-const pdfBuffer = await generatePdfFromHtml(html);
-
-console.log("STEP 3: PDF generated successfully");
-const uploadResult = await uploadBufferToCloudinary(pdfBuffer, {
-  folder: "web-portal/gyapan",
-  public_id: `gyapan-${student._id}-${Date.now()}`,
-});
-
-console.log("STEP 4: Uploaded to Cloudinary");
-
-let emailResult = null;
-
-try {
-  console.log("STEP 5: Sending email");
-
-  emailResult = await sendGyapanEmail(student, {
-    buffer: pdfBuffer,
-    filename: `DRDO-Gyapan-${student.referenceId || student._id}.pdf`,
-  });
-
-  console.log("STEP 6: Email completed");
-} catch (emailError) {
-  console.error("Email Error:", emailError);
-
-  emailResult = {
-    skipped: true,
-    reason: emailError.message,
-  };
-}
-
-student.gyapan = {
-  url: uploadResult.secure_url,
-  publicId: uploadResult.public_id,
-  generatedAt: new Date(),
-  emailedAt: emailResult?.skipped ? undefined : new Date(),
-  emailStatus: emailResult?.skipped ? "Email Failed" : "Sent",
-};
-
-await student.save();
+    await student.save();
 
 return res.status(200).json({
   success: true,
   student,
-  email: emailResult,
-  message: "Training details saved and Gyapan generated successfully.",
+  message: "Training details saved successfully.",
 });
   } catch (error) {
     return res.status(500).json({
@@ -563,5 +458,3 @@ module.exports = {
   saveTrainingManagement,
   recommendedByOptions,
 };
-/*ky krna h?
-*/ 

@@ -208,22 +208,7 @@ const studentSchema = new mongoose.Schema(
       updatedBy: String,
       updatedAt: Date,
     },
-    gyapan: {
-      url: {
-        type: String,
-        default: "",
-      },
-      publicId: {
-        type: String,
-        default: "",
-      },
-      generatedAt: Date,
-      emailedAt: Date,
-      emailStatus: {
-        type: String,
-        default: "",
-      },
-    },
+    
 
     submittedAt: {
       type: Date,
