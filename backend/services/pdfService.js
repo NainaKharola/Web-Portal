@@ -24,6 +24,7 @@ async function generatePdfFromHtml(html) {
     await page.setContent(html, {
       waitUntil: ["domcontentloaded", "networkidle0"],
     });
+    await page.emulateMediaType("screen");
 
     // Wait until all images are loaded
     await page.evaluate(async () => {
@@ -53,7 +54,7 @@ async function generatePdfFromHtml(html) {
     await browser.close();
     browser = null;
 
-    return pdfBuffer;
+    return Buffer.from(pdfBuffer);
   } catch (error) {
     console.error("PDF Generation Error:", error);
     throw error;

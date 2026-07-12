@@ -213,6 +213,9 @@ async function generateOfferLetterPdf(req, res) {
     const student = await findApprovedStudent(req.params.studentId);
     const html = student.offerLetter?.html || (await generateOfferLetterHtml(student));
     const pdfBuffer = await generatePdfFromHtml(html);
+    console.log("PDF Buffer Type:", Buffer.isBuffer(pdfBuffer));
+console.log("PDF Size:", pdfBuffer.length);
+console.log("First 10 Bytes:", pdfBuffer.slice(0, 10).toString());
 
     student.offerLetter = {
       ...currentOfferLetter(student),
