@@ -355,11 +355,19 @@ function StudentDetails({ id }) {
       <section className="details-section">
         <h2>Uploaded Documents</h2>
         <div className="document-actions">
-          <DocumentButton label="Student Photo" file={student.photo} />
-          <DocumentButton label="Resume" file={student.resume} />
-          <DocumentButton label="Result" file={student.result} />
-          <DocumentButton label="Permission Letter" file={student.permissionLetter} />
-        </div>
+        <DocumentButton label="Student Photo" file={student.photo} />
+        <DocumentButton label="Resume" file={student.resume} />
+        <DocumentButton label="Result" file={student.result} />
+        <DocumentButton
+          label="Permission Letter"
+          file={student.permissionLetter}
+  />
+
+  <DocumentButton
+    label="Completed Documents PDF"
+    file={student.completedDocuments}
+  />
+</div>
       </section>
 
       {student.status === "Approved" && (

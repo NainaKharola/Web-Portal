@@ -113,6 +113,11 @@ function AdminDashboard() {
     window.dispatchEvent(new PopStateEvent("popstate"));
   };
 
+  const openGyapan = () => {
+    window.history.pushState({}, "", "/admin/gyapan");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
   const toggleSelected = (id, checked) => {
     setSelectedIds((current) =>
       checked ? [...current, id] : current.filter((value) => value !== id)
@@ -163,6 +168,9 @@ function AdminDashboard() {
           </button>
           <button className="secondary-button" type="button" onClick={openCertificates}>
             Certificates
+          </button>
+          <button className="secondary-button" type="button" onClick={openGyapan}>
+            Gyapan
           </button>
           <button
             className="secondary-button"

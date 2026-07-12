@@ -205,8 +205,18 @@ async function getStudents(req, res) {
 
 async function getCertificateStudents(req, res) {
   try {
+    const filter = { "trainingManagement.completed": "Yes" };
+    if (req.query.date) {
+      const start = new Date(`${req.query.date}T00:00:00.000Z`);
+      const end = new Date(start);
+      end.setUTCDate(end.getUTCDate() + 1);
+      if (Number.isNaN(start.getTime())) {
+        return res.status(400).json({ success: false, message: "Select a valid completion date." });
+      }
+      filter["trainingManagement.completionDate"] = { $gte: start, $lt: end };
+    }
     const students = await Student.find(
-      { "trainingManagement.completed": "Yes" },
+      filter,
       "name referenceId collegeName course branch internshipDuration trainingManagement"
     )
       .sort({ "trainingManagement.toDate": -1, name: 1 })
@@ -423,11 +433,19 @@ async function saveTrainingManagement(req, res) {
           req.body.trainingDuration || student.internshipDuration,
         ),
       joined: req.body.joined || "",
+      joinedDate:
+        req.body.joined === "Yes"
+          ? (student.trainingManagement?.joined === "Yes" && student.trainingManagement?.joinedDate) || new Date()
+          : null,
       projectTitle: req.body.projectTitle || "",
       projectGuide: req.body.projectGuide || "",
       designation: req.body.designation || "",
       leaveAvailed: req.body.leaveAvailed || "",
       completed: req.body.completed || "",
+      completionDate:
+        req.body.completed === "Yes"
+          ? (student.trainingManagement?.completed === "Yes" && student.trainingManagement?.completionDate) || new Date()
+          : null,
       updatedBy: req.admin.email,
       updatedAt: new Date(),
     };

@@ -2,6 +2,9 @@ import Home from "./pages/Home";
 import { useEffect, useState } from "react";
 import AdminDashboard from "./pages/AdminDashboard";
 import Certificates from "./pages/Certificates";
+import GyapanPage from "./pages/GyapanPage";
+import GyapanPreview from "./pages/GyapanPreview";
+import GyapanEditor from "./pages/GyapanEditor";
 import AdminLogin from "./pages/AdminLogin";
 import Landing from "./pages/Landing";
 import OfferLetterEditor from "./pages/OfferLetterEditor";
@@ -45,6 +48,12 @@ function App() {
     if (path === "/admin/certificates") {
       return <Certificates />;
     }
+
+    if (path === "/admin/gyapan") return <GyapanPage />;
+    const gyapanEditMatch = path.match(/^\/admin\/gyapan\/([^/]+)\/edit$/);
+    if (gyapanEditMatch) return <GyapanEditor gyapanId={gyapanEditMatch[1]} />;
+    const gyapanMatch = path.match(/^\/admin\/gyapan\/([^/]+)$/);
+    if (gyapanMatch) return <GyapanPreview gyapanId={gyapanMatch[1]} />;
 
     const offerLetterEditMatch = path.match(/^\/admin\/students\/([^/]+)\/offer-letter\/edit$/);
     if (offerLetterEditMatch) {

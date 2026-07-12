@@ -8,9 +8,15 @@ const { generatePdfFromHtml } = require("../services/pdfService");
 const { uploadBufferToCloudinary } = require("../services/cloudinaryService");
 const { sendOfferLetterEmail } = require("../services/emailService");
 
-function syncLegacyOfferLetterFields(student, result, uploadType, sent = false) {
+function syncLegacyOfferLetterFields(
+  student,
+  result,
+  uploadType,
+  sent = false,
+) {
   student.offerLetterUrl = result?.secure_url || student.offerLetter?.url || "";
-  student.offerLetterPublicId = result?.public_id || student.offerLetter?.publicId || "";
+  student.offerLetterPublicId =
+    result?.public_id || student.offerLetter?.publicId || "";
 
   if (uploadType === "Uploaded") {
     student.offerLetterUploadedDate = new Date();
@@ -37,7 +43,9 @@ async function findApprovedStudent(studentId) {
   }
 
   if (student.status !== "Approved") {
-    const error = new Error("Offer Letter can only be generated after approval.");
+    const error = new Error(
+      "Offer Letter can only be generated after approval.",
+    );
     error.statusCode = 400;
     throw error;
   }
@@ -86,8 +94,12 @@ async function generateOfferLetter(req, res) {
   try {
     const student = await findApprovedStudent(req.params.studentId);
     const issueDate = new Date();
-    const letterNumber = student.offerLetter?.letterNumber || defaultLetterNumber(student);
-    const html = await generateOfferLetterHtml(student, { issueDate, letterNumber });
+    const letterNumber =
+      student.offerLetter?.letterNumber || defaultLetterNumber(student);
+    const html = await generateOfferLetterHtml(student, {
+      issueDate,
+      letterNumber,
+    });
 
     student.offerLetter = {
       ...currentOfferLetter(student),
@@ -159,6 +171,10 @@ async function updateOfferLetter(req, res) {
       return acc;
     }, {});
 
+    console.log("========== OFFER LETTER UPDATE ==========");
+    console.log("Request Body:", req.body);
+    console.log("Updates:", updates);
+
     if (!updates.studentName || !updates.collegeName || !updates.course) {
       return res.status(400).json({
         success: false,
@@ -166,7 +182,9 @@ async function updateOfferLetter(req, res) {
       });
     }
 
-    const issueDate = updates.issueDate ? new Date(updates.issueDate) : new Date();
+    const issueDate = updates.issueDate
+      ? new Date(updates.issueDate)
+      : new Date();
 
     if (Number.isNaN(issueDate.getTime())) {
       return res.status(400).json({
@@ -175,22 +193,46 @@ async function updateOfferLetter(req, res) {
       });
     }
 
-    const html = await generateOfferLetterHtml(student, { ...updates, issueDate });
+    const html = await generateOfferLetterHtml(student, {
+      ...updates,
+      issueDate,
+    });
+    console.log("Duration sent to template:", updates.internshipDuration);
+    console.log(
+      "HTML contains duration?",
+      html.includes(updates.internshipDuration),
+    );
     await generatePdfFromHtml(html);
 
     student.offerLetter = {
       ...currentOfferLetter(student),
+
       generatedBy: req.admin.email,
       issueDate,
+
       uploadType: "Generated",
-      letterNumber: updates.letterNumber || defaultLetterNumber(student),
       status: "Generated",
-      html,
       edited: true,
+      sent: false,
+
+      html,
+
+      letterNumber: updates.letterNumber || defaultLetterNumber(student),
+
+      studentName: updates.studentName,
+      collegeName: updates.collegeName,
+      collegeLocation: updates.collegeLocation,
+      collegeAddress: updates.collegeAddress,
+
+      course: updates.course,
+      year: updates.year,
+      branch: updates.branch,
+
+      internshipDuration: updates.internshipDuration,
+
       subject: updates.subject || "",
       letterBody: updates.letterBody || "",
       additionalRemarks: updates.additionalRemarks || "",
-      sent: false,
     };
     student.offerLetterStatus = "Generated";
 
@@ -211,18 +253,20 @@ async function updateOfferLetter(req, res) {
 async function generateOfferLetterPdf(req, res) {
   try {
     const student = await findApprovedStudent(req.params.studentId);
-    const html = student.offerLetter?.html || (await generateOfferLetterHtml(student));
+    const html =
+      student.offerLetter?.html || (await generateOfferLetterHtml(student));
     const pdfBuffer = await generatePdfFromHtml(html);
     console.log("PDF Buffer Type:", Buffer.isBuffer(pdfBuffer));
-console.log("PDF Size:", pdfBuffer.length);
-console.log("First 10 Bytes:", pdfBuffer.slice(0, 10).toString());
+    console.log("PDF Size:", pdfBuffer.length);
+    console.log("First 10 Bytes:", pdfBuffer.slice(0, 10).toString());
 
     student.offerLetter = {
       ...currentOfferLetter(student),
       generatedBy: student.offerLetter?.generatedBy || req.admin.email,
       issueDate: student.offerLetter?.issueDate || new Date(),
       uploadType: "Generated",
-      letterNumber: student.offerLetter?.letterNumber || defaultLetterNumber(student),
+      letterNumber:
+        student.offerLetter?.letterNumber || defaultLetterNumber(student),
       status: "Generated",
       html,
     };
@@ -231,7 +275,10 @@ console.log("First 10 Bytes:", pdfBuffer.slice(0, 10).toString());
     await student.save();
 
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", 'attachment; filename="DRDO-Internship-Offer-Letter.pdf"');
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="DRDO-Internship-Offer-Letter.pdf"',
+    );
     return res.status(200).send(pdfBuffer);
   } catch (error) {
     return sendError(res, error, "PDF generation failed.");
@@ -285,10 +332,16 @@ async function sendOfferLetter(req, res) {
     let uploadResult = null;
     let emailResult = null;
 
-    if (student.offerLetter?.uploadType === "Uploaded" && student.offerLetter?.url) {
-      emailResult = await sendOfferLetterEmail(student, { url: student.offerLetter.url });
+    if (
+      student.offerLetter?.uploadType === "Uploaded" &&
+      student.offerLetter?.url
+    ) {
+      emailResult = await sendOfferLetterEmail(student, {
+        url: student.offerLetter.url,
+      });
     } else {
-      const html = student.offerLetter?.html || (await generateOfferLetterHtml(student));
+      const html =
+        student.offerLetter?.html || (await generateOfferLetterHtml(student));
       pdfBuffer = await generatePdfFromHtml(html);
 
       uploadResult = await uploadBufferToCloudinary(pdfBuffer, {
@@ -309,7 +362,9 @@ async function sendOfferLetter(req, res) {
     }
 
     if (emailResult?.skipped) {
-      const error = new Error(emailResult.reason || "Email configuration missing.");
+      const error = new Error(
+        emailResult.reason || "Email configuration missing.",
+      );
       error.statusCode = 500;
       throw error;
     }

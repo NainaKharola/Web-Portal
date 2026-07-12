@@ -18,12 +18,14 @@ const {
 const { protectAdmin } = require("../middleware/adminAuth");
 const { ensureApprovedStudent } = require("../middleware/ensureApprovedStudent");
 const { uploadOfferLetter: uploadOfferLetterFile } = require("../middleware/offerLetterUpload");
+const gyapanRoutes = require("./gyapanRoutes");
 
 const router = express.Router();
 
 router.post("/auth/register", registerAdmin);
 router.post("/auth/login", loginAdmin);
 router.get("/auth/me", protectAdmin, getAdminProfile);
+router.use("/gyapan", protectAdmin, gyapanRoutes);
 
 router.get("/recommended-by-options", protectAdmin, (req, res) => {
   res.status(200).json({

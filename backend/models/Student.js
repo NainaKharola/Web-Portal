@@ -196,6 +196,7 @@ const studentSchema = new mongoose.Schema(
         enum: ["", "Yes", "No"],
         default: "",
       },
+      joinedDate: Date,
       projectTitle: String,
       projectGuide: String,
       designation: String,
@@ -205,6 +206,7 @@ const studentSchema = new mongoose.Schema(
         enum: ["", "Yes", "No"],
         default: "",
       },
+      completionDate: Date,
       updatedBy: String,
       updatedAt: Date,
     },
@@ -222,5 +224,7 @@ const studentSchema = new mongoose.Schema(
 
 studentSchema.index({ status: 1, submittedAt: -1 });
 studentSchema.index({ "trainingManagement.completed": 1 });
+studentSchema.index({ "trainingManagement.joined": 1, "trainingManagement.joinedDate": 1 });
+studentSchema.index({ "trainingManagement.completionDate": 1 });
 
 module.exports = mongoose.model("Student", studentSchema);

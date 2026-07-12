@@ -11,17 +11,18 @@ function Certificates() {
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState("");
+  const [date, setDate] = useState("");
 
   useEffect(() => {
     let active = true;
 
-    fetchCertificateStudents()
+    fetchCertificateStudents(date)
       .then((response) => active && setStudents(response.students))
       .catch((err) => active && setError(err.message))
       .finally(() => active && setLoading(false));
 
     return () => { active = false; };
-  }, []);
+  }, [date]);
 
   const selectedCount = selectedIds.length;
   const allSelected = useMemo(
@@ -79,6 +80,7 @@ function Certificates() {
 
       <section className="admin-panel">
         <div className="admin-actions-row">
+          <label className="admin-field certificate-date-filter"><span>Completion Date</span><input type="date" value={date} onChange={(event) => { setDate(event.target.value); setSelectedIds([]); }} /></label>
           <p className="admin-muted">Only students with Training Management marked Completed: Yes are listed.</p>
           <button className="primary-button" type="button" disabled={downloading || !selectedCount} onClick={handleDownload}>
             {downloading ? "Generating..." : `Download Certificates${selectedCount ? ` (${selectedCount})` : ""}`}
@@ -100,7 +102,7 @@ function Certificates() {
                 </tr>;
               })}</tbody>
             </table>
-            {!students.length && <div className="admin-empty-state">No completed trainees are available for certificates.</div>}
+            {!students.length && <div className="admin-empty-state">{date ? "No students completed training on this date." : "No completed trainees are available for certificates."}</div>}
           </div>
         )}
       </section>

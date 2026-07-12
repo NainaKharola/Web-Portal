@@ -6,22 +6,12 @@ const templatePath = path.join(
   __dirname,
   "..",
   "templates",
-  "drdo_offer_letter.html"
+  "drdo_offer_letter.html",
 );
 
-const logoPath = path.join(
-  __dirname,
-  "..",
-  "templates",
-  "drdo_logo.png"
-);
+const logoPath = path.join(__dirname, "..", "templates", "drdo_logo.png");
 
-const bannerPath = path.join(
-  __dirname,
-  "..",
-  "templates",
-  "ssa_banner.png"
-);
+const bannerPath = path.join(__dirname, "..", "templates", "ssa_banner.png");
 
 // Convert images to Base64 so Puppeteer always renders them
 const logoBase64 = fs.existsSync(logoPath)
@@ -48,7 +38,9 @@ function paragraphsFromText(value) {
 
   return text
     .split(/\n{2,}/)
-    .map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, "<br />")}</p>`)
+    .map(
+      (paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, "<br />")}</p>`,
+    )
     .join("");
 }
 
@@ -58,7 +50,9 @@ function formatDate(value) {
 }
 
 function defaultLetterNumber(student) {
-  const suffix = String(student._id || "").slice(-6).toUpperCase();
+  const suffix = String(student._id || "")
+    .slice(-6)
+    .toUpperCase();
   const year = new Date().getFullYear();
   return `DRDO/INT/${year}/${suffix}`;
 }
@@ -78,32 +72,55 @@ function buildTemplateData(student, overrides = {}) {
   const defaults = getDefaultEditableContent(student);
 
   const issueDate =
-    overrides.issueDate ||
-    student.offerLetter?.issueDate ||
-    new Date();
+    overrides.issueDate || student.offerLetter?.issueDate || new Date();
+
+  // Always use the latest duration
+  const duration =
+    overrides.internshipDuration ||
+    overrides.duration ||
+    student.trainingManagement?.trainingDuration ||
+    student.offerLetter?.internshipDuration ||
+    student.internshipDuration ||
+    "";
 
   return {
     logoUrl: overrides.logoUrl || logoBase64,
     bannerUrl: bannerBase64,
 
-    studentName: overrides.studentName || student.name || "",
-    course: overrides.course || student.course || "",
-    year: overrides.year || student.year || "",
-    branch: overrides.branch || student.branch || "",
+    studentName:
+      overrides.studentName ||
+      student.offerLetter?.studentName ||
+      student.name ||
+      "",
 
-    collegeName: overrides.collegeName || student.collegeName || "",
-    collegeLocation: overrides.collegeLocation || student.location || "",
+    course:
+      overrides.course || student.offerLetter?.course || student.course || "",
+
+    year: overrides.year || student.offerLetter?.year || student.year || "",
+
+    branch:
+      overrides.branch || student.offerLetter?.branch || student.branch || "",
+
+    collegeName:
+      overrides.collegeName ||
+      student.offerLetter?.collegeName ||
+      student.collegeName ||
+      "",
+
+    collegeLocation:
+      overrides.collegeLocation ||
+      student.offerLetter?.collegeLocation ||
+      student.trainingManagement?.collegeLocation ||
+      student.location ||
+      "",
+
+    collegeAddress:
+      overrides.collegeAddress || student.offerLetter?.collegeAddress || "",
+
     collegeAddress: overrides.collegeAddress || "",
 
-    internshipDuration:
-      overrides.internshipDuration ||
-      student.internshipDuration ||
-      "",
-
-    duration:
-      overrides.duration ||
-      student.internshipDuration ||
-      "",
+    internshipDuration: duration,
+    duration: duration,
 
     issueDate: formatDate(issueDate),
 
@@ -113,9 +130,7 @@ function buildTemplateData(student, overrides = {}) {
       defaultLetterNumber(student),
 
     subject:
-      overrides.subject ||
-      student.offerLetter?.subject ||
-      defaults.subject,
+      overrides.subject || student.offerLetter?.subject || defaults.subject,
 
     letterBody:
       overrides.letterBody ||

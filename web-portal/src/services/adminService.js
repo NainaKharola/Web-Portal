@@ -107,8 +107,9 @@ export async function saveTrainingManagement(id, payload) {
   return parseResponse(response);
 }
 
-export async function fetchCertificateStudents() {
-  const response = await fetch(`${API_URL}/certificates/students`, {
+export async function fetchCertificateStudents(date = "") {
+  const params = date ? `?date=${encodeURIComponent(date)}` : "";
+  const response = await fetch(`${API_URL}/certificates/students${params}`, {
     headers: authHeaders(),
   });
 
