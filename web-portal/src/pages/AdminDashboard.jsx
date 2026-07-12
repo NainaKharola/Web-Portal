@@ -108,6 +108,11 @@ function AdminDashboard() {
     }));
   };
 
+  const openCertificates = () => {
+    window.history.pushState({}, "", "/admin/certificates");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
   const toggleSelected = (id, checked) => {
     setSelectedIds((current) =>
       checked ? [...current, id] : current.filter((value) => value !== id)
@@ -155,6 +160,9 @@ function AdminDashboard() {
         <div className="admin-actions-row">
           <button className="secondary-button" type="button" onClick={toggleApprovedStudents}>
             {filters.status === "Approved" ? "All Students" : "Approved Students"}
+          </button>
+          <button className="secondary-button" type="button" onClick={openCertificates}>
+            Certificates
           </button>
           <button
             className="secondary-button"

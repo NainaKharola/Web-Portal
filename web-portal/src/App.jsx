@@ -1,6 +1,7 @@
 import Home from "./pages/Home";
 import { useEffect, useState } from "react";
 import AdminDashboard from "./pages/AdminDashboard";
+import Certificates from "./pages/Certificates";
 import AdminLogin from "./pages/AdminLogin";
 import Landing from "./pages/Landing";
 import OfferLetterEditor from "./pages/OfferLetterEditor";
@@ -39,6 +40,10 @@ function App() {
 
     if (path === "/admin/dashboard") {
       return <AdminDashboard />;
+    }
+
+    if (path === "/admin/certificates") {
+      return <Certificates />;
     }
 
     const offerLetterEditMatch = path.match(/^\/admin\/students\/([^/]+)\/offer-letter\/edit$/);

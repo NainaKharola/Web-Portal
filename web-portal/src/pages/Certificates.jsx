@@ -1,0 +1,111 @@
+import { useEffect, useMemo, useState } from "react";
+import {
+  downloadCertificates,
+  fetchCertificateStudents,
+} from "../services/adminService";
+import "../styles/admin.css";
+
+function Certificates() {
+  const [students, setStudents] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [downloading, setDownloading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let active = true;
+
+    fetchCertificateStudents()
+      .then((response) => active && setStudents(response.students))
+      .catch((err) => active && setError(err.message))
+      .finally(() => active && setLoading(false));
+
+    return () => { active = false; };
+  }, []);
+
+  const selectedCount = selectedIds.length;
+  const allSelected = useMemo(
+    () => students.length > 0 && selectedCount === students.length,
+    [selectedCount, students.length]
+  );
+
+  const toggleStudent = (id, checked) => {
+    setSelectedIds((current) => checked ? [...current, id] : current.filter((value) => value !== id));
+  };
+
+  const toggleAll = (checked) => {
+    setSelectedIds(checked ? students.map((student) => student._id) : []);
+  };
+
+  const goBack = () => {
+    window.history.pushState({}, "", "/admin/dashboard");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
+  const handleDownload = async () => {
+    if (!selectedCount) {
+      setError("Select one or more completed trainees.");
+      return;
+    }
+
+    setDownloading(true);
+    setError("");
+    try {
+      const { blob, filename } = await downloadCertificates(selectedIds);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  return (
+    <main className="admin-shell">
+      <header className="admin-topbar">
+        <div>
+          <p className="portal-eyebrow">Admin Panel</p>
+          <h1>Certificates</h1>
+        </div>
+        <button className="secondary-button" type="button" onClick={goBack}>Back to Dashboard</button>
+      </header>
+
+      <section className="admin-panel">
+        <div className="admin-actions-row">
+          <p className="admin-muted">Only students with Training Management marked Completed: Yes are listed.</p>
+          <button className="primary-button" type="button" disabled={downloading || !selectedCount} onClick={handleDownload}>
+            {downloading ? "Generating..." : `Download Certificates${selectedCount ? ` (${selectedCount})` : ""}`}
+          </button>
+        </div>
+        {error && <p className="admin-error">{error}</p>}
+        {loading ? <div className="admin-loading">Loading completed trainees...</div> : (
+          <div className="admin-table-wrap">
+            <table className="admin-table certificates-table">
+              <thead><tr>
+                <th><input type="checkbox" checked={allSelected} onChange={(event) => toggleAll(event.target.checked)} aria-label="Select all completed trainees" /></th>
+                <th>Serial No.</th><th>Reference ID</th><th>Student Name</th><th>College Name</th><th>Course</th><th>Branch</th><th>Training Duration</th><th>From Date</th><th>To Date</th>
+              </tr></thead>
+              <tbody>{students.map((student, index) => {
+                const training = student.trainingManagement || {};
+                return <tr key={student._id}>
+                  <td><input type="checkbox" checked={selectedIds.includes(student._id)} onChange={(event) => toggleStudent(student._id, event.target.checked)} aria-label={`Select ${student.name}`} /></td>
+                  <td>{index + 1}</td><td>{student.referenceId || "-"}</td><td>{student.name}</td><td>{training.collegeName || student.collegeName}</td><td>{training.courseName || student.course}</td><td>{training.branch || student.branch}</td><td>{training.trainingDuration || student.internshipDuration || "-"}</td><td>{training.fromDate || "-"}</td><td>{training.toDate || "-"}</td>
+                </tr>;
+              })}</tbody>
+            </table>
+            {!students.length && <div className="admin-empty-state">No completed trainees are available for certificates.</div>}
+          </div>
+        )}
+      </section>
+    </main>
+  );
+}
+
+export default Certificates;

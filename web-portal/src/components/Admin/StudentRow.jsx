@@ -5,7 +5,7 @@ function formatDate(value) {
   return new Date(value).toLocaleDateString("en-IN");
 }
 
-function StudentRow({ deleteMode = false, isSelected = false, onSelect, student, onView }) {
+function StudentRow({ deleteMode = false, isSelected = false, onSelect, serialNumber, student, onView }) {
   return (
     <tr>
       {deleteMode && (
@@ -18,7 +18,8 @@ function StudentRow({ deleteMode = false, isSelected = false, onSelect, student,
           />
         </td>
       )}
-      <td>{student.serialNumber || "-"}</td>
+      <td>{serialNumber}</td>
+      <td>{student.referenceId || "-"}</td>
       <td>{student.name}</td>
       <td>{student.collegeName}</td>
       <td>{student.branch}</td>

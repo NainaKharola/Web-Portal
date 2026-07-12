@@ -11,6 +11,17 @@ import {
 } from "../services/offerLetterService";
 import "../styles/admin.css";
 
+const trainingDurationOptions = [
+  "2 Weeks",
+  "4 Weeks",
+  "6 Weeks",
+  "8 Weeks",
+  "2 Months",
+  "3 Months",
+  "4 Months",
+  "6 Months",
+];
+
 function formatDate(value) {
   if (!value) return "-";
   return new Date(value).toLocaleString("en-IN");
@@ -130,7 +141,6 @@ function TrainingManagementForm({ student, onUpdated }) {
             ["branch", "Branch"],
             ["collegeName", "College Name"],
             ["collegeLocation", "College Location"],
-            ["trainingDuration", "Training Duration"],
             ["fromDate", "From Date", "date"],
             ["toDate", "To Date", "date"],
             ["projectTitle", "Project Title"],
@@ -140,9 +150,17 @@ function TrainingManagementForm({ student, onUpdated }) {
           ].map(([name, label, type = "text"]) => (
             <label className="admin-field" key={name}>
               <span>{label}</span>
-              <input name={name} type={type} value={form[name]} onChange={handleChange} />
+              <input name={name} type={type} value={form[name]} onChange={handleChange} readOnly={name === "toDate"} />
             </label>
           ))}
+
+          <label className="admin-field">
+            <span>Training Duration</span>
+            <select name="trainingDuration" value={form.trainingDuration} onChange={handleChange}>
+              <option value="">Select duration</option>
+              {trainingDurationOptions.map((duration) => <option key={duration} value={duration}>{duration}</option>)}
+            </select>
+          </label>
 
           {[
             ["joined", "Joined"],

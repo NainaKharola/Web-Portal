@@ -107,6 +107,35 @@ export async function saveTrainingManagement(id, payload) {
   return parseResponse(response);
 }
 
+export async function fetchCertificateStudents() {
+  const response = await fetch(`${API_URL}/certificates/students`, {
+    headers: authHeaders(),
+  });
+
+  return parseResponse(response);
+}
+
+export async function downloadCertificates(ids) {
+  const response = await fetch(`${API_URL}/certificates/download`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(),
+    },
+    body: JSON.stringify({ ids }),
+  });
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}));
+    throw new Error(body.message || "Certificate download failed.");
+  }
+
+  return {
+    blob: await response.blob(),
+    filename: response.headers.get("content-disposition")?.match(/filename="?([^";]+)"?/)?.[1] || "DRDO-Certificates.zip",
+  };
+}
+
 export async function uploadOfferLetter(id, file) {
   const formData = new FormData();
   formData.append("offerLetter", file);

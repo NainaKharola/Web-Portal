@@ -14,6 +14,7 @@ function StudentTable({
           <tr>
             {deleteMode && <th>Select</th>}
             <th>Serial No.</th>
+            <th>Reference ID</th>
             <th>Student Name</th>
             <th>College / University</th>
             <th>Branch</th>
@@ -27,12 +28,13 @@ function StudentTable({
           </tr>
         </thead>
         <tbody>
-          {students.map((student) => (
+          {students.map((student, index) => (
             <StudentRow
               key={student._id}
               deleteMode={deleteMode}
               isSelected={selectedIds.includes(student._id)}
               onSelect={(checked) => onSelect(student._id, checked)}
+              serialNumber={index + 1}
               student={student}
               onView={() => onView(student._id)}
             />
