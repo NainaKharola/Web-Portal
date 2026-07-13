@@ -21,6 +21,7 @@ function Success({ registration }) {
         <span className="success-icon">✓</span>
         <h1>Registration Submitted</h1>
         <p>Your student registration details have been submitted successfully.</p>
+        {registration?.warning && <p>{registration.warning}</p>}
         {referenceId && (
           <div className="reference-box">
             <span>Your Reference ID</span>

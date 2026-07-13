@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Success from "../../pages/Success";
+import { useNavigate } from "react-router-dom";
 import { indianStatesAndUnionTerritories } from "../../data/states";
 import { submitStudentRegistration } from "../../services/studentService";
 import AcademicSection from "./AcademicSection";
@@ -164,8 +164,7 @@ function StudentForm() {
   const [errors, setErrors] = useState({});
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [registrationResult, setRegistrationResult] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const { name, value, type, checked, files } = event.target;
@@ -200,16 +199,16 @@ function StudentForm() {
     try {
       setIsSubmitting(true);
       const response = await submitStudentRegistration(payload);
-      setRegistrationResult(response);
-      setIsSubmitted(true);
+      navigate("/student/success", {
+        replace: true,
+        state: { registration: response },
+      });
     } catch (error) {
       setErrors((current) => ({ ...current, submit: error.message }));
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  if (isSubmitted) return <Success registration={registrationResult} />;
 
   return (
     <main className="portal-shell">

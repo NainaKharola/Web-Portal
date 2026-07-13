@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { AdminAuthProvider } from "./auth/AdminAuth";
 import ProtectedRoute, { PublicAdminRoute } from "./components/ProtectedRoute";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -15,6 +15,7 @@ import OfferLetterPreview from "./pages/OfferLetterPreview";
 import StudentDashboard from "./pages/StudentDashboard";
 import StudentDetails from "./pages/StudentDetails";
 import StudentLogin from "./pages/StudentLogin";
+import Success from "./pages/Success";
 
 const protectedPage = (page) => <ProtectedRoute>{page}</ProtectedRoute>;
 
@@ -43,6 +44,11 @@ function GyapanEditorRoute() {
   return <GyapanEditor gyapanId={gyapanId} />;
 }
 
+function RegistrationSuccessRoute() {
+  const { state } = useLocation();
+  return <Success registration={state?.registration} />;
+}
+
 function App() {
   return (
     <BrowserRouter>
@@ -52,6 +58,7 @@ function App() {
           <Route path="/student" element={<Home />} />
           <Route path="/student/login" element={<StudentLogin />} />
           <Route path="/student/dashboard" element={<StudentDashboard />} />
+          <Route path="/student/success" element={<RegistrationSuccessRoute />} />
 
           <Route path="/admin" element={<Navigate replace to="/admin/login" />} />
           <Route path="/admin/login" element={<PublicAdminRoute><AdminLogin /></PublicAdminRoute>} />
@@ -64,6 +71,7 @@ function App() {
           <Route path="/admin/gyapan" element={protectedPage(<GyapanPage />)} />
           <Route path="/admin/gyapan/:gyapanId" element={protectedPage(<GyapanPreviewRoute />)} />
           <Route path="/admin/gyapan/:gyapanId/edit" element={protectedPage(<GyapanEditorRoute />)} />
+          <Route path="/admin/*" element={protectedPage(<NotFound />)} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AdminAuthProvider>
