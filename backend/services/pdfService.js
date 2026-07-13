@@ -1,12 +1,12 @@
 const puppeteer = require("puppeteer");
 
 async function createBrowser() {
-  const executablePath =
-    process.env.PUPPETEER_EXECUTABLE_PATH ||
-    process.env.CHROME_PATH ||
-    puppeteer.executablePath();
+  // const executablePath =
+  //   process.env.PUPPETEER_EXECUTABLE_PATH ||
+  //   process.env.CHROME_PATH ||
+  //   puppeteer.executablePath();
 
-  console.log("Using Chrome:", executablePath);
+  // console.log("Using Chrome:", executablePath);
 
   return puppeteer.launch({
    // executablePath,
