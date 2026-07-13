@@ -1,4 +1,4 @@
-import { getAdminToken } from "./adminService";
+import { clearAdminToken, getAdminToken } from "./adminService";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/offer-letter`;
 
@@ -9,6 +9,8 @@ function authHeaders() {
 
 async function parseJsonResponse(response) {
   const body = await response.json().catch(() => ({}));
+
+  if (response.status === 401) clearAdminToken();
 
   if (!response.ok) {
     throw new Error(body.message || "Offer Letter request failed.");
@@ -55,6 +57,7 @@ export async function downloadOfferLetterPdf(studentId) {
 
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
+    if (response.status === 401) clearAdminToken();
     throw new Error(body.message || "Unable to download PDF.");
   }
 

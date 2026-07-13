@@ -1,96 +1,74 @@
-import Home from "./pages/Home";
-import { useEffect, useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router-dom";
+import { AdminAuthProvider } from "./auth/AdminAuth";
+import ProtectedRoute, { PublicAdminRoute } from "./components/ProtectedRoute";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminLogin from "./pages/AdminLogin";
 import Certificates from "./pages/Certificates";
+import GyapanEditor from "./pages/GyapanEditor";
 import GyapanPage from "./pages/GyapanPage";
 import GyapanPreview from "./pages/GyapanPreview";
-import GyapanEditor from "./pages/GyapanEditor";
-import AdminLogin from "./pages/AdminLogin";
+import Home from "./pages/Home";
 import Landing from "./pages/Landing";
+import NotFound from "./pages/NotFound";
 import OfferLetterEditor from "./pages/OfferLetterEditor";
 import OfferLetterPreview from "./pages/OfferLetterPreview";
-import StudentDetails from "./pages/StudentDetails";
 import StudentDashboard from "./pages/StudentDashboard";
+import StudentDetails from "./pages/StudentDetails";
 import StudentLogin from "./pages/StudentLogin";
-import { getAdminToken } from "./services/adminService";
+
+const protectedPage = (page) => <ProtectedRoute>{page}</ProtectedRoute>;
+
+function StudentDetailsRoute() {
+  const { id } = useParams();
+  return <StudentDetails id={id} />;
+}
+
+function OfferLetterPreviewRoute() {
+  const { id } = useParams();
+  return <OfferLetterPreview studentId={id} />;
+}
+
+function OfferLetterEditorRoute() {
+  const { id } = useParams();
+  return <OfferLetterEditor studentId={id} />;
+}
+
+function GyapanPreviewRoute() {
+  const { gyapanId } = useParams();
+  return <GyapanPreview gyapanId={gyapanId} />;
+}
+
+function GyapanEditorRoute() {
+  const { gyapanId } = useParams();
+  return <GyapanEditor gyapanId={gyapanId} />;
+}
 
 function App() {
-  const [path, setPath] = useState(window.location.pathname);
+  return (
+    <BrowserRouter>
+      <AdminAuthProvider>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/student" element={<Home />} />
+          <Route path="/student/login" element={<StudentLogin />} />
+          <Route path="/student/dashboard" element={<StudentDashboard />} />
 
-  useEffect(() => {
-    const handleRouteChange = () => setPath(window.location.pathname);
-
-    window.addEventListener("popstate", handleRouteChange);
-
-    return () => {
-      window.removeEventListener("popstate", handleRouteChange);
-    };
-  }, []);
-
-  if (path.startsWith("/admin")) {
-    const isLogin = path === "/admin/login";
-    const token = getAdminToken();
-
-    if (!token && !isLogin) {
-      window.history.replaceState({}, "", "/admin/login");
-      return <AdminLogin />;
-    }
-
-    if (token && isLogin) {
-      window.history.replaceState({}, "", "/admin/dashboard");
-      return <AdminDashboard />;
-    }
-
-    if (path === "/admin/dashboard") {
-      return <AdminDashboard />;
-    }
-
-    if (path === "/admin/certificates") {
-      return <Certificates />;
-    }
-
-    if (path === "/admin/gyapan") return <GyapanPage />;
-    const gyapanEditMatch = path.match(/^\/admin\/gyapan\/([^/]+)\/edit$/);
-    if (gyapanEditMatch) return <GyapanEditor gyapanId={gyapanEditMatch[1]} />;
-    const gyapanMatch = path.match(/^\/admin\/gyapan\/([^/]+)$/);
-    if (gyapanMatch) return <GyapanPreview gyapanId={gyapanMatch[1]} />;
-
-    const offerLetterEditMatch = path.match(/^\/admin\/students\/([^/]+)\/offer-letter\/edit$/);
-    if (offerLetterEditMatch) {
-      return <OfferLetterEditor studentId={offerLetterEditMatch[1]} />;
-    }
-
-    const offerLetterMatch = path.match(/^\/admin\/students\/([^/]+)\/offer-letter$/);
-    if (offerLetterMatch) {
-      return <OfferLetterPreview studentId={offerLetterMatch[1]} />;
-    }
-
-    const studentMatch = path.match(/^\/admin\/students\/([^/]+)$/);
-    if (studentMatch) {
-      return <StudentDetails id={studentMatch[1]} />;
-    }
-
-    window.history.replaceState({}, "", token ? "/admin/dashboard" : "/admin/login");
-    return token ? <AdminDashboard /> : <AdminLogin />;
-  }
-
-  if (path === "/student") {
-    return <Home />;
-  }
-
-  if (path === "/student/login") {
-    return <StudentLogin />;
-  }
-
-  if (path === "/student/dashboard") {
-    return <StudentDashboard />;
-  }
-
-  if (path !== "/") {
-    window.history.replaceState({}, "", "/");
-  }
-
-  return <Landing />;
+          <Route path="/admin" element={<Navigate replace to="/admin/login" />} />
+          <Route path="/admin/login" element={<PublicAdminRoute><AdminLogin /></PublicAdminRoute>} />
+          <Route path="/admin/dashboard" element={protectedPage(<AdminDashboard />)} />
+          <Route path="/admin/students" element={protectedPage(<AdminDashboard />)} />
+          <Route path="/admin/students/:id" element={protectedPage(<StudentDetailsRoute />)} />
+          <Route path="/admin/students/:id/offer-letter" element={protectedPage(<OfferLetterPreviewRoute />)} />
+          <Route path="/admin/students/:id/offer-letter/edit" element={protectedPage(<OfferLetterEditorRoute />)} />
+          <Route path="/admin/certificates" element={protectedPage(<Certificates />)} />
+          <Route path="/admin/gyapan" element={protectedPage(<GyapanPage />)} />
+          <Route path="/admin/gyapan/:gyapanId" element={protectedPage(<GyapanPreviewRoute />)} />
+          <Route path="/admin/gyapan/:gyapanId/edit" element={protectedPage(<GyapanEditorRoute />)} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AdminAuthProvider>
+    </BrowserRouter>
+  );
 }
 
 export default App;

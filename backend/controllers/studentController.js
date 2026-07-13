@@ -268,17 +268,31 @@ async function createStudent(req, res) {
       submittedAt: new Date(),
     });
 
-    // Save student only once
+    // Saving the registration is the transaction boundary for this endpoint.
+    // A confirmation email is useful, but it must never turn a completed
+    // registration into a failed request.
     const savedStudent = await student.save();
-    const emailResult = await sendRegistrationConfirmationEmail(savedStudent);
+    let emailResult;
+    let emailWarning;
+
+    try {
+      emailResult = await sendRegistrationConfirmationEmail(savedStudent);
+    } catch (emailError) {
+      console.error(
+        `Registration email failed for ${savedStudent.referenceId}:`,
+        emailError
+      );
+      emailWarning = "Registration successful, but the confirmation email could not be sent.";
+    }
 
     return res.status(201).json({
       success: true,
-      message: "Student Registered Successfully",
+      message: "Student registered successfully.",
       referenceId: savedStudent.referenceId,
       serialNumber: savedStudent.serialNumber,
-      email: emailResult,
-      student: savedStudent,
+      ...(emailResult ? { email: emailResult } : {}),
+      ...(emailWarning ? { warning: emailWarning } : {}),
+      student: publicStudent(savedStudent),
     });
   } catch (error) {
     console.error(error);

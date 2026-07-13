@@ -2,15 +2,22 @@ const API_URL = `${import.meta.env.VITE_API_URL}/admin`;
 const TOKEN_KEY = "webPortalAdminToken";
 
 export function getAdminToken() {
-  return sessionStorage.getItem(TOKEN_KEY);
+  return sessionStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY);
 }
 
 export function setAdminToken(token) {
   sessionStorage.setItem(TOKEN_KEY, token);
+  localStorage.removeItem(TOKEN_KEY);
+  window.dispatchEvent(new Event("admin-auth-changed"));
 }
 
 export function clearAdminToken() {
   sessionStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(TOKEN_KEY);
+  // The app does not issue an auth cookie, but expire a legacy cookie if one
+  // exists from an earlier deployment.
+  document.cookie = `${TOKEN_KEY}=; Max-Age=0; Path=/; SameSite=Lax`;
+  window.dispatchEvent(new Event("admin-auth-changed"));
 }
 
 function authHeaders() {
@@ -20,6 +27,10 @@ function authHeaders() {
 
 async function parseResponse(response) {
   const body = await response.json().catch(() => ({}));
+
+  if (response.status === 401) {
+    clearAdminToken();
+  }
 
   if (!response.ok) {
     throw new Error(body.message || "Admin request failed.");
@@ -128,6 +139,7 @@ export async function downloadCertificates(ids) {
 
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
+    if (response.status === 401) clearAdminToken();
     throw new Error(body.message || "Certificate download failed.");
   }
 

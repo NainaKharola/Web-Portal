@@ -14,7 +14,7 @@ export async function fetchColleges() {
 async function parseResponse(response) {
   const body = await response.json().catch(() => ({}));
 
-  if (!response.ok) {
+  if (!response.ok || body.success === false) {
     throw new Error(body.message || "Student request failed.");
   }
 

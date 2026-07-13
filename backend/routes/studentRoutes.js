@@ -11,6 +11,7 @@ const {
   uploadCompletedDocuments,
   uploadStudentDocuments,
 } = require("../middleware/uploadMiddleware");
+const { protectAdmin } = require("../middleware/adminAuth");
 
 const router = express.Router();
 
@@ -23,6 +24,6 @@ router.post(
   uploadCompletedDocuments,
   uploadCompletedStudentDocuments
 );
-router.delete("/:id", deleteStudent);
+router.delete("/:id", protectAdmin, deleteStudent);
 
 module.exports = router;

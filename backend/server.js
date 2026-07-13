@@ -51,6 +51,14 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Admin responses can contain sensitive registration data. Prevent browsers
+// and intermediary caches from restoring an authenticated view after logout.
+app.use(["/api/admin", "/api/offer-letter"], (req, res, next) => {
+  res.set("Cache-Control", "no-store, private, max-age=0");
+  res.set("Pragma", "no-cache");
+  next();
+});
+
 // ========================
 // Static Upload Folder
 // ========================
