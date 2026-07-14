@@ -30,7 +30,32 @@ function studentToRow(student) {
 }
 
 function buildStudentRows(rows) {
-  return rows.map((row) => `<tr><td>${escapeHtml(row.studentName)}, ${escapeHtml(row.course)} ${escapeHtml(row.courseYear)} ${escapeHtml(row.branch)}</td><td>${escapeHtml(row.collegeName)}</td><td>${escapeHtml(row.collegeLocation)}</td><td>${escapeHtml(formatDate(row.trainingStartDate))}</td><td>${escapeHtml(formatDate(row.trainingEndDate))}</td></tr>`).join("");
+  return rows
+    .map((row) => {
+      return `
+        <tr>
+          <td>
+            <strong>${escapeHtml(row.studentName)}</strong>,
+            ${escapeHtml(row.course)}
+            ${escapeHtml(row.courseYear)},
+            ${escapeHtml(row.branch)}
+          </td>
+
+          <td>
+            ${escapeHtml(row.collegeName)}
+          </td>
+
+          <td>
+            ${escapeHtml(row.collegeLocation)}
+            <br>
+            ${escapeHtml(formatDate(row.trainingStartDate))}
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            ${escapeHtml(formatDate(row.trainingEndDate))}
+          </td>
+        </tr>
+      `;
+    })
+    .join("");
 }
 
 async function generateGyapanHtml({ rows, letterNumber, issueDate }) {
