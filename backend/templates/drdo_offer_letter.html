@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IRDE Training Letter</title>
     <style>
-      @page {
-        size: A4;
-        margin: 12mm;
+      @page{
+          size:A4 portrait;
+          margin:10mm;
       }
 
       html,
@@ -26,8 +26,11 @@
       }
 
       .container {
-        width: 186mm;
-        margin: 0 auto;
+          width: 186mm;
+          min-height: 273mm;   /* Full printable height */
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
       }
       /* Header section */
       .header-table {
@@ -76,6 +79,19 @@
         line-height: 1.45;
         font-size: 13px;
       }
+      .subject-block{
+          margin-top:20px;
+          margin-bottom:18px;
+      }
+
+      .letter-body{
+          margin-top:18px;
+          margin-bottom:22px;
+      }
+
+      .signature-block{
+          margin-top:40px;
+      }
 
       /* .subject-block {
         margin: 18px 0;
@@ -85,12 +101,12 @@
       } */
 
       /* Letter Body Content */
-      .letter-body {
-        text-align: justify;
-        text-indent: 38px;
-        font-size: 13px;
-        line-height: 1.55;
-        margin-bottom: 12px;
+      .letter-body{
+          text-align: justify;
+          text-indent: 38px;
+          font-size: 13px;
+          line-height: 1.75;
+          flex: 1;
       }
       .student-highlight {
         display: inline;
@@ -125,9 +141,9 @@
         margin-bottom: 4px;
       }
       .bottom-banner {
-        margin-top: 20px;
-        text-align: center;
-        font-size: 11px;
+          margin-top: auto;
+          text-align: center;
+          font-size: 11px;
       }
       .banner-img {
         width: 145px;
@@ -200,7 +216,7 @@
           </td>
         </tr>
       </table>
-
+      </br>
       <div class="meta-info">
         <div>पत्रांक / Letter No.: {{letterNumber}}</div>
         <div>दिनाँक / Dated: {{issueDate}}</div>
@@ -211,16 +227,17 @@
         TRAINING & PLACEMENT CO-ORDINATOR<br />
         GEU<br />
         Dehradun<br />
-      </div>
+      </div><br>
 
       <!-- <div class="subject-block">
         विषय : आई.आर.डी.ई. में विद्यार्थियों को प्रशिक्षण सुविधा
       </div> -->
       <h3>विषय : आई.आर.डी.ई. में विद्यार्थियों को प्रशिक्षण सुविधा</h3>
+      </br>
       <div class="letter-body">
         <span class="student-highlight">
           {{studentName}}, {{course}} {{year}}, {{branch}} </span
-        ><br />
+        >
         को इस संस्थान में
         <span class="student-highlight">{{duration}}</span>
         अवधि का प्रयोगात्मक प्रशिक्षण / परियोजना कार्य करने की सुविधा दी जा सकती
