@@ -6,11 +6,10 @@ const templatePath = path.join(
   __dirname,
   "..",
   "templates",
-  "drdo_offer_letter.html",
+  "drdo_offer_letter.html"
 );
 
 const logoPath = path.join(__dirname, "..", "templates", "drdo_logo.png");
-
 const bannerPath = path.join(__dirname, "..", "templates", "ssa_banner.png");
 
 // Convert images to Base64 so Puppeteer always renders them
@@ -31,19 +30,6 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
-function paragraphsFromText(value) {
-  const text = String(value || "").trim();
-
-  if (!text) return "";
-
-  return text
-    .split(/\n{2,}/)
-    .map(
-      (paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, "<br />")}</p>`,
-    )
-    .join("");
-}
-
 function formatDate(value) {
   if (!value) return new Date().toLocaleDateString("en-IN");
   return new Date(value).toLocaleDateString("en-IN");
@@ -53,28 +39,18 @@ function defaultLetterNumber(student) {
   const suffix = String(student._id || "")
     .slice(-6)
     .toUpperCase();
+
   const year = new Date().getFullYear();
+
   return `DRDO/INT/${year}/${suffix}`;
 }
 
-// function getDefaultEditableContent(student) {
-//   return {
-//     subject: "Offer Letter for Internship",
-//     letterBody: `Dear ${student.name || "Student"},
-
-// With reference to your application, we are pleased to offer you an internship opportunity with DRDO for the duration mentioned below. This offer is subject to verification of submitted documents and compliance with all instructions issued by the department.`,
-//     additionalRemarks:
-//       "You are requested to report as per the instructions shared by the Internship Registration and Management Cell.",
-//   };
-// }
-
 function buildTemplateData(student, overrides = {}) {
-  const defaults = getDefaultEditableContent(student);
-
   const issueDate =
-    overrides.issueDate || student.offerLetter?.issueDate || new Date();
+    overrides.issueDate ||
+    student.offerLetter?.issueDate ||
+    new Date();
 
-  // Always use the latest duration
   const duration =
     overrides.internshipDuration ||
     overrides.duration ||
@@ -94,12 +70,22 @@ function buildTemplateData(student, overrides = {}) {
       "",
 
     course:
-      overrides.course || student.offerLetter?.course || student.course || "",
+      overrides.course ||
+      student.offerLetter?.course ||
+      student.course ||
+      "",
 
-    year: overrides.year || student.offerLetter?.year || student.year || "",
+    year:
+      overrides.year ||
+      student.offerLetter?.year ||
+      student.year ||
+      "",
 
     branch:
-      overrides.branch || student.offerLetter?.branch || student.branch || "",
+      overrides.branch ||
+      student.offerLetter?.branch ||
+      student.branch ||
+      "",
 
     collegeName:
       overrides.collegeName ||
@@ -115,9 +101,9 @@ function buildTemplateData(student, overrides = {}) {
       "",
 
     collegeAddress:
-      overrides.collegeAddress || student.offerLetter?.collegeAddress || "",
-
-    collegeAddress: overrides.collegeAddress || "",
+      overrides.collegeAddress ||
+      student.offerLetter?.collegeAddress ||
+      "",
 
     internshipDuration: duration,
     duration: duration,
@@ -128,35 +114,18 @@ function buildTemplateData(student, overrides = {}) {
       overrides.letterNumber ||
       student.offerLetter?.letterNumber ||
       defaultLetterNumber(student),
-
-    // subject:
-    //   overrides.subject || student.offerLetter?.subject || defaults.subject,
-
-    // letterBody:
-    //   overrides.letterBody ||
-    //   student.offerLetter?.letterBody ||
-    //   defaults.letterBody,
-
-    // additionalRemarks:
-    //   overrides.additionalRemarks ||
-    //   student.offerLetter?.additionalRemarks ||
-    //   defaults.additionalRemarks,
   };
 }
 
 async function readOfferLetterTemplate() {
-  return fsp.readFile(templatePath, "utf8");
+  return await fsp.readFile(templatePath, "utf8");
 }
 
 async function generateOfferLetterHtml(student, overrides = {}) {
   const template = await readOfferLetterTemplate();
   const data = buildTemplateData(student, overrides);
 
-  const finalHtml = template.replace(/{{(\w+)}}/g, (match, key) => {
-    // if (key === "letterBody" || key === "additionalRemarks") {
-    //   return paragraphsFromText(data[key]);
-    // }
-
+  return template.replace(/{{(\w+)}}/g, (match, key) => {
     // Don't escape Base64 image URLs
     if (key === "logoUrl" || key === "bannerUrl") {
       return data[key];
@@ -164,13 +133,10 @@ async function generateOfferLetterHtml(student, overrides = {}) {
 
     return escapeHtml(data[key] ?? "");
   });
-
-  return finalHtml;
 }
 
 module.exports = {
   buildTemplateData,
   defaultLetterNumber,
   generateOfferLetterHtml,
-  getDefaultEditableContent,
 };
