@@ -34,13 +34,11 @@ function Certificates() {
   );
 
   const toggleStudent = (id, checked) => {
-    setSelectedIds((current) =>
-      checked ? [...current, id] : current.filter((value) => value !== id),
-    );
+    setSelectedIds(checked ? [id] : []);
   };
 
-  const toggleAll = (checked) => {
-    setSelectedIds(checked ? students.map((student) => student._id) : []);
+  const toggleAll = () => {
+    // Multiple selection disabled
   };
 
   const goBack = () => {
@@ -56,16 +54,26 @@ function Certificates() {
 
     setDownloading(true);
     setError("");
+
     try {
-      const { blob, filename } = await downloadCertificates(selectedIds);
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
+      for (const id of selectedIds) {
+        const { blob, filename } = await downloadCertificates([id]);
+
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        URL.revokeObjectURL(url);
+
+        // Small delay so browsers don't block multiple downloads
+        await new Promise((resolve) => setTimeout(resolve, 300));
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -133,9 +141,8 @@ function Certificates() {
                   <th>
                     <input
                       type="checkbox"
-                      checked={allSelected}
-                      onChange={(event) => toggleAll(event.target.checked)}
-                      aria-label="Select all completed trainees"
+                      disabled
+                      title="Only one certificate can be generated at a time."
                     />
                   </th>
                   <th>Serial No.</th>

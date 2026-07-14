@@ -145,7 +145,11 @@ export async function downloadCertificates(ids) {
 
   return {
     blob: await response.blob(),
-    filename: response.headers.get("content-disposition")?.match(/filename="?([^";]+)"?/)?.[1] || "DRDO-Certificates.zip",
+    filename:
+  response.headers
+    .get("content-disposition")
+    ?.match(/filename="?([^";]+)"?/)?.[1] ||
+  "DRDO-Certificate.pdf",
   };
 }
 
