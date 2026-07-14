@@ -16,10 +16,8 @@ const trainingDurationOptions = [
   "4 Weeks",
   "6 Weeks",
   "8 Weeks",
-  "2 Months",
-  "3 Months",
-  "4 Months",
-  "6 Months",
+  "10 Weeks",
+  "12 Weeks",
 ];
 
 function formatDate(value) {

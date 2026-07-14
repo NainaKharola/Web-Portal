@@ -67,9 +67,9 @@ function buildEditableFields(student) {
       ? new Date(student.offerLetter.issueDate).toISOString().slice(0, 10)
       : new Date().toISOString().slice(0, 10),
     letterNumber: data.letterNumber,
-    subject: data.subject,
-    letterBody: data.letterBody,
-    additionalRemarks: data.additionalRemarks,
+    //subject: data.subject,
+    //letterBody: data.letterBody,
+    //additionalRemarks: data.additionalRemarks,
   };
 }
 
@@ -161,9 +161,9 @@ async function updateOfferLetter(req, res) {
       "internshipDuration",
       "issueDate",
       "letterNumber",
-      "subject",
-      "letterBody",
-      "additionalRemarks",
+      // "subject",
+      // "letterBody",
+      // "additionalRemarks",
     ];
 
     const updates = allowed.reduce((acc, key) => {
@@ -230,9 +230,9 @@ async function updateOfferLetter(req, res) {
 
       internshipDuration: updates.internshipDuration,
 
-      subject: updates.subject || "",
-      letterBody: updates.letterBody || "",
-      additionalRemarks: updates.additionalRemarks || "",
+      // subject: updates.subject || "",
+      // letterBody: updates.letterBody || "",
+      // additionalRemarks: updates.additionalRemarks || "",
     };
     student.offerLetterStatus = "Generated";
 

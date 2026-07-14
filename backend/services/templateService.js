@@ -57,16 +57,16 @@ function defaultLetterNumber(student) {
   return `DRDO/INT/${year}/${suffix}`;
 }
 
-function getDefaultEditableContent(student) {
-  return {
-    subject: "Offer Letter for Internship",
-    letterBody: `Dear ${student.name || "Student"},
+// function getDefaultEditableContent(student) {
+//   return {
+//     subject: "Offer Letter for Internship",
+//     letterBody: `Dear ${student.name || "Student"},
 
-With reference to your application, we are pleased to offer you an internship opportunity with DRDO for the duration mentioned below. This offer is subject to verification of submitted documents and compliance with all instructions issued by the department.`,
-    additionalRemarks:
-      "You are requested to report as per the instructions shared by the Internship Registration and Management Cell.",
-  };
-}
+// With reference to your application, we are pleased to offer you an internship opportunity with DRDO for the duration mentioned below. This offer is subject to verification of submitted documents and compliance with all instructions issued by the department.`,
+//     additionalRemarks:
+//       "You are requested to report as per the instructions shared by the Internship Registration and Management Cell.",
+//   };
+// }
 
 function buildTemplateData(student, overrides = {}) {
   const defaults = getDefaultEditableContent(student);
@@ -129,18 +129,18 @@ function buildTemplateData(student, overrides = {}) {
       student.offerLetter?.letterNumber ||
       defaultLetterNumber(student),
 
-    subject:
-      overrides.subject || student.offerLetter?.subject || defaults.subject,
+    // subject:
+    //   overrides.subject || student.offerLetter?.subject || defaults.subject,
 
-    letterBody:
-      overrides.letterBody ||
-      student.offerLetter?.letterBody ||
-      defaults.letterBody,
+    // letterBody:
+    //   overrides.letterBody ||
+    //   student.offerLetter?.letterBody ||
+    //   defaults.letterBody,
 
-    additionalRemarks:
-      overrides.additionalRemarks ||
-      student.offerLetter?.additionalRemarks ||
-      defaults.additionalRemarks,
+    // additionalRemarks:
+    //   overrides.additionalRemarks ||
+    //   student.offerLetter?.additionalRemarks ||
+    //   defaults.additionalRemarks,
   };
 }
 
@@ -153,9 +153,9 @@ async function generateOfferLetterHtml(student, overrides = {}) {
   const data = buildTemplateData(student, overrides);
 
   const finalHtml = template.replace(/{{(\w+)}}/g, (match, key) => {
-    if (key === "letterBody" || key === "additionalRemarks") {
-      return paragraphsFromText(data[key]);
-    }
+    // if (key === "letterBody" || key === "additionalRemarks") {
+    //   return paragraphsFromText(data[key]);
+    // }
 
     // Don't escape Base64 image URLs
     if (key === "logoUrl" || key === "bannerUrl") {

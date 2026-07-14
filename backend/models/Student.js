@@ -157,18 +157,18 @@ const studentSchema = new mongoose.Schema(
         default: "",
       },
       pdfBuffer: Buffer,
-      subject: {
-        type: String,
-        default: "",
-      },
-      letterBody: {
-        type: String,
-        default: "",
-      },
-      additionalRemarks: {
-        type: String,
-        default: "",
-      },
+      // subject: {
+      //   type: String,
+      //   default: "",
+      // },
+      // letterBody: {
+      //   type: String,
+      //   default: "",
+      // },
+      // additionalRemarks: {
+      //   type: String,
+      //   default: "",
+      // },
     },
     completedDocuments: {
       url: {

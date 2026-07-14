@@ -3,16 +3,48 @@ function OfferLetterForm({ form, saving, onChange, onSubmit }) {
     onChange({ ...form, [key]: value });
   };
 
+  const courses = ["B.Tech", "M.Tech", "M.Sc", "PhD"];
+
+  const years = [
+    "1st Year",
+    "2nd Year",
+    "3rd Year",
+    "4th Year",
+  ];
+
+  const durations = [
+    "2 Weeks",
+    "4 Weeks",
+    "6 Weeks",
+    "8 Weeks",
+    "10 Weeks",
+    "12 Weeks",
+  ];
+
+  const branches = [
+    "Computer Science and Engineering",
+    "Information Technology",
+    "Electronics and Communication Engineering",
+    "Electrical Engineering",
+    "Mechanical Engineering",
+    "Civil Engineering",
+    "Chemical Engineering",
+    "Aerospace Engineering",
+    "Biotechnology",
+    "Artificial Intelligence and Data Science",
+  ];
+
   return (
     <form className="admin-review-form" onSubmit={onSubmit}>
       <h2>Edit Offer Letter</h2>
 
       <div className="admin-control-grid">
+
         <label className="admin-field">
           <span>Student Name</span>
           <input
             value={form.studentName || ""}
-            onChange={(event) => updateField("studentName", event.target.value)}
+            onChange={(e) => updateField("studentName", e.target.value)}
           />
         </label>
 
@@ -20,77 +52,87 @@ function OfferLetterForm({ form, saving, onChange, onSubmit }) {
           <span>College Name</span>
           <input
             value={form.collegeName || ""}
-            onChange={(event) => updateField("collegeName", event.target.value)}
+            onChange={(e) => updateField("collegeName", e.target.value)}
           />
         </label>
 
+        {/* Course */}
         <label className="admin-field">
           <span>Course</span>
-          <input
+          <select
             value={form.course || ""}
-            onChange={(event) => updateField("course", event.target.value)}
-          />
+            onChange={(e) => updateField("course", e.target.value)}
+          >
+            <option value="">Select Course</option>
+            {courses.map((course) => (
+              <option key={course} value={course}>
+                {course}
+              </option>
+            ))}
+          </select>
         </label>
 
+        {/* Year */}
         <label className="admin-field">
           <span>Year</span>
-          <input
+          <select
             value={form.year || ""}
-            onChange={(event) => updateField("year", event.target.value)}
-          />
+            onChange={(e) => updateField("year", e.target.value)}
+          >
+            <option value="">Select Year</option>
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
         </label>
 
+        {/* Branch */}
         <label className="admin-field">
           <span>Branch</span>
-          <input
+          <select
             value={form.branch || ""}
-            onChange={(event) => updateField("branch", event.target.value)}
-          />
+            onChange={(e) => updateField("branch", e.target.value)}
+          >
+            <option value="">Select Branch</option>
+            {branches.map((branch) => (
+              <option key={branch} value={branch}>
+                {branch}
+              </option>
+            ))}
+          </select>
         </label>
 
+        {/* Internship Duration */}
         <label className="admin-field">
           <span>Internship Duration</span>
-          <input
+          <select
             value={form.internshipDuration || ""}
-            onChange={(event) => updateField("internshipDuration", event.target.value)}
-          />
+            onChange={(e) =>
+              updateField("internshipDuration", e.target.value)
+            }
+          >
+            <option value="">Select Duration</option>
+            {durations.map((duration) => (
+              <option key={duration} value={duration}>
+                {duration}
+              </option>
+            ))}
+          </select>
         </label>
 
+        {/* Issue Date */}
         <label className="admin-field">
           <span>Issue Date</span>
           <input
             type="date"
             value={form.issueDate || ""}
-            onChange={(event) => updateField("issueDate", event.target.value)}
+            onChange={(e) => updateField("issueDate", e.target.value)}
           />
         </label>
 
-        <label className="admin-field">
-          <span>Subject</span>
-          <input
-            value={form.subject || ""}
-            onChange={(event) => updateField("subject", event.target.value)}
-          />
-        </label>
       </div>
-
-      <label className="admin-field admin-field--wide">
-        <span>Letter Body</span>
-        <textarea
-          rows="8"
-          value={form.letterBody || ""}
-          onChange={(event) => updateField("letterBody", event.target.value)}
-        />
-      </label>
-
-      <label className="admin-field admin-field--wide">
-        <span>Additional Remarks</span>
-        <textarea
-          rows="4"
-          value={form.additionalRemarks || ""}
-          onChange={(event) => updateField("additionalRemarks", event.target.value)}
-        />
-      </label>
 
       <button className="primary-button" disabled={saving} type="submit">
         {saving ? "Saving..." : "Save Changes"}
