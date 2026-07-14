@@ -63,40 +63,30 @@ function buildTemplateData(student, overrides = {}) {
     logoUrl: overrides.logoUrl || logoBase64,
     bannerUrl: bannerBase64,
 
-    studentName:
-      overrides.studentName ||
-      student.offerLetter?.studentName ||
-      student.name ||
-      "",
+    studentName: overrides.studentName || student.name || "",
 
     course:
       overrides.course ||
-      student.offerLetter?.course ||
       student.course ||
       "",
 
     year:
       overrides.year ||
-      student.offerLetter?.year ||
       student.year ||
       "",
 
     branch:
       overrides.branch ||
-      student.offerLetter?.branch ||
       student.branch ||
       "",
 
     collegeName:
       overrides.collegeName ||
-      student.offerLetter?.collegeName ||
       student.collegeName ||
       "",
 
     collegeLocation:
       overrides.collegeLocation ||
-      student.offerLetter?.collegeLocation ||
-      student.trainingManagement?.collegeLocation ||
       student.location ||
       "",
 

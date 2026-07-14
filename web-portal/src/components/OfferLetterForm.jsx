@@ -56,6 +56,14 @@ function OfferLetterForm({ form, saving, onChange, onSubmit }) {
           />
         </label>
 
+        <label className="admin-field">
+          <span>College Location</span>
+          <input
+            value={form.collegeLocation || ""}
+            onChange={(e) => updateField("collegeLocation", e.target.value)}
+          />
+        </label>
+
         {/* Course */}
         <label className="admin-field">
           <span>Course</span>

@@ -59,6 +59,7 @@ function buildEditableFields(student) {
   return {
     studentName: data.studentName,
     collegeName: data.collegeName,
+    collegeLocation: data.collegeLocation,
     course: data.course,
     year: data.year,
     branch: data.branch,
@@ -130,11 +131,14 @@ async function generateOfferLetter(req, res) {
 async function getOfferLetterPreview(req, res) {
   try {
     const student = await findApprovedStudent(req.params.studentId);
-    const html =
-      student.offerLetter?.html ||
-      (student.offerLetter?.uploadType === "Uploaded"
-        ? ""
-        : await generateOfferLetterHtml(student));
+
+    let html = "";
+
+    if (student.offerLetter?.uploadType === "Uploaded") {
+      html = "";
+    } else {
+      html = await generateOfferLetterHtml(student);
+    }
 
     return res.status(200).json({
       success: true,
@@ -155,6 +159,7 @@ async function updateOfferLetter(req, res) {
     const allowed = [
       "studentName",
       "collegeName",
+      "collegeLocation",
       "course",
       "year",
       "branch",
@@ -170,10 +175,6 @@ async function updateOfferLetter(req, res) {
       if (req.body[key] !== undefined) acc[key] = req.body[key];
       return acc;
     }, {});
-
-    console.log("========== OFFER LETTER UPDATE ==========");
-    console.log("Request Body:", req.body);
-    console.log("Updates:", updates);
 
     if (!updates.studentName || !updates.collegeName || !updates.course) {
       return res.status(400).json({
@@ -197,12 +198,32 @@ async function updateOfferLetter(req, res) {
       ...updates,
       issueDate,
     });
-    console.log("Duration sent to template:", updates.internshipDuration);
-    console.log(
-      "HTML contains duration?",
-      html.includes(updates.internshipDuration),
-    );
     await generatePdfFromHtml(html);
+    // ===== Sync main Student fields =====
+
+    student.name = updates.studentName || student.name;
+    student.course = updates.course || student.course;
+    student.year = updates.year || student.year;
+    student.branch = updates.branch || student.branch;
+
+    student.collegeName = updates.collegeName || student.collegeName;
+
+    student.location = updates.collegeLocation || student.location;
+
+    student.internshipDuration =
+      updates.internshipDuration || student.internshipDuration;
+
+    // Keep the legacy training-management mirror aligned, while the root
+    // Student fields remain the canonical values used by every document.
+    if (student.trainingManagement) {
+      student.trainingManagement.studentName = student.name;
+      student.trainingManagement.courseName = student.course;
+      student.trainingManagement.courseYear = student.year;
+      student.trainingManagement.branch = student.branch;
+      student.trainingManagement.collegeName = student.collegeName;
+      student.trainingManagement.collegeLocation = student.location;
+      student.trainingManagement.trainingDuration = student.internshipDuration;
+    }
 
     student.offerLetter = {
       ...currentOfferLetter(student),

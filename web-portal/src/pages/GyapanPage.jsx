@@ -74,7 +74,7 @@ function GyapanPage() {
       <section className="admin-panel">
         <div className="admin-actions-row">
           <label className="admin-field certificate-date-filter">
-            <span>Training Start Date (Optional)</span>
+            <span>Completion Date (Optional)</span>
             <input type="date" value={date} onChange={(event) => setDate(event.target.value)} />
           </label>
           <button className="primary-button" type="button" onClick={() => loadStudents(date)} disabled={loading}>
@@ -104,7 +104,7 @@ function GyapanPage() {
             <button className="primary-button" type="button" disabled={busy} onClick={generate}>{busy ? "Creating Preview..." : "Generate Gyapan"}</button>
           </div>
         </>}
-        {!loading && students.length === 0 && !error && <div className="admin-empty-state">{date ? "No joined students have this training start date." : "No students with Joined status set to Yes are available."}</div>}
+        {!loading && students.length === 0 && !error && <div className="admin-empty-state">{date ? "No completed students have this completion date." : "No students with Completed status set to Yes are available."}</div>}
       </section>
     </main>
   );

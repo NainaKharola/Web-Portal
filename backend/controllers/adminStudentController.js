@@ -1,5 +1,4 @@
 const Student = require("../models/Student");
-const archiver = require("archiver");
 const cloudinary = require("../config/cloudinary");
 const { generatePdfsFromHtml } = require("../services/pdfService");
 const {
@@ -212,22 +211,39 @@ async function getCertificateStudents(req, res) {
       { completedStatus: "Yes" },
       { "trainingManagement.completed": "Yes" },
     ];
-    const filter = { $or: completionStatus };
+    const filter = {
+      $and: [
+        { $or: completionStatus },
+        { certificateGenerated: { $ne: true } },
+      ],
+    };
+    if (req.query.search?.trim()) {
+      filter.$and.push({
+        name: { $regex: req.query.search.trim(), $options: "i" },
+      });
+    }
     if (req.query.date) {
       const range = indiaDayRange(req.query.date);
       if (!range) {
-        return res.status(400).json({ success: false, message: "Select a valid completion date." });
+        return res
+          .status(400)
+          .json({ success: false, message: "Select a valid completion date." });
       }
-      filter.$and = [{
-        $or: [
-          { completedStatus: "Yes", completedDate: range },
-          { "trainingManagement.completed": "Yes", "trainingManagement.completionDate": range },
-        ],
-      }];
+      filter.$and.push(
+        {
+          $or: [
+            { completedStatus: "Yes", completedDate: range },
+            {
+              "trainingManagement.completed": "Yes",
+              "trainingManagement.completionDate": range,
+            },
+          ],
+        },
+      );
     }
     const students = await Student.find(
       filter,
-      "name referenceId collegeName course branch internshipDuration trainingManagement",
+      "name referenceId collegeName course branch year location internshipDuration trainingManagement",
     )
       .sort({ "trainingManagement.toDate": -1, name: 1 })
       .lean();
@@ -243,16 +259,23 @@ async function getCertificateStudents(req, res) {
 
 async function downloadCertificates(req, res) {
   try {
-    const ids = [...new Set(Array.isArray(req.body.ids) ? req.body.ids : [])];
+    const ids = [...new Set(Array.isArray(req.body.ids) ? req.body.ids : [req.body.id].filter(Boolean))];
 
     if (!ids.length) {
       return res
         .status(400)
-        .json({ success: false, message: "Select at least one student." });
+        .json({ success: false, message: "Select a student." });
+    }
+    if (ids.length > 1) {
+      return res.status(400).json({
+        success: false,
+        message: "Certificates are downloaded individually. Generate one certificate at a time.",
+      });
     }
 
     const students = await Student.find({
       _id: { $in: ids },
+      certificateGenerated: { $ne: true },
       $or: [
         { completedStatus: "Yes" },
         { "trainingManagement.completed": "Yes" },
@@ -267,34 +290,16 @@ async function downloadCertificates(req, res) {
       });
     }
 
-    const pdfs = await generatePdfsFromHtml(
-      students.map(generateCertificateHtml),
-    );
-    const certificates = students.map((student, index) => ({
-      name: certificateFileName(student),
-      pdf: pdfs[index],
-    }));
+    const student = students[0];
+    const [pdf] = await generatePdfsFromHtml([generateCertificateHtml(student)]);
+    await Student.findByIdAndUpdate(student._id, { certificateGenerated: true });
 
-    if (certificates.length === 1) {
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader(
-        "Content-Disposition",
-        `attachment; filename="${certificates[0].name}"`,
-      );
-      return res.status(200).send(certificates[0].pdf);
-    }
-
-    res.setHeader("Content-Type", "application/zip");
+    res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
-      'attachment; filename="DRDO-Certificates.zip"',
+      `attachment; filename="${certificateFileName(student)}"`,
     );
-
-    const archive = archiver("zip", { zlib: { level: 9 } });
-    archive.on("error", (error) => res.destroy(error));
-    archive.pipe(res);
-    certificates.forEach(({ name, pdf }) => archive.append(pdf, { name }));
-    await archive.finalize();
+    return res.status(200).send(pdf);
   } catch (error) {
     if (!res.headersSent) {
       return res
@@ -486,8 +491,32 @@ async function saveTrainingManagement(req, res) {
         message: "From Date and To Date are required.",
       });
     }
+    // ===== Sync main Student document =====
+
+    student.name = training.studentName;
+    student.course = training.courseName;
+    student.year = training.courseYear;
+    student.branch = training.branch;
+
+    student.collegeName = training.collegeName;
+    student.location = training.collegeLocation;
+
+    student.internshipDuration = training.trainingDuration;
 
     student.trainingManagement = training;
+    // Keep Offer Letter data in sync
+
+    if (student.offerLetter) {
+      student.offerLetter.studentName = training.studentName;
+      student.offerLetter.course = training.courseName;
+      student.offerLetter.year = training.courseYear;
+      student.offerLetter.branch = training.branch;
+
+      student.offerLetter.collegeName = training.collegeName;
+      student.offerLetter.collegeLocation = training.collegeLocation;
+
+      student.offerLetter.internshipDuration = training.trainingDuration;
+    }
     student.joinedStatus = training.joined;
     student.joinedDate = training.joinedDate || undefined;
     student.completedStatus = training.completed;

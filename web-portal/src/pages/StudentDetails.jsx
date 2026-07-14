@@ -11,6 +11,32 @@ import {
 } from "../services/offerLetterService";
 import "../styles/admin.css";
 
+const courseOptions = [
+  "B.Tech",
+  "M.Tech",
+  "M.Sc",
+  "Ph.D",
+];
+
+const yearOptions = [
+  "1st Year",
+  "2nd Year",
+  "3rd Year",
+  "4th Year",
+];
+
+const branchOptions = [
+  "Computer Science Engineering",
+  "Information Technology",
+  "Electronics and Communication Engineering",
+  "Electrical Engineering",
+  "Mechanical Engineering",
+  "Civil Engineering",
+  "Chemical Engineering",
+  "Biotechnology",
+  "Artificial Intelligence and Data Science",
+];
+
 const trainingDurationOptions = [
   "2 Weeks",
   "4 Weeks",
@@ -132,25 +158,136 @@ function TrainingManagementForm({ student, onUpdated }) {
 
       {open && (
         <form className="training-form" onSubmit={handleSubmit}>
-          {[
-            ["studentName", "Student Name"],
-            ["courseName", "Course Name"],
-            ["courseYear", "Course Year"],
-            ["branch", "Branch"],
-            ["collegeName", "College Name"],
-            ["collegeLocation", "College Location"],
-            ["fromDate", "From Date", "date"],
-            ["toDate", "To Date", "date"],
-            ["projectTitle", "Project Title"],
-            ["projectGuide", "Project Guide"],
-            ["designation", "Designation"],
-            ["leaveAvailed", "Leave Availed"],
-          ].map(([name, label, type = "text"]) => (
-            <label className={`admin-field${name === "projectTitle" ? " training-form__project-title" : ""}`} key={name}>
-              <span>{label}</span>
-              <input name={name} type={type} value={form[name]} onChange={handleChange} readOnly={name === "toDate"} />
-            </label>
-          ))}
+          <label className="admin-field">
+  <span>Student Name</span>
+      <input
+        name="studentName"
+        value={form.studentName}
+        onChange={handleChange}
+      />
+    </label>
+
+    <label className="admin-field">
+      <span>Course</span>
+      <select
+        name="courseName"
+        value={form.courseName}
+        onChange={handleChange}
+      >
+        <option value="">Select Course</option>
+        {courseOptions.map((course) => (
+          <option key={course} value={course}>
+            {course}
+          </option>
+        ))}
+      </select>
+    </label>
+
+    <label className="admin-field">
+      <span>Course Year</span>
+      <select
+        name="courseYear"
+        value={form.courseYear}
+        onChange={handleChange}
+      >
+        <option value="">Select Year</option>
+        {yearOptions.map((year) => (
+          <option key={year} value={year}>
+            {year}
+          </option>
+        ))}
+      </select>
+    </label>
+
+    <label className="admin-field">
+      <span>Branch</span>
+      <select
+        name="branch"
+        value={form.branch}
+        onChange={handleChange}
+      >
+        <option value="">Select Branch</option>
+        {branchOptions.map((branch) => (
+          <option key={branch} value={branch}>
+            {branch}
+          </option>
+        ))}
+      </select>
+    </label>
+
+    <label className="admin-field">
+      <span>College Name</span>
+      <input
+        name="collegeName"
+        value={form.collegeName}
+        onChange={handleChange}
+      />
+    </label>
+
+    <label className="admin-field">
+      <span>College Location</span>
+      <input
+        name="collegeLocation"
+        value={form.collegeLocation}
+        onChange={handleChange}
+      />
+    </label>
+
+    <label className="admin-field">
+      <span>From Date</span>
+      <input
+        type="date"
+        name="fromDate"
+        value={form.fromDate}
+        onChange={handleChange}
+      />
+    </label>
+
+    <label className="admin-field">
+      <span>To Date</span>
+      <input
+        type="date"
+        name="toDate"
+        value={form.toDate}
+        readOnly
+      />
+    </label>
+
+    <label className="admin-field training-form__project-title">
+      <span>Project Title</span>
+      <input
+        name="projectTitle"
+        value={form.projectTitle}
+        onChange={handleChange}
+      />
+    </label>
+
+    <label className="admin-field">
+      <span>Project Guide</span>
+      <input
+        name="projectGuide"
+        value={form.projectGuide}
+        onChange={handleChange}
+      />
+    </label>
+
+    <label className="admin-field">
+      <span>Designation</span>
+      <input
+        name="designation"
+        value={form.designation}
+        onChange={handleChange}
+      />
+    </label>
+
+    <label className="admin-field">
+      <span>Leave Availed</span>
+      <input
+        name="leaveAvailed"
+        value={form.leaveAvailed}
+        onChange={handleChange}
+      />
+    </label>
 
           <label className="admin-field">
             <span>Training Duration</span>

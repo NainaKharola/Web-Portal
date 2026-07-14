@@ -7,9 +7,14 @@ const { generateGyapanHtml, studentToRow } = require("../services/gyapanService"
 async function getGyapanStudents(req, res) {
   try {
     const filter = {
-      $or: [
-        { joinedStatus: "Yes" },
-        { "trainingManagement.joined": "Yes" },
+      $and: [
+        {
+          $or: [
+            { completedStatus: "Yes" },
+            { "trainingManagement.completed": "Yes" },
+          ],
+        },
+        { gyapanGenerated: { $ne: true } },
       ],
     };
 
@@ -17,12 +22,17 @@ async function getGyapanStudents(req, res) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(req.query.date)) {
         return res.status(400).json({ success: false, message: "Select a valid training start date." });
       }
-      filter["trainingManagement.fromDate"] = req.query.date;
+      filter.$and.push({
+        $or: [
+          { completedStatus: "Yes", completedDate: { $gte: new Date(`${req.query.date}T00:00:00.000Z`), $lt: new Date(`${req.query.date}T23:59:59.999Z`) } },
+          { "trainingManagement.completed": "Yes", "trainingManagement.completionDate": { $gte: new Date(`${req.query.date}T00:00:00.000Z`), $lt: new Date(`${req.query.date}T23:59:59.999Z`) } },
+        ],
+      });
     }
 
     const students = await Student.find(filter).sort({ name: 1 }).lean();
     return res.json({ success: true, students });
-  } catch (error) { return res.status(500).json({ success: false, message: "Unable to fetch joined students." }); }
+  } catch (error) { return res.status(500).json({ success: false, message: "Unable to fetch completed students." }); }
 }
 
 async function selectedRows(ids) {
@@ -30,9 +40,10 @@ async function selectedRows(ids) {
   if (!uniqueIds.length) { const error = new Error("Select at least one student."); error.statusCode = 400; throw error; }
   const students = await Student.find({
     _id: { $in: uniqueIds },
-    $or: [{ joinedStatus: "Yes" }, { "trainingManagement.joined": "Yes" }],
+    gyapanGenerated: { $ne: true },
+    $or: [{ completedStatus: "Yes" }, { "trainingManagement.completed": "Yes" }],
   }).lean();
-  if (students.length !== uniqueIds.length) { const error = new Error("Only students marked Joined: Yes can be added to Gyapan."); error.statusCode = 400; throw error; }
+  if (students.length !== uniqueIds.length) { const error = new Error("Only students marked Completed: Yes and without a generated Gyapan can be added."); error.statusCode = 400; throw error; }
   return students.map(studentToRow);
 }
 
@@ -68,8 +79,13 @@ async function editPreview(req, res) {
 async function generateFinalPdf(req, res) {
   try {
     const gyapan = await Gyapan.findById(req.params.id); if (!gyapan) return res.status(404).json({ success: false, message: "Gyapan not found." });
+    if (gyapan.generated) return res.json({ success: true, gyapan, pdfUrl: gyapan.pdfUrl, message: "Gyapan PDF has already been generated." });
     const pdf = await generatePdfFromHtml(gyapan.html); const upload = await uploadBufferToCloudinary(pdf, { folder: "web-portal/gyapan", public_id: `Gyapan-${gyapan._id}-${Date.now()}` });
     gyapan.generated = true; gyapan.generatedDate = new Date(); gyapan.generatedBy = req.admin.email; gyapan.pdfUrl = upload.secure_url; gyapan.gyapanUrl = upload.secure_url; gyapan.publicId = upload.public_id; await gyapan.save();
+    await Student.updateMany(
+      { _id: { $in: gyapan.selectedStudents } },
+      { $set: { gyapanGenerated: true } },
+    );
     return res.json({ success: true, gyapan, pdfUrl: gyapan.pdfUrl, message: "Gyapan PDF generated and uploaded successfully." });
   } catch (error) { return res.status(500).json({ success: false, message: error.message || "Gyapan PDF generation failed." }); }
 }

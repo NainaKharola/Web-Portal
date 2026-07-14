@@ -225,6 +225,16 @@ const studentSchema = new mongoose.Schema(
       default: "",
     },
     completedDate: Date,
+    // Document workflow flags. These live on Student so every admin module
+    // reads the same source of truth for document availability.
+    gyapanGenerated: {
+      type: Boolean,
+      default: false,
+    },
+    certificateGenerated: {
+      type: Boolean,
+      default: false,
+    },
     
 
     submittedAt: {
@@ -243,5 +253,7 @@ studentSchema.index({ "trainingManagement.joined": 1, "trainingManagement.joined
 studentSchema.index({ "trainingManagement.completionDate": 1 });
 studentSchema.index({ joinedStatus: 1, joinedDate: 1 });
 studentSchema.index({ completedStatus: 1, completedDate: 1 });
+studentSchema.index({ completedStatus: 1, gyapanGenerated: 1 });
+studentSchema.index({ completedStatus: 1, certificateGenerated: 1, name: 1 });
 
 module.exports = mongoose.model("Student", studentSchema);

@@ -18,12 +18,12 @@ function studentToRow(student) {
   const training = student.trainingManagement || {};
   return {
     studentId: student._id,
-    studentName: training.studentName || student.name || "",
-    course: training.courseName || student.course || "",
-    courseYear: training.courseYear || student.year || "",
-    branch: training.branch || student.branch || "",
-    collegeName: training.collegeName || student.collegeName || "",
-    collegeLocation: training.collegeLocation || student.location || "",
+    studentName: student.name || "",
+    course: student.course || "",
+    courseYear: student.year || "",
+    branch: student.branch || "",
+    collegeName: student.collegeName || "",
+    collegeLocation: student.location || "",
     trainingStartDate: training.fromDate || "",
     trainingEndDate: training.toDate || "",
   };
