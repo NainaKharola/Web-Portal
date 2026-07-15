@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const colleges = await College.find().sort({ name: 1 });
+    const colleges = await College.find().sort({ name: 1 }).lean();
 
     res.json(colleges);
   } catch (err) {

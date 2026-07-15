@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 const cards = [
   ["Total Students", "totalStudents"],
   ["Pending Applications", "pendingApplications"],
@@ -6,7 +8,7 @@ const cards = [
   ["Offer Letters Sent", "offerLettersSent"],
 ];
 
-function DashboardCards({ summary }) {
+const DashboardCards = memo(function DashboardCards({ summary }) {
   return (
     <section className="admin-summary-grid">
       {cards.map(([label, key]) => (
@@ -17,6 +19,6 @@ function DashboardCards({ summary }) {
       ))}
     </section>
   );
-}
+});
 
 export default DashboardCards;

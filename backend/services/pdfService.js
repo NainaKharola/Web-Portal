@@ -65,16 +65,45 @@ async function renderPdf(browser, html) {
   }
 }
 
+let browserInstance = null;
+let browserPromise = null;
+
+async function getBrowser() {
+  if (browserInstance && browserInstance.connected) {
+    return browserInstance;
+  }
+
+  if (browserPromise) {
+    return browserPromise;
+  }
+
+  browserPromise = createBrowser()
+    .then((browser) => {
+      browserInstance = browser;
+      browserPromise = null;
+
+      browser.once("disconnect", () => {
+        console.log("Puppeteer browser disconnected. Clearing instance.");
+        browserInstance = null;
+      });
+
+      return browserInstance;
+    })
+    .catch((err) => {
+      browserPromise = null;
+      throw err;
+    });
+
+  return browserPromise;
+}
+
 async function generatePdfsFromHtml(htmlDocuments) {
-  let browser;
   try {
-    browser = await createBrowser();
+    const browser = await getBrowser();
     return await Promise.all(htmlDocuments.map((html) => renderPdf(browser, html)));
   } catch (error) {
     console.error("PDF Generation Error:", error);
     throw error;
-  } finally {
-    if (browser) await browser.close();
   }
 }
 
@@ -82,5 +111,12 @@ async function generatePdfFromHtml(html) {
   const [pdf] = await generatePdfsFromHtml([html]);
   return pdf;
 }
+
+// Clean up Puppeteer instance on server exit
+process.on("exit", () => {
+  if (browserInstance) {
+    browserInstance.close().catch(() => {});
+  }
+});
 
 module.exports = { generatePdfFromHtml, generatePdfsFromHtml };

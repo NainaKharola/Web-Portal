@@ -255,5 +255,8 @@ studentSchema.index({ joinedStatus: 1, joinedDate: 1 });
 studentSchema.index({ completedStatus: 1, completedDate: 1 });
 studentSchema.index({ completedStatus: 1, gyapanGenerated: 1 });
 studentSchema.index({ completedStatus: 1, certificateGenerated: 1, name: 1 });
+studentSchema.index({ submittedAt: -1 });
+studentSchema.index({ name: 1 });
+studentSchema.index({ "trainingManagement.toDate": -1 });
 
 module.exports = mongoose.model("Student", studentSchema);

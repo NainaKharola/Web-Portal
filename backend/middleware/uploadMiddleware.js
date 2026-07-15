@@ -117,27 +117,37 @@ function uploadStudentDocuments(req, res, next) {
       const uploadedFiles = {};
 
       if (req.files) {
+        // Pre-validate all file sizes first before starting any upload
         for (const fieldName of Object.keys(req.files)) {
           const file = req.files[fieldName][0];
-
           if (fieldName === "photo" && file.size > PHOTO_MAX_FILE_SIZE) {
             return res.status(400).json({
               success: false,
               message: "Photo size should not exceed 1 MB.",
             });
           }
+        }
 
+        const uploadPromises = Object.keys(req.files).map(async (fieldName) => {
+          const file = req.files[fieldName][0];
           const result = await uploadToCloudinary(
             file,
             uploadFolders[fieldName]
           );
-
-          uploadedFiles[fieldName] = {
-            url: result.secure_url,
-            public_id: result.public_id,
-            originalName: file.originalname,
+          return {
+            fieldName,
+            data: {
+              url: result.secure_url,
+              public_id: result.public_id,
+              originalName: file.originalname,
+            },
           };
-          console.log("Uploaded:", result.secure_url);
+        });
+
+        const results = await Promise.all(uploadPromises);
+        for (const uploadRes of results) {
+          uploadedFiles[uploadRes.fieldName] = uploadRes.data;
+          console.log("Uploaded:", uploadRes.data.url);
         }
       }
 

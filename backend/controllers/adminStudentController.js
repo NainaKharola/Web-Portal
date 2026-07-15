@@ -164,32 +164,31 @@ async function getStudents(req, res) {
   try {
     const filter = buildStudentFilter(req.query);
     const sort = buildSort(req.query.sortBy, req.query.sortOrder);
+    const projection = "_id referenceId name collegeName branch year cgpa submittedAt status offerLetterStatus approvedDate";
 
-    const students = await Student.find(filter).sort(sort).lean();
+    const [
+      students,
+      totalStudents,
+      pendingApplications,
+      approvedStudents,
+      rejectedStudents,
+      offerLettersSent,
+    ] = await Promise.all([
+      Student.find(filter).select(projection).sort(sort).lean(),
+      Student.countDocuments({}),
+      Student.countDocuments({ $or: [{ status: "Pending" }, { status: { $exists: false } }] }),
+      Student.countDocuments({ status: "Approved" }),
+      Student.countDocuments({ status: "Rejected" }),
+      Student.countDocuments({ offerLetterStatus: "Sent" }),
+    ]);
 
-    const allStudents = await Student.find({}, "status offerLetterStatus");
-
-    const summary = allStudents.reduce(
-      (acc, student) => {
-        acc.totalStudents++;
-
-        const status = student.status || "Pending";
-
-        if (status === "Pending") acc.pendingApplications++;
-        if (status === "Approved") acc.approvedStudents++;
-        if (status === "Rejected") acc.rejectedStudents++;
-        if (student.offerLetterStatus === "Sent") acc.offerLettersSent++;
-
-        return acc;
-      },
-      {
-        totalStudents: 0,
-        pendingApplications: 0,
-        approvedStudents: 0,
-        rejectedStudents: 0,
-        offerLettersSent: 0,
-      },
-    );
+    const summary = {
+      totalStudents,
+      pendingApplications,
+      approvedStudents,
+      rejectedStudents,
+      offerLettersSent,
+    };
 
     return res.status(200).json({
       success: true,

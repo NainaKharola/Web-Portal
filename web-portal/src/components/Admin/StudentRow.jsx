@@ -1,3 +1,4 @@
+import { memo } from "react";
 import StatusBadge from "./StatusBadge";
 
 function formatDate(value) {
@@ -5,7 +6,26 @@ function formatDate(value) {
   return new Date(value).toLocaleDateString("en-IN");
 }
 
-function StudentRow({ deleteMode = false, isSelected = false, onSelect, serialNumber, student, onView }) {
+const StudentRow = memo(function StudentRow({
+  deleteMode = false,
+  isSelected = false,
+  onSelect,
+  serialNumber,
+  student,
+  onView,
+}) {
+  const handleSelectChange = (event) => {
+    if (onSelect) {
+      onSelect(student._id, event.target.checked);
+    }
+  };
+
+  const handleViewClick = () => {
+    if (onView) {
+      onView(student._id);
+    }
+  };
+
   return (
     <tr>
       {deleteMode && (
@@ -13,7 +33,7 @@ function StudentRow({ deleteMode = false, isSelected = false, onSelect, serialNu
           <input
             checked={isSelected}
             type="checkbox"
-            onChange={(event) => onSelect(event.target.checked)}
+            onChange={handleSelectChange}
             aria-label={`Select ${student.name}`}
           />
         </td>
@@ -34,12 +54,12 @@ function StudentRow({ deleteMode = false, isSelected = false, onSelect, serialNu
       </td>
       <td>{formatDate(student.approvedDate)}</td>
       <td>
-        <button className="text-button" type="button" onClick={onView}>
+        <button className="text-button" type="button" onClick={handleViewClick}>
           View Details
         </button>
       </td>
     </tr>
   );
-}
+});
 
 export default StudentRow;

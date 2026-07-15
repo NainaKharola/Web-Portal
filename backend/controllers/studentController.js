@@ -452,12 +452,11 @@ async function downloadStudentDocument(req, res) {
     }
 
     const html = await renderTemplate(templateName, buildStudentTemplateData(student));
-    const fs = require("fs");
 
-    fs.writeFileSync("test-document.html", html);
+    await fs.writeFile("test-document.html", html);
 
     console.log("HTML WRITTEN");
-console.log(html.substring(0, 500));
+    console.log(html.substring(0, 500));
     const pdf = await generatePdfFromHtml(html);
     const filename =
       req.params.type === "declaration"

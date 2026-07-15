@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import DashboardCards from "../components/Admin/DashboardCards";
 import FilterBar from "../components/Admin/FilterBar";
 import SearchBar from "../components/Admin/SearchBar";
@@ -90,41 +90,41 @@ function AdminDashboard() {
     loadFilterOptions();
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     clearAdminToken();
     window.history.pushState({}, "", "/admin/login");
     window.dispatchEvent(new PopStateEvent("popstate"));
-  };
+  }, []);
 
-  const openStudent = (id) => {
+  const openStudent = useCallback((id) => {
     window.history.pushState({}, "", `/admin/students/${id}`);
     window.dispatchEvent(new PopStateEvent("popstate"));
-  };
+  }, []);
 
-  const toggleApprovedStudents = () => {
+  const toggleApprovedStudents = useCallback(() => {
     setFilters((current) => ({
       ...current,
       status: current.status === "Approved" ? "" : "Approved",
     }));
-  };
+  }, []);
 
-  const openCertificates = () => {
+  const openCertificates = useCallback(() => {
     window.history.pushState({}, "", "/admin/certificates");
     window.dispatchEvent(new PopStateEvent("popstate"));
-  };
+  }, []);
 
-  const openGyapan = () => {
+  const openGyapan = useCallback(() => {
     window.history.pushState({}, "", "/admin/gyapan");
     window.dispatchEvent(new PopStateEvent("popstate"));
-  };
+  }, []);
 
-  const toggleSelected = (id, checked) => {
+  const toggleSelected = useCallback((id, checked) => {
     setSelectedIds((current) =>
       checked ? [...current, id] : current.filter((value) => value !== id)
     );
-  };
+  }, []);
 
-  const deleteSelected = async () => {
+  const deleteSelected = useCallback(async () => {
     if (!selectedIds.length) {
       setError("Select one or more registrations to delete.");
       return;
@@ -140,7 +140,7 @@ function AdminDashboard() {
     } catch (err) {
       setError(err.message);
     }
-  };
+  }, [selectedIds, query]);
 
   return (
     <main className="admin-shell">

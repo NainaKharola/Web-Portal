@@ -1,5 +1,4 @@
 const nodemailer = require("nodemailer");
-const { google } = require("googleapis");
 
 function hasEmailConfig() {
   return Boolean(
@@ -11,23 +10,18 @@ function hasEmailConfig() {
   );
 }
 
+let cachedTransporter = null;
+
 async function createTransporter() {
+  if (cachedTransporter) {
+    return cachedTransporter;
+  }
+
   if (!hasEmailConfig()) {
     return null;
   }
 
-  const oAuth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET
-  );
-
-  oAuth2Client.setCredentials({
-    refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
-  });
-
-  const accessToken = await oAuth2Client.getAccessToken();
-
-  return nodemailer.createTransport({
+  cachedTransporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
       type: "OAuth2",
@@ -35,9 +29,10 @@ async function createTransporter() {
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-      accessToken: accessToken.token,
     },
   });
+
+  return cachedTransporter;
 }
 
 async function sendOfferLetterEmail(student, attachment = {}) {

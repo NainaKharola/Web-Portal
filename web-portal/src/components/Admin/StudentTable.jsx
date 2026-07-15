@@ -33,10 +33,10 @@ function StudentTable({
               key={student._id}
               deleteMode={deleteMode}
               isSelected={selectedIds.includes(student._id)}
-              onSelect={(checked) => onSelect(student._id, checked)}
+              onSelect={onSelect}
               serialNumber={index + 1}
               student={student}
-              onView={() => onView(student._id)}
+              onView={onView}
             />
           ))}
         </tbody>
