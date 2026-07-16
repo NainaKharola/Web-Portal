@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
+const { createLocalModel, syncMongoCollection } = require("../services/localStorageService");
 
 const adminSchema = new mongoose.Schema(
   {
@@ -38,4 +39,20 @@ adminSchema.methods.matchPassword = function matchPassword(password) {
   return bcrypt.compare(password, this.password);
 };
 
-module.exports = mongoose.model("Admin", adminSchema);
+adminSchema.post("save", async () => {
+  await syncMongoCollection(mongoose.model("Admin"), "admins.json");
+});
+
+const AdminModel = mongoose.model("Admin", adminSchema);
+module.exports = createLocalModel(AdminModel, "admins.json", {
+  name: "Admin",
+}, {
+  async beforeSave(admin) {
+    if (admin.password && !admin.password.startsWith("$2")) {
+      admin.password = await bcrypt.hash(admin.password, 12);
+    }
+  },
+  async matchPassword(password) {
+    return bcrypt.compare(password, this.password);
+  },
+});

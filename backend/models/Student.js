@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { createLocalModel, syncMongoCollection } = require("../services/localStorageService");
 
 const studentSchema = new mongoose.Schema(
   {
@@ -258,5 +259,20 @@ studentSchema.index({ completedStatus: 1, certificateGenerated: 1, name: 1 });
 studentSchema.index({ submittedAt: -1 });
 studentSchema.index({ name: 1 });
 studentSchema.index({ "trainingManagement.toDate": -1 });
+studentSchema.post("save", async () => {
+  await syncMongoCollection(mongoose.model("Student"), "students.json");
+});
 
-module.exports = mongoose.model("Student", studentSchema);
+const StudentModel = mongoose.model("Student", studentSchema);
+module.exports = createLocalModel(StudentModel, "students.json", {
+  status: "Pending",
+  remark: "",
+  referenceBy: "",
+  recommendedBy: "",
+  offerLetterStatus: "Pending",
+  offerLetter: {},
+  trainingManagement: {},
+  gyapanGenerated: false,
+  certificateGenerated: false,
+  submittedAt: new Date(),
+});

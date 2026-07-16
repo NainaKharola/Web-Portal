@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { createLocalModel, syncMongoCollection } = require("../services/localStorageService");
 
 const studentRowSchema = new mongoose.Schema({
   studentId: { type: mongoose.Schema.Types.ObjectId, ref: "Student" },
@@ -27,4 +28,20 @@ const gyapanSchema = new mongoose.Schema({
   html: { type: String, default: "" },
 }, { timestamps: true, versionKey: false });
 
-module.exports = mongoose.model("Gyapan", gyapanSchema);
+gyapanSchema.post("save", async () => {
+  await syncMongoCollection(mongoose.model("Gyapan"), "gyapan.json");
+});
+
+const GyapanModel = mongoose.model("Gyapan", gyapanSchema);
+module.exports = createLocalModel(GyapanModel, "gyapan.json", {
+  generated: false,
+  generatedBy: "",
+  pdfUrl: "",
+  gyapanUrl: "",
+  publicId: "",
+  uploadType: "Generated",
+  letterNumber: "",
+  studentRows: [],
+  selectedStudents: [],
+  html: "",
+});
