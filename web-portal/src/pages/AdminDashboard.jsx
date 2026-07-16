@@ -143,13 +143,13 @@ function AdminDashboard() {
   }, [selectedIds, query]);
 
   return (
-    <main className="admin-shell">
+    <main className="admin-console admin-shell">
       <header className="admin-topbar">
         <div>
           <p className="portal-eyebrow">Admin Panel</p>
           <h1>Student Applications</h1>
         </div>
-        <button className="secondary-button" type="button" onClick={handleLogout}>
+        <button className="admin-secondary-btn" type="button" onClick={handleLogout}>
           Logout
         </button>
       </header>
@@ -163,24 +163,24 @@ function AdminDashboard() {
         </div>
 
         <div className="admin-actions-row">
-          <button className="secondary-button" type="button" onClick={toggleApprovedStudents}>
+          <button className="admin-secondary-btn" type="button" onClick={toggleApprovedStudents}>
             {filters.status === "Approved" ? "All Students" : "Approved Students"}
           </button>
-          <button className="secondary-button" type="button" onClick={openCertificates}>
+          <button className="admin-secondary-btn" type="button" onClick={openCertificates}>
             Certificates
           </button>
-          <button className="secondary-button" type="button" onClick={openGyapan}>
+          <button className="admin-secondary-btn" type="button" onClick={openGyapan}>
             Gyapan
           </button>
           <button
-            className="secondary-button"
+            className="admin-danger-btn"
             type="button"
             onClick={() => setDeleteMode((current) => !current)}
           >
             {deleteMode ? "Cancel Delete" : "Delete Entry"}
           </button>
           {deleteMode && (
-            <button className="primary-button" type="button" onClick={deleteSelected}>
+            <button className="admin-danger-btn" type="button" onClick={deleteSelected}>
               Delete Selected
             </button>
           )}

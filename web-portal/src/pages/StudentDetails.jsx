@@ -71,7 +71,7 @@ function DocumentButton({ label, file }) {
   if (!file?.url) return null;
 
   return (
-    <a className="secondary-button admin-link-button" href={file.url} target="_blank" rel="noreferrer">
+    <a className="admin-secondary-btn admin-link-button" href={file.url} target="_blank" rel="noreferrer">
       View {label}
     </a>
   );
@@ -151,7 +151,7 @@ function TrainingManagementForm({ student, onUpdated }) {
     <section className="details-section">
       <div className="details-section__header">
         <h2>Training Management System</h2>
-        <button className="primary-button" type="button" onClick={() => setOpen((value) => !value)}>
+        <button className="admin-primary-btn" type="button" onClick={() => setOpen((value) => !value)}>
           Training Management System
         </button>
       </div>
@@ -311,7 +311,7 @@ function TrainingManagementForm({ student, onUpdated }) {
             </label>
           ))}
 
-          <button className="primary-button" type="submit" disabled={saving}>
+          <button className="admin-primary-btn" type="submit" disabled={saving}>
             {saving ? "Saving..." : "Save Changes"}
           </button>
           {message && <p className="admin-muted">{message}</p>}
@@ -402,7 +402,7 @@ function StudentDetails({ id }) {
 
   if (loading) {
     return (
-      <main className="admin-shell">
+      <main className="admin-console admin-shell">
         <div className="admin-loading">Loading student details...</div>
       </main>
     );
@@ -410,8 +410,8 @@ function StudentDetails({ id }) {
 
   if (error || !student) {
     return (
-      <main className="admin-shell">
-        <button className="secondary-button" type="button" onClick={goBack}>
+      <main className="admin-console admin-shell">
+        <button className="admin-secondary-btn" type="button" onClick={goBack}>
           Back
         </button>
         <p className="admin-error">{error || "Student not found."}</p>
@@ -420,7 +420,7 @@ function StudentDetails({ id }) {
   }
 
   return (
-    <main className="admin-shell">
+    <main className="admin-console admin-shell">
       <header className="admin-topbar">
         <div>
           <p className="portal-eyebrow">Student Details</p>
@@ -430,7 +430,7 @@ function StudentDetails({ id }) {
             <span>{student.email}</span>
           </div>
         </div>
-        <button className="secondary-button" type="button" onClick={goBack}>
+        <button className="admin-secondary-btn" type="button" onClick={goBack}>
           Back to Dashboard
         </button>
       </header>
@@ -534,7 +534,7 @@ function StudentDetails({ id }) {
 
           <div className="offer-letter-actions">
             <button
-              className="primary-button"
+              className="admin-primary-btn"
               disabled={letterBusy === "generate"}
               type="button"
               onClick={handleGenerateOfferLetter}
@@ -543,7 +543,7 @@ function StudentDetails({ id }) {
             </button>
 
             {(student.offerLetter?.html || student.offerLetter?.url || student.offerLetterUrl) && (
-              <button className="secondary-button" type="button" onClick={openOfferLetterPreview}>
+              <button className="admin-secondary-btn" type="button" onClick={openOfferLetterPreview}>
                 Preview Offer Letter
               </button>
             )}
@@ -558,7 +558,7 @@ function StudentDetails({ id }) {
                 onChange={(event) => setLetterFile(event.target.files?.[0] || null)}
               />
             </label>
-            <button className="secondary-button" disabled={letterBusy === "upload"} type="submit">
+            <button className="admin-secondary-btn" disabled={letterBusy === "upload"} type="submit">
               {letterBusy === "upload" ? "Uploading..." : "Upload Offer Letter"}
             </button>
           </form>

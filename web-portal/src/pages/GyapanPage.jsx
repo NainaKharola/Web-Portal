@@ -66,10 +66,10 @@ function GyapanPage() {
   };
 
   return (
-    <main className="admin-shell">
+    <main className="admin-console admin-shell">
       <header className="admin-topbar">
         <div><p className="portal-eyebrow">Admin Panel</p><h1>GYAPAN</h1></div>
-        <button className="secondary-button" type="button" onClick={back}>Back to Dashboard</button>
+        <button className="admin-secondary-btn" type="button" onClick={back}>Back to Dashboard</button>
       </header>
       <section className="admin-panel">
         <div className="admin-actions-row">
@@ -77,7 +77,7 @@ function GyapanPage() {
             <span>Completion Date (Optional)</span>
             <input type="date" value={date} onChange={(event) => setDate(event.target.value)} />
           </label>
-          <button className="primary-button" type="button" onClick={() => loadStudents(date)} disabled={loading}>
+          <button className="admin-primary-btn" type="button" onClick={() => loadStudents(date)} disabled={loading}>
             {loading ? "Loading..." : "Apply Filter"}
           </button>
         </div>
@@ -100,8 +100,8 @@ function GyapanPage() {
               </article>;
             })}
           </div>
-          <div className="admin-actions-row" style={{ marginTop: 18 }}>
-            <button className="primary-button" type="button" disabled={busy} onClick={generate}>{busy ? "Creating Preview..." : "Generate Gyapan"}</button>
+          <div className="admin-actions-row admin-actions-row--spaced">
+            <button className="admin-primary-btn" type="button" disabled={busy} onClick={generate}>{busy ? "Creating Preview..." : "Generate Gyapan"}</button>
           </div>
         </>}
         {!loading && students.length === 0 && !error && <div className="admin-empty-state">{date ? "No completed students have this completion date." : "No students with Completed status set to Yes are available."}</div>}

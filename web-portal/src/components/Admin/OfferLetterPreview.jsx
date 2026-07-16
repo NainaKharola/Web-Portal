@@ -3,7 +3,7 @@ function OfferLetterPreview({ student }) {
 
   return (
     <a
-      className="secondary-button admin-link-button"
+      className="admin-secondary-btn admin-link-button"
       href={student.offerLetterUrl}
       target="_blank"
       rel="noreferrer"

@@ -82,13 +82,13 @@ function Certificates() {
   };
 
   return (
-    <main className="admin-shell">
+    <main className="admin-console admin-shell">
       <header className="admin-topbar">
         <div>
           <p className="portal-eyebrow">Admin Panel</p>
           <h1>Certificates</h1>
         </div>
-        <button className="secondary-button" type="button" onClick={goBack}>
+        <button className="admin-secondary-btn" type="button" onClick={goBack}>
           Back to Dashboard
         </button>
       </header>
@@ -120,7 +120,7 @@ function Certificates() {
             />
           </label>
           <button
-            className="primary-button"
+            className="admin-primary-btn"
             type="button"
             disabled={downloading || !selectedCount}
             onClick={handleDownload}

@@ -409,3 +409,233 @@
     grid-column: span 1;
   }
 }
+
+/* Admin-only design system. The .admin-console scope keeps student-facing screens unchanged. */
+.admin-console {
+  --admin-navy: #0f4c92;
+  --admin-navy-dark: #093b75;
+  --admin-blue-soft: #dbeafe;
+  --admin-border: #d7e3f2;
+  --admin-ink: #173b67;
+  --admin-muted: #60748d;
+  --admin-surface: #ffffff;
+  --admin-shadow: 0 12px 28px rgba(22, 65, 112, 0.1);
+  padding: 34px 22px 48px;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(30, 108, 192, 0.14), transparent 28rem),
+    linear-gradient(135deg, #eef5fc 0%, #f8fbff 48%, #eaf3fc 100%);
+}
+
+.admin-console .admin-topbar,
+.admin-console .admin-summary-grid,
+.admin-console .admin-panel,
+.admin-console .details-section,
+.admin-console .admin-review-form,
+.admin-console .offer-letter-box {
+  width: min(1240px, 100%);
+}
+
+.admin-console .admin-topbar {
+  margin-bottom: 26px;
+  padding: 4px 2px;
+}
+
+.admin-console .admin-topbar h1,
+.admin-console h2 {
+  color: var(--admin-ink);
+  letter-spacing: -0.025em;
+}
+
+.admin-console .portal-eyebrow {
+  color: var(--admin-navy);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.admin-console .admin-panel,
+.admin-console .details-section,
+.admin-console .admin-review-form,
+.admin-console .offer-letter-box,
+.admin-console .admin-summary-card,
+.admin-console .gyapan-card {
+  border: 1px solid var(--admin-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--admin-shadow);
+}
+
+.admin-console .admin-panel,
+.admin-console .details-section,
+.admin-console .admin-review-form,
+.admin-console .offer-letter-box {
+  padding: clamp(20px, 3vw, 30px);
+  margin-bottom: 22px;
+}
+
+.admin-console .admin-summary-grid { gap: 18px; margin-bottom: 22px; }
+
+.admin-console .admin-summary-card {
+  position: relative;
+  min-height: 126px;
+  padding: 21px;
+  overflow: hidden;
+}
+
+.admin-console .admin-summary-card::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  content: "";
+  background: var(--admin-navy);
+}
+
+.admin-console .admin-summary-card strong { color: var(--admin-navy); }
+.admin-console .admin-summary-card span,
+.admin-console .admin-field span,
+.admin-console .detail-item span { color: var(--admin-muted); }
+
+.admin-console .admin-actions-row { gap: 12px; margin-bottom: 20px; }
+.admin-console .admin-actions-row--spaced { margin-top: 16px; }
+
+.admin-primary-btn,
+.admin-secondary-btn,
+.admin-danger-btn,
+.admin-success-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 17px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  box-shadow: 0 5px 12px rgba(15, 76, 146, 0.12);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.admin-primary-btn { color: #fff; background: var(--admin-navy); }
+.admin-primary-btn:hover:not(:disabled) { background: var(--admin-navy-dark); }
+.admin-secondary-btn { color: var(--admin-navy); border-color: #c7dbf4; background: var(--admin-blue-soft); }
+.admin-secondary-btn:hover:not(:disabled) { background: #c7ddfb; border-color: #a8c8ee; }
+.admin-danger-btn { color: #fff; background: #b42318; box-shadow: 0 5px 12px rgba(180, 35, 24, 0.13); }
+.admin-danger-btn:hover:not(:disabled) { background: #901f16; }
+.admin-success-btn { color: #fff; background: #177245; }
+.admin-success-btn:hover:not(:disabled) { background: #105c36; }
+
+.admin-primary-btn:hover:not(:disabled),
+.admin-secondary-btn:hover:not(:disabled),
+.admin-danger-btn:hover:not(:disabled),
+.admin-success-btn:hover:not(:disabled) {
+  box-shadow: 0 9px 18px rgba(15, 76, 146, 0.2);
+  transform: translateY(-2px);
+}
+
+.admin-primary-btn:focus-visible,
+.admin-secondary-btn:focus-visible,
+.admin-danger-btn:focus-visible,
+.admin-success-btn:focus-visible {
+  outline: 3px solid rgba(15, 76, 146, 0.24);
+  outline-offset: 2px;
+}
+
+.admin-primary-btn:disabled,
+.admin-secondary-btn:disabled,
+.admin-danger-btn:disabled,
+.admin-success-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  box-shadow: none;
+  transform: none;
+}
+
+.admin-console .admin-field { gap: 7px; }
+.admin-console .admin-field input,
+.admin-console .admin-field select,
+.admin-console .admin-field textarea,
+.admin-console .gyapan-editor-table input {
+  min-height: 46px;
+  border: 1px solid #cbdced;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fbfdff;
+  color: var(--admin-ink);
+  box-shadow: inset 0 1px 2px rgba(18, 71, 131, 0.03);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.admin-console .admin-field textarea { min-height: 112px; }
+.admin-console .admin-field input:focus,
+.admin-console .admin-field select:focus,
+.admin-console .admin-field textarea:focus,
+.admin-console .gyapan-editor-table input:focus {
+  border-color: var(--admin-navy);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(15, 76, 146, 0.12);
+}
+
+.admin-console input[type="file"] {
+  padding: 7px;
+  cursor: pointer;
+}
+
+.admin-console input[type="file"]::file-selector-button {
+  margin-right: 10px;
+  padding: 7px 11px;
+  border: 0;
+  border-radius: 7px;
+  color: var(--admin-navy);
+  background: var(--admin-blue-soft);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.admin-console input[type="checkbox"] { accent-color: var(--admin-navy); cursor: pointer; }
+
+.admin-console .admin-table-wrap {
+  border-color: var(--admin-border);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.admin-console .admin-table { background: var(--admin-surface); }
+.admin-console .admin-table th {
+  padding: 15px 13px;
+  color: #234a78;
+  background: #eef5fc;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+.admin-console .admin-table td { padding: 14px 13px; border-color: #e1ebf5; }
+.admin-console .admin-table tbody tr { transition: background-color 150ms ease; }
+.admin-console .admin-table tbody tr:hover { background: #f5f9fe; }
+.admin-console .admin-table-action { min-height: 36px; padding: 7px 11px; border-radius: 9px; font-size: 0.84rem; }
+
+.admin-console .detail-item {
+  border-color: #dce8f4;
+  border-radius: 11px;
+  background: #f9fbfe;
+}
+.admin-console .detail-item strong { color: var(--admin-ink); }
+.admin-console .gyapan-cards { gap: 18px; }
+.admin-console .gyapan-card { padding: 20px; }
+.admin-console .gyapan-card label { color: var(--admin-ink); }
+.admin-console .offer-letter-viewer { border-color: var(--admin-border); border-radius: 12px; }
+
+@media (max-width: 640px) {
+  .admin-console { padding: 22px 12px 32px; }
+  .admin-console .admin-topbar { gap: 14px; }
+  .admin-console .admin-topbar > .admin-secondary-btn { width: 100%; }
+  .admin-console .admin-actions-row > .admin-primary-btn,
+  .admin-console .admin-actions-row > .admin-secondary-btn,
+  .admin-console .admin-actions-row > .admin-danger-btn { flex: 1 1 100%; }
+  .admin-console .offer-letter-actions > *,
+  .admin-console .document-actions > * { flex: 1 1 100%; }
+  .admin-console .admin-summary-card { min-height: 108px; }
+}

@@ -142,7 +142,7 @@ function OfferLetterForm({ form, saving, onChange, onSubmit }) {
 
       </div>
 
-      <button className="primary-button" disabled={saving} type="submit">
+      <button className="admin-primary-btn" disabled={saving} type="submit">
         {saving ? "Saving..." : "Save Changes"}
       </button>
     </form>

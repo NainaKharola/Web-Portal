@@ -55,20 +55,20 @@ function OfferLetterEditor({ studentId }) {
 
   if (loading) {
     return (
-      <main className="admin-shell">
+      <main className="admin-console admin-shell">
         <div className="admin-loading">Loading editor...</div>
       </main>
     );
   }
 
   return (
-    <main className="admin-shell">
+    <main className="admin-console admin-shell">
       <header className="admin-topbar">
         <div>
           <p className="portal-eyebrow">Offer Letter Editor</p>
           <h1>Edit Allowed Fields</h1>
         </div>
-        <button className="secondary-button" type="button" onClick={goPreview}>
+        <button className="admin-secondary-btn" type="button" onClick={goPreview}>
           Back to Preview
         </button>
       </header>

@@ -54,7 +54,7 @@ const StudentRow = memo(function StudentRow({
       </td>
       <td>{formatDate(student.approvedDate)}</td>
       <td>
-        <button className="text-button" type="button" onClick={handleViewClick}>
+        <button className="admin-secondary-btn admin-table-action" type="button" onClick={handleViewClick}>
           View Details
         </button>
       </td>

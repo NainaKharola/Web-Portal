@@ -124,7 +124,7 @@ function AdminReviewForm({ student, onUpdated }) {
       {error && <p className="admin-error">{error}</p>}
       {message && <p className="admin-success">{message}</p>}
 
-      <button className="primary-button" disabled={saving} type="submit">
+      <button className="admin-primary-btn" disabled={saving} type="submit">
         {saving ? "Saving..." : "Save Changes"}
       </button>
     </form>

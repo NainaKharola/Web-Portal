@@ -86,31 +86,31 @@ function OfferLetterPreview({ studentId }) {
 
   if (loading) {
     return (
-      <main className="admin-shell">
+      <main className="admin-console admin-shell">
         <div className="admin-loading">Loading Offer Letter preview...</div>
       </main>
     );
   }
 
   return (
-    <main className="admin-shell">
+    <main className="admin-console admin-shell">
       <header className="admin-topbar">
         <div>
           <p className="portal-eyebrow">Offer Letter Preview</p>
           <h1>{preview?.student?.name || "Offer Letter"}</h1>
         </div>
-        <button className="secondary-button" type="button" onClick={goBack}>
+        <button className="admin-secondary-btn" type="button" onClick={goBack}>
           Back to Student
         </button>
       </header>
 
       <section className="details-section">
         <div className="offer-letter-actions">
-          <button className="secondary-button" type="button" onClick={openEditor}>
+          <button className="admin-secondary-btn" type="button" onClick={openEditor}>
             Edit
           </button>
           <button
-            className="secondary-button"
+            className="admin-secondary-btn"
             disabled={busy === "download" || preview?.uploadType === "Uploaded"}
             type="button"
             onClick={handleDownload}
@@ -118,11 +118,11 @@ function OfferLetterPreview({ studentId }) {
             {busy === "download" ? "Preparing..." : "Download PDF"}
           </button>
           {preview?.uploadType === "Uploaded" && preview?.pdfUrl && (
-            <a className="secondary-button admin-link-button" href={preview.pdfUrl} target="_blank" rel="noreferrer">
+            <a className="admin-secondary-btn admin-link-button" href={preview.pdfUrl} target="_blank" rel="noreferrer">
               Open PDF
             </a>
           )}
-          <button className="primary-button" disabled={busy === "send"} type="button" onClick={handleSend}>
+          <button className="admin-primary-btn" disabled={busy === "send"} type="button" onClick={handleSend}>
             {busy === "send" ? "Sending..." : "Send Offer Letter"}
           </button>
         </div>
